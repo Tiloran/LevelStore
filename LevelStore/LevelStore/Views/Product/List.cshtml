@@ -6,12 +6,15 @@
 
 @foreach (Product product in Model.Product)
 {
-    <div>
-        <span>@product.Name</span>
-        <span>@product.Price</span>
-        <div>@product.Description</div>
-        <a class="btn btn-primary">Выбрать</a>
-    </div>
+<div>
+    <span>@product.Name</span>
+    <span>@product.Price</span>
+    <div>@product.Description</div>
+    <a class="btn btn-primary">Выбрать</a>
+    <div>@product.Description</div>
+    <div>@product.Description</div>
+
+</div>
 }
 
 <a asp-controller="Admin" asp-action="Create" class="btn btn-default">Create</a>
