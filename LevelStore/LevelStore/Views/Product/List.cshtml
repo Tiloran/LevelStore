@@ -1,0 +1,15 @@
+﻿@model ProductsListViewModel
+@{
+    ViewData["Title"] = "List";
+    Layout = "_Layout";
+}
+
+@foreach (Product product in Model.Product)
+{
+    <div>
+        <span>@product.Name</span>
+        <span>@product.Price</span>
+        <div>@product.Description</div>
+    </div>
+}
+
