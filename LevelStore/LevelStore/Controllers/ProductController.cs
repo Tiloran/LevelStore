@@ -17,14 +17,28 @@ namespace LevelStore.Controllers
             repository = repo;
         }
 
-        public ViewResult List(string category) =>
-            View(new ProductsListViewModel
-            {
-                Product = repository.Products
-                    .Where(p => category == null || p.Category == category)
-                    .OrderBy(p => p.ProductID),
-                CurrentCategory = category
-            });
+        public ViewResult List(string category)
+        {
+            List<ProductWithImages> productAndImages = new List<ProductWithImages>();
+            List<Product> products = new List<Product>();
+            List<Image> images = new List<Image>();
+            products = new List<Product>(repository.Products.Where(p => category == null || p.Category == category).OrderBy(p => p.ProductID));
+            images = new List<Image>(repository.Images);
 
+            for (int i = 0; i < products.Count; i++)
+            {
+                images = new List<Image> (repository.Images.Where(index => index.ProductID == products[i].ProductID));
+                productAndImages.Add(new ProductWithImages()
+                {
+                    product = products[i],
+                    Images = images
+
+                });
+            }
+
+            ProductsListViewModel productsListViewModel = new ProductsListViewModel();
+            productsListViewModel.ProductAndImages = productAndImages.ToList();
+            return View(productsListViewModel);
+        }
     }
 }

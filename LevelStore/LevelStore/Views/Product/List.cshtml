@@ -4,15 +4,22 @@
     Layout = "_Layout";
 }
 
-@foreach (Product product in Model.Product)
+@foreach (var product in Model.ProductAndImages)
 {
 <div>
-    <span>@product.Name</span>
-    <span>@product.Price</span>
-    <div>@product.Description</div>
+    <span>@product.product.Name</span>
+    <span>@product.product.Price</span>
+    <div>@product.product.Description</div>
+    @if (product.Images.Count > 0)
+    {
+        <img src="/images/@product.Images[0].Name" alt="loh">
+    }
+    else
+    {
+        <img src="/images/none.png" alt="None Image">
+    }
+    
     <a class="btn btn-primary">Выбрать</a>
-    <div>@product.Description</div>
-    <div>@product.Description</div>
 
 </div>
 }

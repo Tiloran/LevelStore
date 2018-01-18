@@ -7,7 +7,7 @@ namespace LevelStore.Models.ViewModels
 {
     public class ProductsListViewModel
     {
-        public IEnumerable<Product> Product { get; set; }
+        public IEnumerable<ProductWithImages> ProductAndImages { get; set; }
         public string CurrentCategory { get; set; }
     }
 }

@@ -20,6 +20,23 @@ namespace LevelStore.Migrations
                 .HasAnnotation("ProductVersion", "2.0.1-rtm-125")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("LevelStore.Models.Image", b =>
+                {
+                    b.Property<int>("ImageID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.Property<int>("ProductID");
+
+                    b.HasKey("ImageID");
+
+                    b.HasIndex("ProductID");
+
+                    b.ToTable("Images");
+                });
+
             modelBuilder.Entity("LevelStore.Models.Product", b =>
                 {
                     b.Property<int>("ProductID")
@@ -27,15 +44,15 @@ namespace LevelStore.Migrations
 
                     b.Property<int?>("AccessoriesForBags");
 
-                    b.Property<string>("Category");
+                    b.Property<string>("Category")
+                        .IsRequired();
 
                     b.Property<int>("Color");
 
                     b.Property<string>("Description");
 
-                    b.Property<string>("Name");
-
-                    b.Property<byte[]>("Picture");
+                    b.Property<string>("Name")
+                        .IsRequired();
 
                     b.Property<decimal>("Price");
 
@@ -44,6 +61,14 @@ namespace LevelStore.Migrations
                     b.HasKey("ProductID");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("LevelStore.Models.Image", b =>
+                {
+                    b.HasOne("LevelStore.Models.Product")
+                        .WithMany("Images")
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

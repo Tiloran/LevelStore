@@ -15,12 +15,28 @@ namespace LevelStore.Models.EF
         }
 
         public IEnumerable<Product> Products => context.Products;
+        public IEnumerable<Image> Images => context.Images;
 
-        public void SaveProduct(Product product)
+        public void SaveProduct(Product product, List<string> Images)
+
         {
             if (product.ProductID == 0)
             {
-                context.Products.Add(product);
+                Product newProduct = new Product
+                {
+                    Name = product.Name,
+                    Price = product.Price,
+                    Category = product.Category,
+                    Images = new List<Image>()
+                };
+                foreach (var name in Images)
+                {
+                    newProduct.Images.Add(new Image
+                    {
+                        Name = name
+                    });
+                }
+                context.Products.Add(newProduct);
             }
             else
             {

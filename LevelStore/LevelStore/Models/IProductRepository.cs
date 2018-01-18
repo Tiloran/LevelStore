@@ -8,8 +8,9 @@ namespace LevelStore.Models
     public interface IProductRepository
     {
         IEnumerable<Product> Products { get; }
+        IEnumerable<Image> Images { get; }
 
-        void SaveProduct(Product product);
+        void SaveProduct(Product product, List<string> Images);
 
         Product DeleteProduct(int productID);
     }

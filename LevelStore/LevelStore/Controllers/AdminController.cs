@@ -23,7 +23,8 @@ namespace LevelStore.Controllers
         {
             if (ModelState.IsValid)
             {
-                repository.SaveProduct(product);
+                List<string> Images = new List<string>{"ебать-ты-лох-оригинал.jpg"};
+                repository.SaveProduct(product, Images);
                 //TempData["message"] = $"{product.Name} has been saved";
                 return RedirectToAction(controllerName: "Product", actionName: "List");
             }
