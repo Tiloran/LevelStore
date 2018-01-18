@@ -1,0 +1,22 @@
+﻿@model Product
+@{
+    ViewData["Title"] = "ViewSingleProduct";
+    Layout = "_Layout";
+}
+
+<div>@Model.Name</div>
+<div>@Model.Price</div>
+<div>@Model.Description</div>
+<div>@Model.Category</div>
+@if (Model.Images.Count > 0)
+{
+    foreach (var image in Model.Images)
+    {
+        <img src="/images/@image.Name" alt="loh">
+    }
+}
+else
+{
+        <img src="/images/none.png" alt="loh">
+}
+

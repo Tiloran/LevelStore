@@ -38,5 +38,14 @@ namespace LevelStore.Controllers
             ProductsListViewModel productsListViewModel = new ProductsListViewModel {ProductAndImages = productAndImages.ToList()};
             return View(productsListViewModel);
         }
+
+        [HttpPost]
+        public ViewResult ViewSingleProduct(int productId)
+        {
+            Product selectedProduct = repository.Products.FirstOrDefault(p => p.ProductID == productId);
+            List<Image> productImages = repository.Images.Where(p => p.ProductID == productId).ToList();
+            selectedProduct.Images = productImages;
+            return View(selectedProduct);
+        }
     }
 }

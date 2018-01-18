@@ -26,16 +26,9 @@ namespace LevelStore.Models.EF
                 {
                     Name = product.Name,
                     Price = product.Price,
-                    Category = product.Category,
-                    //Images = product.Images.ToList()
+                    Category = product.Category
                 };
-                //foreach (var name in Images)
-                //{
-                //    newProduct.Images.Add(new Image
-                //    {
-                //        Name = name
-                //    });
-                //}
+                
                 context.Products.Add(Product);
             }
             else

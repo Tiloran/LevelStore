@@ -34,11 +34,11 @@ namespace LevelStore.Controllers
                 int id = repository.SaveProduct(product);
                 //TempData["message"] = $"{product.Name} has been saved";
                 //ViewData["product"] = product;
-                
+
 
                 //string url = string.Format($"/UploadFiles?productname={product.Name} & productprice ={product.Price}");
-                
-                return RedirectToRoute(new {controller = "Admin",action ="UploadFiles", id = $"{id}" });
+                TempData["id"] = id;
+                return RedirectToRoute(new {controller = "Admin",action ="UploadFiles" });
             }
             else
             {
@@ -57,9 +57,10 @@ namespace LevelStore.Controllers
             return View();
         }
 
-        public IActionResult UploadFiles(int id)
+        public IActionResult UploadFiles()
         {
-            return View(id);
+            
+            return View();
         }
 
         [HttpPost]
