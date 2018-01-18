@@ -4,6 +4,8 @@
     Layout = "_Layout";
 }
 
+<a asp-controller="Admin" asp-action="Create" class="btn btn-default">Create</a>
+
 @foreach (var product in Model.ProductAndImages)
 {
 <div>
@@ -24,5 +26,5 @@
 </div>
 }
 
-<a asp-controller="Admin" asp-action="Create" class="btn btn-default">Create</a>
+
 

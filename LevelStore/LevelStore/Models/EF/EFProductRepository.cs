@@ -17,39 +17,57 @@ namespace LevelStore.Models.EF
         public IEnumerable<Product> Products => context.Products;
         public IEnumerable<Image> Images => context.Images;
 
-        public void SaveProduct(Product product, List<string> Images)
-
+        public int SaveProduct(Product product)
         {
+            Product Product = new Product();
             if (product.ProductID == 0)
             {
-                Product newProduct = new Product
+                Product = new Product
                 {
                     Name = product.Name,
                     Price = product.Price,
                     Category = product.Category,
-                    Images = new List<Image>()
+                    //Images = product.Images.ToList()
                 };
-                foreach (var name in Images)
-                {
-                    newProduct.Images.Add(new Image
-                    {
-                        Name = name
-                    });
-                }
-                context.Products.Add(newProduct);
+                //foreach (var name in Images)
+                //{
+                //    newProduct.Images.Add(new Image
+                //    {
+                //        Name = name
+                //    });
+                //}
+                context.Products.Add(Product);
             }
             else
             {
-                Product dbEntry = context.Products.FirstOrDefault(p => p.ProductID == product.ProductID);
-                if (dbEntry != null)
+                Product = context.Products.FirstOrDefault(p => p.ProductID == product.ProductID);
+                if (Product != null)
                 {
-                    dbEntry.Name = product.Name;
-                    dbEntry.Description = product.Description;
-                    dbEntry.Price = product.Price;
-                    dbEntry.Category = product.Category;
+                    Product.Name = product.Name;
+                    Product.Description = product.Description;
+                    Product.Price = product.Price;
+                    Product.Category = product.Category;
                 }
             }
             context.SaveChanges();
+            return Product.ProductID;
+        }
+
+        public void AddImages(List<string> Images, int? id)
+        {
+            Product Product = context.Products.FirstOrDefault(p => p.ProductID == id);
+            if (Product != null)
+            {
+                if (Product.Images == null)
+                {
+                    Product.Images = new List<Image>();
+                }
+                foreach (var image in Images)
+                {
+                    Product.Images.Add(new Image { Name = image });
+                }
+                context.SaveChanges();
+            }
         }
 
         public Product DeleteProduct(int ProductId)

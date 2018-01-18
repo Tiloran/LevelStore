@@ -32,12 +32,10 @@ namespace LevelStore.Controllers
                 {
                     product = products[i],
                     Images = images
-
                 });
             }
 
-            ProductsListViewModel productsListViewModel = new ProductsListViewModel();
-            productsListViewModel.ProductAndImages = productAndImages.ToList();
+            ProductsListViewModel productsListViewModel = new ProductsListViewModel {ProductAndImages = productAndImages.ToList()};
             return View(productsListViewModel);
         }
     }

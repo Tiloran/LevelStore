@@ -10,8 +10,8 @@ namespace LevelStore.Models
         IEnumerable<Product> Products { get; }
         IEnumerable<Image> Images { get; }
 
-        void SaveProduct(Product product, List<string> Images);
-
+        int SaveProduct(Product product);
+        void AddImages(List<string> images, int? id);
         Product DeleteProduct(int productID);
     }
 }
