@@ -27,6 +27,8 @@ namespace LevelStore.Controllers
         public ViewResult Create()
         {
             TempData["OtherStuffForProduct"] = new OtherStuffForProduct();
+            TempData["Colors"] = repository.TypeColors.ToList();
+            TempData["BoundColors"] = new List<Color>();
             return View("Edit", new Product());
         }
 
@@ -35,34 +37,48 @@ namespace LevelStore.Controllers
         {
             Product product = repository.Products.FirstOrDefault(i => i.ProductID == productid);
             TempData["OtherStuffForProduct"] = new OtherStuffForProduct();
+            TempData["Colors"] = repository.TypeColors.ToList();
+            TempData["BoundColors"] = repository.BoundColors.Where(i=> i.ProductID == productid).ToList();
             return View("Edit", product);
         }
 
         [HttpPost]
-        public IActionResult Edit(Product product)
+        public IActionResult Edit(Product product, List<int> colors)
         {
             if (ModelState.IsValid)
             {
-                int id = repository.SaveProduct(product);
-                //TempData["message"] = $"{product.Name} has been saved";
-                //ViewData["product"] = product;
-
-
-                //string url = string.Format($"/UploadFiles?productname={product.Name} & productprice ={product.Price}");
+                int? id = repository.SaveProduct(product, colors);
+                if (id == null)
+                {
+                    return View();
+                }
                 TempData["id"] = id;
-                return RedirectToRoute(new {controller = "Admin",action ="UploadFiles" });
+                TempData["ImageList"] = repository.Images.ToList();
+                List<Color> bindetColors = repository.BoundColors.Where(i => i.ProductID == id).ToList();
+                List<TypeColor> typeColors = repository.TypeColors.ToList();
+                List<TypeColor> ourTypeColors = new List<TypeColor>();
+
+                foreach (var bindetColor in bindetColors)
+                {
+                    foreach (var typeColor in typeColors)
+                    {
+                        if (typeColor.TypeColorID == bindetColor.TypeColorID)
+                        {
+                            ourTypeColors.Add(typeColor);
+                        }
+                    }
+                }
+                TempData["Colors"] = ourTypeColors;
+                //TempData["Colors"] = repository.TypeColors.ToList();
+                return View("UploadFiles");
             }
-            else
-            {
-                //Some error
-                return View();
-            }
+            //Some error
+            return View();
         }
 
         public IActionResult AddColors()
         {
-            List<TypeColor> typeColors = repository.TypeColors.ToList();
-            TempData["ColorList"] = typeColors;
+            TempData["ColorList"] = repository.TypeColors.ToList();
             return View(new TypeColor());
         }
 
@@ -70,9 +86,15 @@ namespace LevelStore.Controllers
         public IActionResult AddColors(TypeColor newTypeColor)
         {
             repository.SaveTypeColor(newTypeColor);
-            List<TypeColor> typeColors = repository.TypeColors.ToList();
-            TempData["ColorList"] = typeColors;
+            TempData["ColorList"] = repository.TypeColors.ToList();
             return View(new TypeColor());
+        }
+
+        public IActionResult BindPhotoAndColor(int imageID, int ColorID)
+        {
+            TempData["ImageList"] = repository.Images.ToList();
+            TempData["Colors"] = repository.TypeColors.ToList();
+            return View("UploadFiles");
         }
 
         public IActionResult RemoveColor(int typeColorId)
@@ -95,7 +117,6 @@ namespace LevelStore.Controllers
 
         public IActionResult UploadFiles()
         {
-            
             return View();
         }
 

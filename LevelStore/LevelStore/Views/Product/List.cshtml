@@ -52,7 +52,7 @@
     <div>@product.product.Description</div>
     @if (product.Images.Count > 0)
     {
-        <img src="/images/@product.Images[0].Name" style="width: 100px; height: 100px;" alt="loh">
+        <img src="/images/@product.Images[0].Name" style="width: 100px; height: 100px;" alt="@product.Images[0].Alternative">
     }
     else
     {

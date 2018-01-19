@@ -4,6 +4,8 @@
     ViewData["Title"] = "Edit";
     Layout = "_Layout";
     //ViewBag.ImageList = new List<string>();
+    List<TypeColor> colorList = TempData["Colors"] as List<TypeColor>;
+    List<Color> boundcolorList = TempData["BoundColors"] as List<Color>;
 }
 
 @section scripts{
@@ -77,38 +79,48 @@
                         }
                     }
                 </select>
-
+                <div>
                 <label>Цвет:</label>
-                <select asp-for="Color">
+                @*<select asp-items="Color" asp-for="Color">
                     <option disabled>Выберите цвет</option>
-                    @foreach(KeyValuePair<int, string> keyValue in otherStuffForProduct.Colors)
+                    @for(int i = 0; i < colorList.Count; i++)
                     {
-                        if (keyValue.Key == 1)
-                        {
-                            <option selected value="@keyValue.Key">@keyValue.Value</option>
-                        }
-                        else
-                        {
-                            <option  value="@keyValue.Key">@keyValue.Value</option>
-                        }
+                        
+                        <option  value="@colorList[i].TypeColorID">@colorList[i].ColorType</option>
+                        
                     }
-                </select>
+                </select>*@
 
-                <label>Фурнитура:</label>
-                <select asp-for="AccessoriesForBags">
-                    <option disabled>Выберите фурнитуру</option>
-                    @foreach(KeyValuePair<int, string> keyValue in otherStuffForProduct.AccessoriesForBags)
-                    {
-                        if (keyValue.Key == 1)
-                        {
-                            <option selected value="@keyValue.Key">@keyValue.Value</option>
-                        }
-                        else
-                        {
-                            <option  value="@keyValue.Key">@keyValue.Value</option>
-                        }
+                @for (int i = 0; i < colorList.Count; i++)
+                 {
+                     <label>@colorList[i].ColorType:</label>
+                     if (boundcolorList.Select(bcl => bcl.TypeColorID).Contains(colorList[i].TypeColorID))
+                     {
+                         <input name="colors" checked="checked" type="checkbox" value="@colorList[i].TypeColorID"/>
+                     }
+                     else
+                     {
+                         <input name="colors" type="checkbox" value="@colorList[i].TypeColorID" />
+                     }
                     }
-                </select>
+                </div>
+                <div>
+                <label>Фурнитура:</label>
+                    <select  asp-for="AccessoriesForBags">
+                        <option disabled>Выберите фурнитуру</option>
+                        @foreach(KeyValuePair<int, string> keyValue in otherStuffForProduct.AccessoriesForBags)
+                        {
+                            if (keyValue.Key == 1)
+                            {
+                                <option selected value="@keyValue.Key">@keyValue.Value</option>
+                            }
+                            else
+                            {
+                                <option  value="@keyValue.Key">@keyValue.Value</option>
+                            }
+                        }
+                    </select>
+                </div>
             @*<input asp-for="Category" class="form-control" />*@
             }
         </div>

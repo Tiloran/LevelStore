@@ -12,11 +12,11 @@
 {
     foreach (var image in Model.Images)
     {
-        <img src="/images/@image.Name" style="width: 100px; height: 100px;" alt="loh">
+        <img src="/images/@image.Name" style="width: 100px; height: 100px;" alt="@image.Alternative">
     }
 }
 else
 {
-        <img src="/images/none.png" style="width: 100px; height: 100px;" alt="loh">
+        <img src="/images/none.png" style="width: 100px; height: 100px;" alt="none image">
 }
 

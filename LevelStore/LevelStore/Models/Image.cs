@@ -11,6 +11,7 @@ namespace LevelStore.Models
         public int ImageID { get; set; }
         [Required]
         public string Name { get; set; }
+        public string Alternative { get; set; }
         public int ProductID { get; set; }
         public int? TypeColorID { get; set; }
 

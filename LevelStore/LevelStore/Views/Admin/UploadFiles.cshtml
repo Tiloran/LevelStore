@@ -2,9 +2,28 @@
 @{
     ViewData["Title"] = "UploadFiles";
     Layout = "_Layout";
+    List<Image> imageList = TempData["ImageList"] as List<Image>;
+    List<TypeColor> colorsList = TempData["Colors"] as List<TypeColor>;
 }
 
 <h2>UploadFiles</h2>
+@foreach (var image in imageList)
+{
+    <form asp-action="BindPhotoAndColor" method="post">
+        <img src="/images/@image.Name" style="width: 100px; height: 100px;" alt="@image.Alternative">
+        <input type="hidden" name="imageID" value="@image.ImageID"/>
+        <label>Цвет фотографии:</label>
+        <select name="ColorID">
+            <option disabled>Выберите цвет фотографии</option>
+            @foreach(var color in colorsList)
+            {
+            <option value="@color.TypeColorID">@color.ColorType</option>
+            }
+        </select>
+        <button type="submit" class="btn btn-sm btn-danger">Изменить</button>
+    </form>
+    
+}
 <form asp-action="UploadFiles" enctype="multipart/form-data" method="post">
     <h3>Выберите файл для загрузки</h3>
     <input type="file" name="files" multiple/>

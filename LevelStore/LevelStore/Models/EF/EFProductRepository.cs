@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace LevelStore.Models.EF
 {
@@ -17,6 +18,7 @@ namespace LevelStore.Models.EF
         public IEnumerable<Product> Products => context.Products;
         public IEnumerable<Image> Images => context.Images;
         public IEnumerable<TypeColor> TypeColors  => context.TypeColors;
+        public IEnumerable<Color> BoundColors => context.Colors;
 
         public void DeleteTypeColor(int typeColorId)
         {
@@ -33,7 +35,7 @@ namespace LevelStore.Models.EF
             context.TypeColors.Add(typeColor);
             context.SaveChanges();
         }
-        public int SaveProduct(Product product)
+        public int? SaveProduct(Product product, List<int> colorsID)
         {
             Product Product = new Product();
             if (product.ProductID == 0)
@@ -65,7 +67,35 @@ namespace LevelStore.Models.EF
                 }
             }
             context.SaveChanges();
-            return Product.ProductID;
+            if (Product != null)
+            {
+                Product = context.Products.Where(i => i.ProductID == Product.ProductID).Include(c => c.Color).FirstOrDefault();
+                if (Product.Color == null)
+                {
+                    Product.Color = new List<Color>();
+                }
+                List<int> ProductcolorsID = context.Colors.Where(i => i.ProductID == Product.ProductID).Select(id => id.TypeColorID).ToList();
+                foreach (var colorid in colorsID)
+                {
+                    if (ProductcolorsID.Contains(colorid))
+                    {
+                        continue;
+                    }
+                    Product.Color.Add(new Color() { TypeColorID = colorid, ProductID = Product.ProductID });
+                }
+                foreach (var ProductcolorID in ProductcolorsID)
+                {
+                    if (colorsID.Contains(ProductcolorID))
+                    {
+                        continue;
+                    }
+                    Product.Color.Remove(Product.Color.FirstOrDefault(i => i.ColorID == ProductcolorID));
+                }
+                context.SaveChanges();
+                return Product.ProductID;
+            }
+            return null;
+
         }
 
         public void AddImages(List<string> Images, int? id)
