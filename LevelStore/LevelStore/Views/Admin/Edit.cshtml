@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Edit";
     Layout = "_Layout";
-    ViewBag.ImageList = new List<string>();
+    //ViewBag.ImageList = new List<string>();
 }
 
 @section scripts{
@@ -44,30 +44,56 @@
 }
 
     <h2>Edit</h2>
-
+    
     <form asp-action="Edit" method="post">
         <input type="hidden" asp-for="ProductID" />
         <div class="form-group">
-            <label asp-for="Name"></label>
+            <label>Название:</label>
             <div><span asp-validation-for="Name" class="text-danger"></span></div>
             <input asp-for="Name" class="form-control" />
         </div>
         <div class="form-group">
-            <label asp-for="Description"></label>
+            <label>Описание:</label>
             <div><span asp-validation-for="Description" class="text-danger"></span></div>
             <textarea asp-for="Description" class="form-control"></textarea>
         </div>
         <div class="form-group">
-            <label asp-for="Category"></label>
+            <label>Категория:</label>
             <div><span asp-validation-for="Category" class="text-danger"></span></div>
-            <input asp-for="Category" class="form-control" />
+            @{
+            CategoryList categoryList = TempData["CategoriesList"] as CategoryList;
+            <select asp-for="Category">
+                <option disabled>Выберите категорию</option>
+                @for (int i = 0; i < categoryList.categories.Count; i++)
+            {
+                if (i == 0)
+                {
+                    <option selected value="@categoryList.categories[i]">@categoryList.categories[i]</option>
+            }
+            else
+            {
+                <option value="@categoryList.categories[i]">@categoryList.categories[i]</option>
+        }
+    }
+            </select>
+            @*<input asp-for="Category" class="form-control" />*@
+            }
         </div>
         <div class="form-group">
-            <label asp-for="Price"></label>
+            <label>Цена:</label>
             <div><span asp-validation-for="Price" class="text-danger"></span></div>
             <input asp-for="Price" class="form-control" />
         </div>
-
+        <div class="form-group">
+            <label>Размер:</label>
+            <div><span asp-validation-for="Size" class="text-danger"></span></div>
+            <input asp-for="Size" class="form-control" />
+        </div>
+        <div>
+            <label>Новый товар:</label>
+            <div><span asp-validation-for="NewProduct" class="text-danger"></span></div>
+            <input asp-for="NewProduct" class="form-control" />
+        </div>
         <div class="text-center">
             <button class="btn btn-primary" type="submit">Save</button>
             <a asp-controller="Product" asp-action="List" class="btn btn-default">Cancel</a>

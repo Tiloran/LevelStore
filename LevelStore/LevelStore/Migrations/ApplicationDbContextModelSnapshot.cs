@@ -54,6 +54,8 @@ namespace LevelStore.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
+                    b.Property<bool>("NewProduct");
+
                     b.Property<decimal>("Price");
 
                     b.Property<string>("Size");

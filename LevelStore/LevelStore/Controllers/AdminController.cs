@@ -24,7 +24,11 @@ namespace LevelStore.Controllers
             _appEnvironment = appEnvironment;
         }
 
-        public ViewResult Create() => View("Edit", new Product());
+        public ViewResult Create()
+        {
+            TempData["CategoriesList"] = new CategoryList();
+            return View("Edit", new Product());
+        }
 
         [HttpPost]
         public IActionResult Edit(Product product)

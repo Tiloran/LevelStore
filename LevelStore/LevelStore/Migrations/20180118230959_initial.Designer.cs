@@ -11,8 +11,8 @@ using System;
 namespace LevelStore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180118092942_Initial")]
-    partial class Initial
+    [Migration("20180118230959_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -54,6 +54,8 @@ namespace LevelStore.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired();
+
+                    b.Property<bool>("NewProduct");
 
                     b.Property<decimal>("Price");
 
