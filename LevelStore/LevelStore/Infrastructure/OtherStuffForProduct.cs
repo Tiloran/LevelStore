@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace LevelStore.Infrastructure
 {
-    public class CategoryList
+    public class OtherStuffForProduct
     {
         public List<string> categories = new List<string>()
         {
@@ -27,6 +27,21 @@ namespace LevelStore.Infrastructure
             "LimitedEdition"
         };
 
-        
+        public Dictionary<int, string> Colors = new Dictionary<int, string>()
+        {
+            {1, "черный"},
+            {2, "синий"},
+            {3, "зеленый"},
+            {4, "хаки" }
+        };
+
+        public Dictionary<int , string> AccessoriesForBags = new Dictionary<int, string>()
+        {
+            {1, "антик"},
+            {2, "никель"}
+        };
+
+
+
     }
 }

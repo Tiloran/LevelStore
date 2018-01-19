@@ -12,6 +12,7 @@ namespace LevelStore.Models
         [Required]
         public string Name { get; set; }
         public int ProductID { get; set; }
+        public int? TypeColorID { get; set; }
 
     }
 }

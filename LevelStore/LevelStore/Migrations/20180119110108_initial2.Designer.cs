@@ -11,9 +11,10 @@ using System;
 namespace LevelStore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180119110108_initial2")]
+    partial class initial2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,9 +34,7 @@ namespace LevelStore.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.HasIndex("TypeColorID");
-
-                    b.ToTable("Colors");
+                    b.ToTable("Color");
                 });
 
             modelBuilder.Entity("LevelStore.Models.Image", b =>
@@ -48,13 +47,9 @@ namespace LevelStore.Migrations
 
                     b.Property<int>("ProductID");
 
-                    b.Property<int?>("TypeColorID");
-
                     b.HasKey("ImageID");
 
                     b.HasIndex("ProductID");
-
-                    b.HasIndex("TypeColorID");
 
                     b.ToTable("Images");
                 });
@@ -85,28 +80,11 @@ namespace LevelStore.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("LevelStore.Models.TypeColor", b =>
-                {
-                    b.Property<int>("TypeColorID")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("ColorType");
-
-                    b.HasKey("TypeColorID");
-
-                    b.ToTable("TypeColors");
-                });
-
             modelBuilder.Entity("LevelStore.Models.Color", b =>
                 {
                     b.HasOne("LevelStore.Models.Product")
                         .WithMany("Color")
                         .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("LevelStore.Models.TypeColor")
-                        .WithMany("Color")
-                        .HasForeignKey("TypeColorID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -116,10 +94,6 @@ namespace LevelStore.Migrations
                         .WithMany("Images")
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("LevelStore.Models.TypeColor")
-                        .WithMany("Images")
-                        .HasForeignKey("TypeColorID");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,4 +1,5 @@
-﻿@model Product
+﻿@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@model Product
 @{
     ViewData["Title"] = "Edit";
     Layout = "_Layout";
@@ -61,21 +62,53 @@
             <label>Категория:</label>
             <div><span asp-validation-for="Category" class="text-danger"></span></div>
             @{
-            CategoryList categoryList = TempData["CategoriesList"] as CategoryList;
-            <select asp-for="Category">
-                <option disabled>Выберите категорию</option>
-                @for (int i = 0; i < categoryList.categories.Count; i++)
-            {
-                if (i == 0)
-                {
-                    <option selected value="@categoryList.categories[i]">@categoryList.categories[i]</option>
-            }
-            else
-            {
-                <option value="@categoryList.categories[i]">@categoryList.categories[i]</option>
-        }
-    }
-            </select>
+            OtherStuffForProduct otherStuffForProduct = TempData["OtherStuffForProduct"] as OtherStuffForProduct;
+                <select asp-for="Category">
+                    <option disabled>Выберите категорию</option>
+                    @for (int i = 0; i < otherStuffForProduct.categories.Count; i++)
+                    {
+                        if (i == 0)
+                        {
+                            <option selected value="@otherStuffForProduct.categories[i]">@otherStuffForProduct.categories[i]</option>
+                        }
+                        else
+                        {
+                            <option value="@otherStuffForProduct.categories[i]">@otherStuffForProduct.categories[i]</option>
+                        }
+                    }
+                </select>
+
+                <label>Цвет:</label>
+                <select asp-for="Color">
+                    <option disabled>Выберите цвет</option>
+                    @foreach(KeyValuePair<int, string> keyValue in otherStuffForProduct.Colors)
+                    {
+                        if (keyValue.Key == 1)
+                        {
+                            <option selected value="@keyValue.Key">@keyValue.Value</option>
+                        }
+                        else
+                        {
+                            <option  value="@keyValue.Key">@keyValue.Value</option>
+                        }
+                    }
+                </select>
+
+                <label>Фурнитура:</label>
+                <select asp-for="AccessoriesForBags">
+                    <option disabled>Выберите фурнитуру</option>
+                    @foreach(KeyValuePair<int, string> keyValue in otherStuffForProduct.AccessoriesForBags)
+                    {
+                        if (keyValue.Key == 1)
+                        {
+                            <option selected value="@keyValue.Key">@keyValue.Value</option>
+                        }
+                        else
+                        {
+                            <option  value="@keyValue.Key">@keyValue.Value</option>
+                        }
+                    }
+                </select>
             @*<input asp-for="Category" class="form-control" />*@
             }
         </div>
@@ -92,7 +125,7 @@
         <div>
             <label>Новый товар:</label>
             <div><span asp-validation-for="NewProduct" class="text-danger"></span></div>
-            <input asp-for="NewProduct" class="form-control" />
+            <input asp-for="NewProduct" class="form-control"/>
         </div>
         <div class="text-center">
             <button class="btn btn-primary" type="submit">Save</button>

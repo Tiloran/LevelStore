@@ -17,7 +17,7 @@ namespace LevelStore.Models
         [Required]
         public string Category { get; set; }
         public string Size { get; set; }
-        public int Color { get; set; }
+        public List<Color> Color { get; set; }
         public bool NewProduct { get; set; }
         public int? AccessoriesForBags { get; set; }
         public List<Image> Images { get; set; }

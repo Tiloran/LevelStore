@@ -1,0 +1,18 @@
+﻿@model TypeColor
+@{
+    ViewData["Title"] = "AddColors";
+    Layout = "_Layout";
+    var ColorList = TempData["ColorList"] as List<TypeColor>;
+}
+
+@foreach (var type in ColorList)
+{
+    <label>@type.ColorType</label>
+    <a asp-controller="Admin" asp-action="RemoveColor" asp-route-typeColorId="@type.TypeColorID">Удалить</a>
+}
+
+<form asp-action="AddColors" method="post">
+    <input asp-for="ColorType"/>
+    <button type="submit">Добавить</button>
+</form>
+<a asp-controller="Product" asp-action="List">Назад</a>

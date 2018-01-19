@@ -26,8 +26,16 @@ namespace LevelStore.Controllers
 
         public ViewResult Create()
         {
-            TempData["CategoriesList"] = new CategoryList();
+            TempData["OtherStuffForProduct"] = new OtherStuffForProduct();
             return View("Edit", new Product());
+        }
+
+        
+        public IActionResult Edit(int productid)
+        {
+            Product product = repository.Products.FirstOrDefault(i => i.ProductID == productid);
+            TempData["OtherStuffForProduct"] = new OtherStuffForProduct();
+            return View("Edit", product);
         }
 
         [HttpPost]
@@ -51,8 +59,32 @@ namespace LevelStore.Controllers
             }
         }
 
+        public IActionResult AddColors()
+        {
+            List<TypeColor> typeColors = repository.TypeColors.ToList();
+            TempData["ColorList"] = typeColors;
+            return View(new TypeColor());
+        }
 
-        
+        [HttpPost]
+        public IActionResult AddColors(TypeColor newTypeColor)
+        {
+            repository.SaveTypeColor(newTypeColor);
+            List<TypeColor> typeColors = repository.TypeColors.ToList();
+            TempData["ColorList"] = typeColors;
+            return View(new TypeColor());
+        }
+
+        public IActionResult RemoveColor(int typeColorId)
+        {
+            repository.DeleteTypeColor(typeColorId);
+            List<TypeColor> typeColors = repository.TypeColors.ToList();
+            TempData["ColorList"] = typeColors;
+            return View("AddColors",new TypeColor());
+        }
+
+
+
         public ViewResult Test() => View();
 
         [HttpPost]

@@ -11,9 +11,10 @@ using System;
 namespace LevelStore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180119110652_initial5")]
+    partial class initial5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,7 +49,7 @@ namespace LevelStore.Migrations
 
                     b.Property<int>("ProductID");
 
-                    b.Property<int?>("TypeColorID");
+                    b.Property<int>("TypeColorID");
 
                     b.HasKey("ImageID");
 
@@ -119,7 +120,8 @@ namespace LevelStore.Migrations
 
                     b.HasOne("LevelStore.Models.TypeColor")
                         .WithMany("Images")
-                        .HasForeignKey("TypeColorID");
+                        .HasForeignKey("TypeColorID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }
