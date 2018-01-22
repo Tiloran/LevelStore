@@ -23,16 +23,43 @@ namespace LevelStore.Models.EF
         public void DeleteTypeColor(int typeColorId)
         {
             TypeColor deleteItem = context.TypeColors.FirstOrDefault(i => i.TypeColorID == typeColorId);
-            if (deleteItem != null)
+            if (deleteItem != null && context.TypeColors.Count() > 1)
             {
+                List<Image> imagesWithDelatedColor =
+                    context.Images.Where(i => i.TypeColorID == deleteItem.TypeColorID).ToList();
+                List<Color> bindedColorsToProduct = context.Colors.Where(i => i.TypeColorID == deleteItem.TypeColorID).ToList();
+                foreach (var image in imagesWithDelatedColor)
+                {
+                    image.TypeColorID = null;
+                }
+                foreach (var bindedColor in bindedColorsToProduct)
+                {
+                    context.Colors.Remove(bindedColor);
+                }
+
                 context.TypeColors.Remove(deleteItem);
+                
                 context.SaveChanges();
             }
         }
 
         public void SaveTypeColor(TypeColor typeColor)
         {
-            context.TypeColors.Add(typeColor);
+            if (typeColor.TypeColorID == 0)
+            {
+                context.TypeColors.Add(typeColor);
+            }
+            else
+            {
+                TypeColor editableColor = context.TypeColors.FirstOrDefault(tc => tc.TypeColorID == typeColor.TypeColorID);
+                if (editableColor != null)
+                {
+                    editableColor.ColorType = typeColor.ColorType;
+                    editableColor.Images = typeColor.Images;
+                    editableColor.Color = typeColor.Color;
+                }
+            }
+            
             context.SaveChanges();
         }
         public int? SaveProduct(Product product, List<int> colorsID)
@@ -101,6 +128,7 @@ namespace LevelStore.Models.EF
         public void AddImages(List<string> Images, int? id)
         {
             Product Product = context.Products.FirstOrDefault(p => p.ProductID == id);
+            TypeColor firstColor = context.TypeColors.FirstOrDefault();
             if (Product != null)
             {
                 if (Product.Images == null)
@@ -109,11 +137,27 @@ namespace LevelStore.Models.EF
                 }
                 foreach (var image in Images)
                 {
-                    Product.Images.Add(new Image { Name = image });
+                    if (firstColor != null)
+                    {
+                        Product.Images.Add(new Image {Name = image, TypeColorID = firstColor.TypeColorID});
+                    }
+                    else
+                    {
+                        Product.Images.Add(new Image {Name = image});
+                    }
                 }
                 context.SaveChanges();
             }
         }
+
+        public List<TypeColor> GetColorThatBindedWithImages(List<Image> images)
+        {
+            //List<TypeColor> bindedColors = context.TypeColors
+            //     .Include(c => c.Images.Where(i1 => images.Any(i2 => i2.TypeColorID == i1.TypeColorID))).ToList();
+            List<TypeColor> bindedColors = context.TypeColors.Where(i1 => images.Any(i2 => i2.TypeColorID == i1.TypeColorID)).ToList();
+            return bindedColors;
+        }
+
 
         public Product DeleteProduct(int ProductId)
         {

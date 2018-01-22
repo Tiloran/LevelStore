@@ -4,6 +4,7 @@
     Layout = "_Layout";
     List<Image> imageList = TempData["ImageList"] as List<Image>;
     List<TypeColor> colorsList = TempData["Colors"] as List<TypeColor>;
+    List<TypeColor> bindedColors = TempData["BindedColors"] as List<TypeColor>;
 }
 
 <h2>UploadFiles</h2>
@@ -15,10 +16,18 @@
         <label>Цвет фотографии:</label>
         <select name="ColorID">
             <option disabled>Выберите цвет фотографии</option>
-            @foreach(var color in colorsList)
-            {
-            <option value="@color.TypeColorID">@color.ColorType</option>
-            }
+            @foreach (var color in colorsList)
+    {
+        if (bindedColors.Any(i => i.TypeColorID == image.TypeColorID && color.TypeColorID == image.TypeColorID))
+        {
+            <option selected value="@color.TypeColorID">@color.ColorType</option>
+}
+else
+{
+        <option value="@color.TypeColorID">@color.ColorType</option>
+}
+
+}
         </select>
         <button type="submit" class="btn btn-sm btn-danger">Изменить</button>
     </form>

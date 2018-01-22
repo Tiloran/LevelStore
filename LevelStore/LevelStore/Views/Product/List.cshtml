@@ -46,22 +46,27 @@
 
 @foreach (var product in Model.ProductAndImages)
 {
-<form asp-action="ViewSingleProduct" method="post">
-    <span>@product.product.Name</span>
-    <span>@product.product.Price</span>
-    <div>@product.product.Description</div>
-    @if (product.Images.Count > 0)
-    {
-        <img src="/images/@product.Images[0].Name" style="width: 100px; height: 100px;" alt="@product.Images[0].Alternative">
-    }
-    else
-    {
-        <img src="/images/none.png" style="width: 100px; height: 100px;" alt="None Image">
-    }
-    <input type="hidden" name="ProductID" value="@product.product.ProductID" />
-    <button type="submit" class="btn btn-sm btn-danger">Выбрать</button>
-    <a asp-controller="Admin" asp-action="Edit" asp-route-productid="@product.product.ProductID">Изменить</a>
-</form>
+    <form asp-action="ViewSingleProduct" method="post">
+        
+        <span>@product.product.Name</span>
+        <span>@product.product.Price</span>
+        <div>@product.product.Description</div>
+        @if (product.product.NewProduct)
+        {
+            <div style="background-color: red; width: 100px;">NEW</div>
+        }
+        @if (product.Images.Count > 0)
+        {
+            <img src="/images/@product.Images[0].Name" style="width: 100px; height: 100px;" alt="@product.Images[0].Alternative">
+        }
+        else
+        {
+            <img src="/images/none.png" style="width: 100px; height: 100px;" alt="None Image">
+        }
+        <input type="hidden" name="ProductID" value="@product.product.ProductID"/>
+        <button type="submit" class="btn btn-sm btn-danger">Выбрать</button>
+        <a asp-controller="Admin" asp-action="Edit" asp-route-productid="@product.product.ProductID">Изменить</a>
+    </form>
 }
 
 

@@ -53,22 +53,15 @@ namespace LevelStore.Controllers
                     return View();
                 }
                 TempData["id"] = id;
-                TempData["ImageList"] = repository.Images.ToList();
-                List<Color> bindetColors = repository.BoundColors.Where(i => i.ProductID == id).ToList();
-                List<TypeColor> typeColors = repository.TypeColors.ToList();
-                List<TypeColor> ourTypeColors = new List<TypeColor>();
-
-                foreach (var bindetColor in bindetColors)
-                {
-                    foreach (var typeColor in typeColors)
-                    {
-                        if (typeColor.TypeColorID == bindetColor.TypeColorID)
-                        {
-                            ourTypeColors.Add(typeColor);
-                        }
-                    }
-                }
+                //TempData["ImageList"] = repository.Images.ToList();
+                List<Color> bindedColors = repository.BoundColors.Where(i => i.ProductID == id).ToList();
+                List<TypeColor> ourTypeColors = repository.TypeColors
+                    .Where(i1 => bindedColors.Any(i2 => i2.TypeColorID == i1.TypeColorID)).ToList();
+                List<Image> imageList = repository.Images.Where(i => i.ProductID == id).ToList();
+                List<TypeColor> boundedColors = repository.GetColorThatBindedWithImages(imageList);
                 TempData["Colors"] = ourTypeColors;
+                TempData["ImageList"] = imageList;
+                TempData["BindedColors"] = boundedColors;
                 //TempData["Colors"] = repository.TypeColors.ToList();
                 return View("UploadFiles");
             }
@@ -90,11 +83,42 @@ namespace LevelStore.Controllers
             return View(new TypeColor());
         }
 
-        public IActionResult BindPhotoAndColor(int imageID, int ColorID)
+        public IActionResult BindPhotoAndColor(int? imageID, int? ColorID)
         {
-            TempData["ImageList"] = repository.Images.ToList();
-            TempData["Colors"] = repository.TypeColors.ToList();
-            return View("UploadFiles");
+            if (imageID != null)
+            {
+                Image currentImage = repository.Images.FirstOrDefault(i => i.ImageID == imageID);
+                TypeColor selectedColor = repository.TypeColors.FirstOrDefault(i => i.TypeColorID == ColorID);
+                if (currentImage != null && selectedColor != null)
+                {
+                    if (selectedColor.Images == null)
+                    {
+                        selectedColor.Images = new List<Image>();
+                    }
+                    selectedColor.Images.Add(currentImage);
+                    repository.SaveTypeColor(selectedColor);
+                }
+            }
+            
+            int? id = TempData["id"] as int?;
+            if (id != null)
+            {
+                TempData["id"] = id;
+                List<Image> imageList = repository.Images.Where(i => i.ProductID == id).ToList();
+                List<TypeColor> boundedColors = repository.GetColorThatBindedWithImages(imageList);
+                List<Color> bindedColors = repository.BoundColors.Where(i => i.ProductID == id).ToList();
+                List<TypeColor> ourTypeColors = repository.TypeColors
+                    .Where(i1 => bindedColors.Any(i2 => i2.TypeColorID == i1.TypeColorID)).ToList();
+                TempData["Colors"] = ourTypeColors;
+                TempData["ImageList"] = imageList;
+                TempData["BindedColors"] = boundedColors;
+                return View("UploadFiles");
+            }
+            else
+            {
+                return RedirectToActionPermanent(actionName : "List", controllerName: "Product");
+            }
+            
         }
 
         public IActionResult RemoveColor(int typeColorId)
