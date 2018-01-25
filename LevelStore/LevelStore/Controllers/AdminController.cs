@@ -58,6 +58,33 @@ namespace LevelStore.Controllers
                 List<TypeColor> ourTypeColors = repository.TypeColors
                     .Where(i1 => bindedColors.Any(i2 => i2.TypeColorID == i1.TypeColorID)).ToList();
                 List<Image> imageList = repository.Images.Where(i => i.ProductID == id).ToList();
+                if (imageList.Count > 1)
+                {
+                    bool NoFirst = imageList.FirstOrDefault(f => f.FirstOnScreen && f.SecondOnScreen == false) == null;
+                    if (NoFirst)
+                    {
+                        imageList.FirstOrDefault(f => f.FirstOnScreen == false && f.SecondOnScreen == false)
+                            .FirstOnScreen = true;
+                    }
+                    bool NoSecond = imageList.FirstOrDefault(s => s.FirstOnScreen == false && s.SecondOnScreen) == null;
+                    if (NoSecond)
+                    {
+                        imageList.FirstOrDefault(s => s.FirstOnScreen == false && s.SecondOnScreen == false)
+                            .SecondOnScreen = true;
+                    }
+                    bool bug = imageList.FirstOrDefault(s => s.FirstOnScreen && s.SecondOnScreen) != null;
+                    if (bug)
+                    {
+                        foreach (var image in imageList)
+                        {
+                            if (image.FirstOnScreen && image.SecondOnScreen)
+                            {
+                                image.FirstOnScreen = false;
+                                image.SecondOnScreen = false;
+                            }
+                        }
+                    }
+                }
                 List<TypeColor> boundedColors = repository.GetColorThatBindedWithImages(imageList);
                 TempData["Colors"] = ourTypeColors;
                 TempData["ImageList"] = imageList;
@@ -83,23 +110,46 @@ namespace LevelStore.Controllers
             return View(new TypeColor());
         }
 
-        public IActionResult BindPhotoAndColor(int? imageID, int? ColorID)
+        public IActionResult BindPhotoAndColor(int?[] imageID, int?[] ColorID, string[] Alternative, int? ValFirstOnScreen, int? ValSecondOnScreen)
         {
-            if (imageID != null)
+            if (imageID.Length == ColorID.Length)
             {
-                Image currentImage = repository.Images.FirstOrDefault(i => i.ImageID == imageID);
-                TypeColor selectedColor = repository.TypeColors.FirstOrDefault(i => i.TypeColorID == ColorID);
-                if (currentImage != null && selectedColor != null)
+                for (int i = 0; i < imageID.Length; i++)
                 {
-                    if (selectedColor.Images == null)
+                    if (imageID != null)
                     {
-                        selectedColor.Images = new List<Image>();
+                        Image currentImage = repository.Images.FirstOrDefault(iid => iid.ImageID == imageID[i]);
+                        currentImage.Alternative = Alternative[i];
+                        if (imageID[i] == ValFirstOnScreen)
+                        {
+                            currentImage.FirstOnScreen = true;
+                            currentImage.SecondOnScreen = false;
+                        }
+                        else if (imageID[i] == ValSecondOnScreen)
+                        {
+                            currentImage.FirstOnScreen = false;
+                            currentImage.SecondOnScreen = true;
+                        }
+                        else
+                        {
+                            currentImage.FirstOnScreen = false;
+                            currentImage.SecondOnScreen = false;
+                        }
+                        
+                        TypeColor selectedColor = repository.TypeColors.FirstOrDefault(tcid => tcid.TypeColorID == ColorID[i]);
+                        if (currentImage != null && selectedColor != null)
+                        {
+                            if (selectedColor.Images == null)
+                            {
+                                selectedColor.Images = new List<Image>();
+                            }
+                            selectedColor.Images.Add(currentImage);
+                            repository.SaveTypeColor(selectedColor);
+                        }
                     }
-                    selectedColor.Images.Add(currentImage);
-                    repository.SaveTypeColor(selectedColor);
                 }
             }
-            
+
             int? id = TempData["id"] as int?;
             if (id != null)
             {
@@ -170,6 +220,7 @@ namespace LevelStore.Controllers
             if (id != null)
             {
                 repository.AddImages(imageList, id);
+                
             }
             
             return RedirectToAction(actionName: "List", controllerName: "Product");

@@ -64,6 +64,13 @@ namespace LevelStore.Models.EF
         }
         public int? SaveProduct(Product product, List<int> colorsID)
         {
+            if (colorsID.Count == 0)
+            {
+                if (context.TypeColors.FirstOrDefault() != null)
+                {
+                    colorsID.Add(context.TypeColors.FirstOrDefault().TypeColorID);
+                }
+            }
             Product Product = new Product();
             if (product.ProductID == 0)
             {
@@ -127,7 +134,7 @@ namespace LevelStore.Models.EF
 
         public void AddImages(List<string> Images, int? id)
         {
-            Product Product = context.Products.FirstOrDefault(p => p.ProductID == id);
+            Product Product = context.Products.Where(p => p.ProductID == id).Include(i => i.Images).FirstOrDefault();
             TypeColor firstColor = context.TypeColors.FirstOrDefault();
             if (Product != null)
             {
@@ -135,15 +142,66 @@ namespace LevelStore.Models.EF
                 {
                     Product.Images = new List<Image>();
                 }
-                foreach (var image in Images)
+                bool SetFirst = false;
+                bool SetSecond = false;
+                if (!Product.Images.Any())
+                {
+                    if (Images.Count >= 2)
+                    {
+                        SetFirst = true;
+                        SetSecond = true;
+                    }
+                    else if (Images.Count == 1)
+                    {
+                        SetFirst = true;
+                    }
+                }
+                for (int i = 0; i < Images.Count; i++)
                 {
                     if (firstColor != null)
                     {
-                        Product.Images.Add(new Image {Name = image, TypeColorID = firstColor.TypeColorID});
+                        if (SetFirst && i == 0)
+                        {
+                            Product.Images.Add(new Image
+                            {
+                                Name = Images[i],
+                                FirstOnScreen = true,
+                                TypeColorID = firstColor.TypeColorID
+                            });
+                        }
+                        else if (SetSecond && i == 1)
+                        {
+                            Product.Images.Add(new Image
+                            {
+                                Name = Images[i],
+                                SecondOnScreen = true,
+                                TypeColorID = firstColor.TypeColorID
+                            });
+                        }
+                        else
+                        {
+                            Product.Images.Add(new Image
+                            {
+                                Name = Images[i],
+                                TypeColorID = firstColor.TypeColorID
+                            });
+                        }
+
                     }
                     else
                     {
-                        Product.Images.Add(new Image {Name = image});
+                        if (SetFirst && i == 0)
+                        {
+                            Product.Images.Add(new Image { Name = Images[i], FirstOnScreen = true});
+                        }
+                        else if (SetSecond && i == 1)
+                        {
+                            Product.Images.Add(new Image { Name = Images[i], SecondOnScreen = true});
+                        }
+                        else
+                        {
+                            Product.Images.Add(new Image { Name = Images[i] });
+                        }
                     }
                 }
                 context.SaveChanges();

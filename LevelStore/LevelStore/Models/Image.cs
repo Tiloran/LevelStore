@@ -14,6 +14,8 @@ namespace LevelStore.Models
         public string Alternative { get; set; }
         public int ProductID { get; set; }
         public int? TypeColorID { get; set; }
+        public bool FirstOnScreen { get; set; }
+        public bool SecondOnScreen { get; set; }
 
     }
 }

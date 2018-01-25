@@ -3,10 +3,12 @@
     ViewData["Title"] = "List";
     Layout = "_Layout";
 }
+<script src="/lib/jquery/dist/jquery.js"></script>
+<script src="/js/ShowSecondOnMouseOver.js"></script>
 
 <a asp-controller="Admin" asp-action="Create" class="btn btn-default">Create</a>
 <a asp-controller="Admin" asp-action="AddColors" class="btn btn-default">Add Colors</a>
-<div><a asp-controller="Product" asp-action="List" >Без фильтров</a></div>
+<div><a asp-controller="Product" asp-action="List">Без фильтров</a></div>
 <div><a asp-controller="Product" asp-action="List" asp-route-category="purse">Кошельки</a></div>
 <ul>
     <li><a asp-controller="Product" asp-action="List" asp-route-category="purse-CrazyHouse">Кошельки "CrazyHouse"</a></li>
@@ -47,23 +49,36 @@
 @foreach (var product in Model.ProductAndImages)
 {
     <form asp-action="ViewSingleProduct" method="post">
-        
+
         <span>@product.product.Name</span>
         <span>@product.product.Price</span>
         <div>@product.product.Description</div>
+        
         @if (product.product.NewProduct)
         {
             <div style="background-color: red; width: 100px;">NEW</div>
         }
-        @if (product.Images.Count > 0)
-        {
-            <img src="/images/@product.Images[0].Name" style="width: 100px; height: 100px;" alt="@product.Images[0].Alternative">
+        @{
+            try
+            {
+                @if (product.Images.Count > 0 && product.Images.FirstOrDefault(f => f.FirstOnScreen).Name != null && product.Images.FirstOrDefault(f => f.SecondOnScreen).Name != null)
+                 {
+                     <img src="/images/@product.Images.FirstOrDefault(f => f.FirstOnScreen).Name" id="@product.product.ProductID" name="FirstAndSecondImages" onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" style="width: 100px; height: 100px;" alt="@product.Images.FirstOrDefault(f => f.FirstOnScreen).Alternative">
+                     <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.FirstOrDefault(f => f.FirstOnScreen).Name" imageAlternative="@product.Images.FirstOrDefault(f => f.FirstOnScreen).Alternative"/>
+                     <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.FirstOrDefault(f => f.SecondOnScreen).Name" imageAlternative="@product.Images.FirstOrDefault(f => f.SecondOnScreen).Alternative"/>
+                 }
+                 else
+                 {
+                     <img src="/images/none.png" style="width: 100px; height: 100px;" alt="None Image">
+                 }
+            }
+            catch
+            {
+                     <img src="/images/none.png" style="width: 100px; height: 100px;" alt="None Image">
+            }
         }
-        else
-        {
-            <img src="/images/none.png" style="width: 100px; height: 100px;" alt="None Image">
-        }
-        <input type="hidden" name="ProductID" value="@product.product.ProductID"/>
+        
+        <input type="hidden" name="ProductID" value="@product.product.ProductID" />
         <button type="submit" class="btn btn-sm btn-danger">Выбрать</button>
         <a asp-controller="Admin" asp-action="Edit" asp-route-productid="@product.product.ProductID">Изменить</a>
     </form>
