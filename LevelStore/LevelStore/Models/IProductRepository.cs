@@ -11,6 +11,7 @@ namespace LevelStore.Models
         IEnumerable<Image> Images { get; }
         IEnumerable<TypeColor> TypeColors { get; }
         IEnumerable<Color> BoundColors { get; }
+        IEnumerable<AccessorieForBag> Accessories { get; }
         void SaveTypeColor(TypeColor typeColor);
         void DeleteTypeColor(int typeColorId);
         int? SaveProduct(Product product, List<int> colorsID);

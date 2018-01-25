@@ -19,7 +19,7 @@ namespace LevelStore.Models
         public string Size { get; set; }
         public List<Color> Color { get; set; }
         public bool NewProduct { get; set; }
-        public int? AccessoriesForBags { get; set; }
+        public int? AccessorieForBagID { get; set; }
         public List<Image> Images { get; set; }
     }
 }

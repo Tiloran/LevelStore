@@ -6,6 +6,11 @@
     //ViewBag.ImageList = new List<string>();
     List<TypeColor> colorList = TempData["Colors"] as List<TypeColor>;
     List<Color> boundcolorList = TempData["BoundColors"] as List<Color>;
+    Dictionary<int,string> Accesories = new Dictionary<int, string>();
+    foreach (var accesorie in (TempData["Accesories"] as List<AccessorieForBag>))
+    {
+        Accesories.Add(accesorie.AccessorieForBagID, accesorie.Name);
+    }
 }
 
 @section scripts{
@@ -106,11 +111,11 @@
                 </div>
                 <div>
                 <label>Фурнитура:</label>
-                    <select  asp-for="AccessoriesForBags">
+                    <select  asp-for="AccessorieForBagID">
                         <option disabled>Выберите фурнитуру</option>
-                        @foreach(KeyValuePair<int, string> keyValue in otherStuffForProduct.AccessoriesForBags)
+                        @foreach(KeyValuePair<int, string> keyValue in Accesories)
                         {
-                            if (keyValue.Key == 1)
+                            if (keyValue.Key == Model.AccessorieForBagID)
                             {
                                 <option selected value="@keyValue.Key">@keyValue.Value</option>
                             }
@@ -141,6 +146,6 @@
         </div>
         <div class="text-center">
             <button class="btn btn-primary" type="submit">Save</button>
-            <a asp-controller="Product" asp-action="List" class="btn btn-default">Cancel</a>
+            <a asp-controller="Product" asp-action="ListAdmin" class="btn btn-default">К списку</a>
         </div>
     </form>

@@ -17,12 +17,12 @@ namespace LevelStore.Controllers
             repository = repo;
         }
 
-        public ViewResult List(string category)
+        public ViewResult ListAdmin(string category)
         {
             List<ProductWithImages> productAndImages = new List<ProductWithImages>();
             List<Product> products = new List<Product>();
             List<Image> images = new List<Image>();
-            products = new List<Product>(repository.Products.Where(p => category == null || p.Category == category).OrderBy(p => p.ProductID));
+            products = new List<Product>(repository.Products.Where(p => category == null || p.Category.Contains(category)).OrderBy(p => p.ProductID));
             images = new List<Image>(repository.Images);
 
             for (int i = 0; i < products.Count; i++)
@@ -36,6 +36,28 @@ namespace LevelStore.Controllers
             }
 
             ProductsListViewModel productsListViewModel = new ProductsListViewModel {ProductAndImages = productAndImages.ToList()};
+            return View(productsListViewModel);
+        }
+
+        public ViewResult List(string category)
+        {
+            List<ProductWithImages> productAndImages = new List<ProductWithImages>();
+            List<Product> products = new List<Product>();
+            List<Image> images = new List<Image>();
+            products = new List<Product>(repository.Products.Where(p => category == null || p.Category.Contains(category)).OrderBy(p => p.ProductID));
+            images = new List<Image>(repository.Images);
+
+            for (int i = 0; i < products.Count; i++)
+            {
+                images = new List<Image>(repository.Images.Where(index => index.ProductID == products[i].ProductID));
+                productAndImages.Add(new ProductWithImages()
+                {
+                    product = products[i],
+                    Images = images
+                });
+            }
+
+            ProductsListViewModel productsListViewModel = new ProductsListViewModel { ProductAndImages = productAndImages.ToList() };
             return View(productsListViewModel);
         }
 

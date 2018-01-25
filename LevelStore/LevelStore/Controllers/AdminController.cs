@@ -29,6 +29,7 @@ namespace LevelStore.Controllers
             TempData["OtherStuffForProduct"] = new OtherStuffForProduct();
             TempData["Colors"] = repository.TypeColors.ToList();
             TempData["BoundColors"] = new List<Color>();
+            TempData["Accesories"] = repository.Accessories.ToList();
             return View("Edit", new Product());
         }
 
@@ -39,6 +40,7 @@ namespace LevelStore.Controllers
             TempData["OtherStuffForProduct"] = new OtherStuffForProduct();
             TempData["Colors"] = repository.TypeColors.ToList();
             TempData["BoundColors"] = repository.BoundColors.Where(i=> i.ProductID == productid).ToList();
+            TempData["Accesories"] = repository.Accessories.ToList();
             return View("Edit", product);
         }
 
@@ -166,7 +168,7 @@ namespace LevelStore.Controllers
             }
             else
             {
-                return RedirectToActionPermanent(actionName : "List", controllerName: "Product");
+                return RedirectToActionPermanent(actionName : "ListAdmin", controllerName: "Product");
             }
             
         }
@@ -198,7 +200,7 @@ namespace LevelStore.Controllers
         public IActionResult UploadFiles(IList<IFormFile> files)
         {
             long size = 0;
-            List<string> imageList = new List<string>();
+            List<string> imageNameList = new List<string>();
             foreach (var file in files)
             {
                 var filename = ContentDispositionHeaderValue
@@ -206,7 +208,7 @@ namespace LevelStore.Controllers
                     .FileName
                     .ToString()
                     .Trim('"');
-                    imageList.Add(filename);
+                imageNameList.Add(filename);
                 filename = _appEnvironment.WebRootPath + $@"\images\{filename}";
                 size += file.Length;
                 using (FileStream fs = System.IO.File.Create(filename))
@@ -219,11 +221,21 @@ namespace LevelStore.Controllers
             //ViewBag.Message = $"{files.Count} file(s) / {size} bytes uploaded successfully!";
             if (id != null)
             {
-                repository.AddImages(imageList, id);
+                repository.AddImages(imageNameList, id);
                 
             }
-            
-            return RedirectToAction(actionName: "List", controllerName: "Product");
+
+            //return RedirectToAction(actionName: "ListAdmin", controllerName: "Product");
+            TempData["id"] = id;
+            List<Image> imageList = repository.Images.Where(i => i.ProductID == id).ToList();
+            List<TypeColor> boundedColors = repository.GetColorThatBindedWithImages(imageList);
+            List<Color> bindedColors = repository.BoundColors.Where(i => i.ProductID == id).ToList();
+            List<TypeColor> ourTypeColors = repository.TypeColors
+                .Where(i1 => bindedColors.Any(i2 => i2.TypeColorID == i1.TypeColorID)).ToList();
+            TempData["Colors"] = ourTypeColors;
+            TempData["ImageList"] = imageList;
+            TempData["BindedColors"] = boundedColors;
+            return View("UploadFiles");
         }
 
         [HttpPost]

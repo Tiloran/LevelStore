@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using LevelStore.Models;
+using LevelStore.Models.EF;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace LevelStore
@@ -14,7 +17,21 @@ namespace LevelStore
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            var host = BuildWebHost(args);
+
+            var scope = host.Services.CreateScope();
+
+            var services = scope.ServiceProvider;
+            try
+            {
+                var context = services.GetRequiredService<ApplicationDbContext>();
+                AddColorsAndAcessories.EnsurePopulated(context);
+            }
+            catch
+            {
+                // ignored
+            }
+            host.Run();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>

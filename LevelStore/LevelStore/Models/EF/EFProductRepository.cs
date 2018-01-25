@@ -19,6 +19,7 @@ namespace LevelStore.Models.EF
         public IEnumerable<Image> Images => context.Images;
         public IEnumerable<TypeColor> TypeColors  => context.TypeColors;
         public IEnumerable<Color> BoundColors => context.Colors;
+        public IEnumerable<AccessorieForBag> Accessories => context.AccessoriesForBags;
 
         public void DeleteTypeColor(int typeColorId)
         {
@@ -81,8 +82,8 @@ namespace LevelStore.Models.EF
                     Category = product.Category,
                     NewProduct = product.NewProduct,
                     Size = product.Size,
-                    Description = product.Description
-                    
+                    Description = product.Description,
+                    AccessorieForBagID = product.AccessorieForBagID
                 };
                 
                 context.Products.Add(Product);
@@ -98,6 +99,7 @@ namespace LevelStore.Models.EF
                     Product.Category = product.Category;
                     Product.NewProduct = product.NewProduct;
                     Product.Size = product.Size;
+                    Product.AccessorieForBagID = product.AccessorieForBagID;
                 }
             }
             context.SaveChanges();
