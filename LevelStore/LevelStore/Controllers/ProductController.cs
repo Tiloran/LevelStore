@@ -61,6 +61,8 @@ namespace LevelStore.Controllers
             return View(productsListViewModel);
         }
 
+        
+
         [HttpPost]
         public ViewResult ViewSingleProduct(int productId)
         {

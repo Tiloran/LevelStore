@@ -1,0 +1,16 @@
+﻿@model Cart
+
+<div class=""> 
+    @if (Model.Lines.Count() > 0)
+    {
+
+        <small class="navbar-text">
+            @Model.Lines.Sum(x => x.Quantity) шмоток
+            @Model.ComputeTotalValue().ToString("C")
+        </small>
+    }
+        <a class="btn btn-sm btn-default navbar-btn" asp-controller="Cart" asp-action="Index">
+            Корзина
+        </a>
+
+</div>

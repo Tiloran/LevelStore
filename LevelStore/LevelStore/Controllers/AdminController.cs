@@ -26,7 +26,7 @@ namespace LevelStore.Controllers
 
         public ViewResult Create()
         {
-            TempData["OtherStuffForProduct"] = new OtherStuffForProduct();
+            
             TempData["Colors"] = repository.TypeColors.ToList();
             TempData["BoundColors"] = new List<Color>();
             TempData["Accesories"] = repository.Accessories.ToList();

@@ -29,6 +29,10 @@ namespace LevelStore
         {
             services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(Configuration["Data:SportStoreProducts:ConnectionString"]));
             services.AddTransient<IProductRepository, EFProductRepository>();
+            services.AddScoped<Cart>(sp => SessionCart.GetCart(sp));
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddMemoryCache();
+            services.AddSession();
             services.AddMvc();
         }
 
@@ -38,6 +42,7 @@ namespace LevelStore
             app.UseDeveloperExceptionPage();
             app.UseStatusCodePages();
             app.UseStaticFiles();
+            app.UseSession();
             app.UseMvcWithDefaultRoute();
 
         }

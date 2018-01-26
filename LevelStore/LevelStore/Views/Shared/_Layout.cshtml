@@ -8,6 +8,9 @@
     @RenderSection("scripts", false)
 </head>
 <body>
-    @RenderBody()
+<div>
+    @await Component.InvokeAsync("CartSummary")
+</div>
+@RenderBody()
 </body>
 </html>
