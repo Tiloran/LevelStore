@@ -7,7 +7,7 @@
 <script src="/js/ShowSecondOnMouseOver.js"></script>
 
 
-<a asp-controller="Product" asp-action="ListAdmin" class="btn btn-default">Админка</a>
+<a asp-controller="Admin" asp-action="ListAdmin" class="btn btn-default">Админка</a>
 <div><a asp-controller="Product" asp-action="List">Без фильтров</a></div>
 <div><a asp-controller="Product" asp-action="List" asp-route-category="purse">Кошельки</a></div>
 <ul>
@@ -61,7 +61,7 @@
     @{
             try
             {
-        @if (product.Images.Count > 0 && product.Images.FirstOrDefault(f => f.FirstOnScreen).Name != null && product.Images.FirstOrDefault(f => f.SecondOnScreen).Name != null)
+        if (product.Images.Count > 0 && product.Images.FirstOrDefault(f => f.FirstOnScreen).Name != null && product.Images.FirstOrDefault(f => f.SecondOnScreen).Name != null)
                  {
         <img src="/images/@product.Images.FirstOrDefault(f => f.FirstOnScreen).Name" id="@product.product.ProductID" name="FirstAndSecondImages" onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" style="width: 100px; height: 100px;" alt="@product.Images.FirstOrDefault(f => f.FirstOnScreen).Alternative">
         <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.FirstOrDefault(f => f.FirstOnScreen).Name" imageAlternative="@product.Images.FirstOrDefault(f => f.FirstOnScreen).Alternative" />

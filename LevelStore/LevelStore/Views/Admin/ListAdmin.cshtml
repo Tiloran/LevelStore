@@ -1,0 +1,89 @@
+﻿@model ProductsListViewModel
+@{
+    ViewData["Title"] = "ListAdmin";
+    Layout = "_Layout";
+}
+<script src="/lib/jquery/dist/jquery.js"></script>
+<script src="/js/ShowSecondOnMouseOver.js"></script>
+
+<a asp-controller="Product" asp-action="List" class="btn btn-default">К юзерскому списку</a>
+<a asp-controller="Admin" asp-action="Create" class="btn btn-default">Create</a>
+<a asp-controller="Admin" asp-action="AddColors" class="btn btn-default">Add Colors</a>
+<div><a asp-controller="Admin" asp-action="ListAdmin">Без фильтров</a></div>
+<div><a asp-controller="Admin" asp-action="ListAdmin" asp-route-category="purse">Кошельки</a></div>
+<ul>
+    <li><a asp-controller="Admin" asp-action="ListAdmin" asp-route-category="purse-CrazyHouse">Кошельки "CrazyHouse"</a></li>
+    <li><a asp-controller="Admin" asp-action="ListAdmin" asp-route-category="purse-Kaiser">Кошельки "Kaiser"</a></li>
+    <li><a asp-controller="Admin" asp-action="ListAdmin" asp-route-category="purse-Flatar">Кошельки "Flatar"</a></li>
+</ul>
+
+<div><a asp-controller="Admin" asp-action="ListAdmin" asp-route-category="mini-bag">Мини-сумки</a></div>
+<ul>
+    <li><a asp-controller="Admin" asp-action="ListAdmin" asp-route-category="mini-bag-CrazyHouse">Мини-сумки "CrazyHouse"</a></li>
+    <li><a asp-controller="Admin" asp-action="ListAdmin" asp-route-category="mini-bag-Kaiser">Мини-сумки "Kaiser"</a></li>
+    <li><a asp-controller="Admin" asp-action="ListAdmin" asp-route-category="mini-bag-Flatar">Мини-сумки "Flatar"</a></li>
+</ul>
+
+<div><a asp-controller="Admin" asp-action="ListAdmin" asp-route-category="bag">Сумки</a></div>
+<ul>
+    <li><a asp-controller="Admin" asp-action="ListAdmin" asp-route-category="bag-CrazyHouse">Сумки "CrazyHouse"</a></li>
+    <li><a asp-controller="Admin" asp-action="ListAdmin" asp-route-category="bag-Kaiser">Сумки "Kaiser"</a></li>
+    <li><a asp-controller="Admin" asp-action="ListAdmin" asp-route-category="bag-Flatar">Сумки "Flatar"</a></li>
+</ul>
+
+<div><a asp-controller="Admin" asp-action="ListAdmin" asp-route-category="backpacks">Рюкзаки</a></div>
+<ul>
+    <li><a asp-controller="Admin" asp-action="ListAdmin" asp-route-category="backpacks-CrazyHouse">Рюкзаки "CrazyHouse"</a></li>
+    <li><a asp-controller="Admin" asp-action="ListAdmin" asp-route-category="backpacks-Kaiser">Рюкзаки "Kaiser"</a></li>
+    <li><a asp-controller="Admin" asp-action="ListAdmin" asp-route-category="backpacks-Flatar">Рюкзаки "Flatar"</a></li>
+</ul>
+
+<div><a asp-controller="Admin" asp-action="ListAdmin" asp-route-category="Accessories">Аксессуары</a></div>
+<ul>
+    <li><a asp-controller="Admin" asp-action="ListAdmin" asp-route-category="Accessories-CrazyHouse">Аксессуары "CrazyHouse"</a></li>
+    <li><a asp-controller="Admin" asp-action="ListAdmin" asp-route-category="Accessories-Kaiser">Аксессуары "Kaiser"</a></li>
+    <li><a asp-controller="Admin" asp-action="ListAdmin" asp-route-category="Accessories-Flatar">Аксессуары "Flatar"</a></li>
+</ul>
+
+<div><a asp-controller="Admin" asp-action="ListAdmin" asp-route-category="LimitedEdition">Limited Edition</a></div>
+
+@foreach (var product in Model.ProductAndImages)
+{
+    
+    <div>
+        <span>@product.product.Name</span>
+        <span>@product.product.Price</span>
+        <div>@product.product.Description</div>
+
+        @if (product.product.NewProduct)
+        {
+        <div style="background-color: red; width: 100px;">NEW</div>
+        }
+        @{
+        try
+        {
+        if (product.Images.Count > 0 && product.Images.FirstOrDefault(f => f.FirstOnScreen).Name != null && product.Images.FirstOrDefault(f => f.SecondOnScreen).Name != null)
+        {
+        <img src="/images/@product.Images.FirstOrDefault(f => f.FirstOnScreen).Name" id="@product.product.ProductID" name="FirstAndSecondImages" onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" style="width: 100px; height: 100px;" alt="@product.Images.FirstOrDefault(f => f.FirstOnScreen).Alternative">
+        <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.FirstOrDefault(f => f.FirstOnScreen).Name" imageAlternative="@product.Images.FirstOrDefault(f => f.FirstOnScreen).Alternative" />
+        <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.FirstOrDefault(f => f.SecondOnScreen).Name" imageAlternative="@product.Images.FirstOrDefault(f => f.SecondOnScreen).Alternative" />
+        }
+        else
+        {
+        <img src="/images/none.png" style="width: 100px; height: 100px;" alt="None Image">
+        }
+        }
+        catch
+        {
+        <img src="/images/none.png" style="width: 100px; height: 100px;" alt="None Image">
+        }
+        }
+
+        <input type="hidden" name="ProductID" value="@product.product.ProductID" />
+        <a asp-controller="Admin" asp-action="Edit" asp-route-productid="@product.product.ProductID">Изменить</a>
+    </div>
+    
+}
+
+
+

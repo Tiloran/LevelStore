@@ -10,7 +10,7 @@ namespace LevelStore.Controllers
     {
         public IActionResult Index()
         {
-            return RedirectToActionPermanent(controllerName: "Product", actionName: "ListAdmin");
+            return RedirectToActionPermanent(controllerName: "Admin", actionName: "ListAdmin");
         }
     }
 }

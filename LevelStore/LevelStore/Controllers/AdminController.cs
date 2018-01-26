@@ -6,6 +6,7 @@ using System.Net;
 using System.Threading.Tasks;
 using LevelStore.Infrastructure;
 using LevelStore.Models;
+using LevelStore.Models.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -98,6 +99,28 @@ namespace LevelStore.Controllers
             return View();
         }
 
+        public ViewResult ListAdmin(string category)
+        {
+            List<ProductWithImages> productAndImages = new List<ProductWithImages>();
+            List<Product> products = new List<Product>();
+            List<Image> images = new List<Image>();
+            products = new List<Product>(repository.Products.Where(p => category == null || p.Category.Contains(category)).OrderBy(p => p.ProductID));
+            images = new List<Image>(repository.Images);
+
+            for (int i = 0; i < products.Count; i++)
+            {
+                images = new List<Image>(repository.Images.Where(index => index.ProductID == products[i].ProductID));
+                productAndImages.Add(new ProductWithImages()
+                {
+                    product = products[i],
+                    Images = images
+                });
+            }
+
+            ProductsListViewModel productsListViewModel = new ProductsListViewModel { ProductAndImages = productAndImages.ToList() };
+            return View(productsListViewModel);
+        }
+
         public IActionResult AddColors()
         {
             TempData["ColorList"] = repository.TypeColors.ToList();
@@ -168,7 +191,7 @@ namespace LevelStore.Controllers
             }
             else
             {
-                return RedirectToActionPermanent(actionName : "ListAdmin", controllerName: "Product");
+                return RedirectToActionPermanent(actionName : "ListAdmin", controllerName: "Admin");
             }
             
         }
@@ -180,16 +203,7 @@ namespace LevelStore.Controllers
             TempData["ColorList"] = typeColors;
             return View("AddColors",new TypeColor());
         }
-
-
-
-        public ViewResult Test() => View();
-
-        [HttpPost]
-        public ViewResult Test(IList<Image> list)
-        {
-            return View();
-        }
+        
 
         public IActionResult UploadFiles()
         {
