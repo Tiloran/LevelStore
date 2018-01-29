@@ -2,12 +2,14 @@
 @{
     ViewData["Title"] = "ViewSingleProduct";
     Layout = "_Layout";
+    string Category = TempData["Category"] as String;
+    string SubCategory = TempData["SubCategory"] as String;
 }
 
 <div>@Model.Name</div>
 <div>@Model.Price</div>
 <div>@Model.Description</div>
-<div>@Model.Category</div>
+<div>@Category "@SubCategory"</div>
 @if (Model.Images.Count > 0)
 {
     foreach (var image in Model.Images)

@@ -18,6 +18,8 @@ namespace LevelStore.Models.EF
         public IEnumerable<TypeColor> TypeColors  => context.TypeColors;
         public IEnumerable<Color> BoundColors => context.Colors;
         public IEnumerable<AccessorieForBag> Accessories => context.AccessoriesForBags;
+        public IEnumerable<SubCategory> SubCategories => context.SubCategories;
+        public IEnumerable<Category> Categories => context.Categories;
 
         public void DeleteTypeColor(int typeColorId)
         {
@@ -77,7 +79,7 @@ namespace LevelStore.Models.EF
                 {
                     Name = product.Name,
                     Price = product.Price,
-                    Category = product.Category,
+                    SubCategoryID = product.SubCategoryID,
                     NewProduct = product.NewProduct,
                     Size = product.Size,
                     Description = product.Description,
@@ -94,7 +96,7 @@ namespace LevelStore.Models.EF
                     Product.Name = product.Name;
                     Product.Description = product.Description;
                     Product.Price = product.Price;
-                    Product.Category = product.Category;
+                    Product.SubCategoryID = product.SubCategoryID;
                     Product.NewProduct = product.NewProduct;
                     Product.Size = product.Size;
                     Product.AccessorieForBagID = product.AccessorieForBagID;
@@ -220,6 +222,13 @@ namespace LevelStore.Models.EF
         public Product DeleteProduct(int ProductId)
         {
             return new Product();
+        }
+
+
+        public List<Category> GetCategoriesWithSubCategories()
+        {
+            List<Category> categories = new List<Category>(context.Categories.Include(sc => sc.SubCategories));
+            return categories;
         }
     }
 }

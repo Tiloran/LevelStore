@@ -11,9 +11,10 @@ using System;
 namespace LevelStore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180129151022_initial12")]
+    partial class initial12
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -123,7 +124,7 @@ namespace LevelStore.Migrations
                     b.Property<int>("SubCategoryID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("CategoryID");
+                    b.Property<int?>("CategoryID");
 
                     b.Property<string>("SubCategoryName");
 
@@ -182,8 +183,7 @@ namespace LevelStore.Migrations
                 {
                     b.HasOne("LevelStore.Models.Category")
                         .WithMany("SubCategories")
-                        .HasForeignKey("CategoryID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CategoryID");
                 });
 #pragma warning restore 612, 618
         }

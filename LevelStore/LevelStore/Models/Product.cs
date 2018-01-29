@@ -12,7 +12,7 @@ namespace LevelStore.Models
         [Required]
         public decimal Price { get; set; }
         [Required]
-        public string Category { get; set; }
+        public int? SubCategoryID { get; set; }
         public string Size { get; set; }
         public List<Color> Color { get; set; }
         public bool NewProduct { get; set; }

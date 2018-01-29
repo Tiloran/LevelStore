@@ -15,12 +15,28 @@ namespace LevelStore.Controllers
             repository = repo;
         }
 
-        public ViewResult List(string category)
+        public ViewResult List(int? categoryID, int? subCategoryID)
         {
             List<ProductWithImages> productAndImages = new List<ProductWithImages>();
             List<Product> products = new List<Product>();
             List<Image> images = new List<Image>();
-            products = new List<Product>(repository.Products.Where(p => category == null || p.Category.Contains(category)).OrderBy(p => p.ProductID));
+            if (subCategoryID != null)
+            {
+                products = new List<Product>(repository.Products.Where(pSCId => pSCId.SubCategoryID == subCategoryID).OrderBy(pId => pId.ProductID));
+            }
+            else if (categoryID != null)
+            {
+                List<SubCategory> subCategories =
+                    new List<SubCategory>(repository.SubCategories.Where(i => i.CategoryID == categoryID).ToList());
+                repository.SubCategories.Where(i => i.CategoryID == categoryID);
+                products = new List<Product>(repository.Products
+                    .Where(pSCId => subCategories.Any(sCId => pSCId.SubCategoryID == sCId.SubCategoryID))
+                    .OrderBy(pId => pId.ProductID));
+            }
+            else
+            {
+                products = new List<Product>(repository.Products.OrderBy(p => p.ProductID));
+            }
             images = new List<Image>(repository.Images);
 
             for (int i = 0; i < products.Count; i++)
@@ -32,8 +48,9 @@ namespace LevelStore.Controllers
                     Images = images
                 });
             }
+            List<Category> categories = repository.GetCategoriesWithSubCategories();
 
-            ProductsListViewModel productsListViewModel = new ProductsListViewModel { ProductAndImages = productAndImages.ToList() };
+            ProductsListViewModel productsListViewModel = new ProductsListViewModel { ProductAndImages = productAndImages.ToList(), Categories = categories};
             return View(productsListViewModel);
         }
 
@@ -45,6 +62,10 @@ namespace LevelStore.Controllers
             Product selectedProduct = repository.Products.FirstOrDefault(p => p.ProductID == productId);
             List<Image> productImages = repository.Images.Where(p => p.ProductID == productId).ToList();
             selectedProduct.Images = productImages;
+            var subCategory = 
+                repository.SubCategories.First(sCId => sCId.SubCategoryID == selectedProduct.SubCategoryID);
+            TempData["Category"] = repository.Categories.First(cId => cId.CategoryID == subCategory.CategoryID).CategoryName;
+            TempData["SubCategory"] = subCategory.SubCategoryName;
             return View(selectedProduct);
         }
     }

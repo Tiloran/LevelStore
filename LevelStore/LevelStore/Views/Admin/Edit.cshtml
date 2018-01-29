@@ -2,149 +2,142 @@
 @{
     ViewData["Title"] = "Edit";
     Layout = "_Layout";
-    //ViewBag.ImageList = new List<string>();
     List<TypeColor> colorList = TempData["Colors"] as List<TypeColor>;
     List<Color> boundcolorList = TempData["BoundColors"] as List<Color>;
-    Dictionary<int,string> Accesories = new Dictionary<int, string>();
+    List<Category> Categories = TempData["Categories"] as List<Category>;
+    Dictionary<int, string> Accesories = new Dictionary<int, string>();
     foreach (var accesorie in (TempData["Accesories"] as List<AccessorieForBag>))
     {
         Accesories.Add(accesorie.AccessorieForBagID, accesorie.Name);
     }
 }
 
-@section scripts{
-    <script src="/lib/jquery/dist/jquery.js"></script>
-    <script type="text/javascript">
-        var ololo = 0;
-        $(document).ready(function() {
-            $("#upload").click(function(e) {
-                e.preventDefault();
+@*@section scripts{
+        <script src="/lib/jquery/dist/jquery.js"></script>
+        <script type="text/javascript">
+            var ololo = 0;
+            $(document).ready(function() {
+                $("#upload").click(function(e) {
+                    e.preventDefault();
 
-                var fileUpload = $("#files").get(0);
-                var files = fileUpload.files;
-                var data = new FormData();
-                for (var i = 0; i < files.length ; i++) {
-                    data.append(files[i].name, files[i]);
-                }
-
-                $.ajax({
-                    url: "/Admin/UploadFilesAjax/",
-                    type: "POST",
-                    contentType: false,
-                    processData: false,
-                    data: data,
-                    success: function (message) {
-                        for (var i = 1; i < files.length + 1 ; i++) {
-                            $("#fileList").append("<input name=\"Images[" + i + "].Name \" Value=\"" + files[i].name + "\"/>");
-                        }
-                        alert(message);
-                    },
-                    error: function () {
-                        alert("There was error uploading files!");
+                    var fileUpload = $("#files").get(0);
+                    var files = fileUpload.files;
+                    var data = new FormData();
+                    for (var i = 0; i < files.length ; i++) {
+                        data.append(files[i].name, files[i]);
                     }
 
+                    $.ajax({
+                        url: "/Admin/UploadFilesAjax/",
+                        type: "POST",
+                        contentType: false,
+                        processData: false,
+                        data: data,
+                        success: function (message) {
+                            for (var i = 1; i < files.length + 1 ; i++) {
+                                $("#fileList").append("<input name=\"Images[" + i + "].Name \" Value=\"" + files[i].name + "\"/>");
+                            }
+                            alert(message);
+                        },
+                        error: function () {
+                            alert("There was error uploading files!");
+                        }
+
+                    });
+                    e.preventDefault();
                 });
-                e.preventDefault();
             });
-        });
-    </script>
-}
+        </script>
+    }*@
 
-    <h2>Edit</h2>
-    
-    <form asp-action="Edit" method="post">
-        <input type="hidden" asp-for="ProductID" />
-        <div class="form-group">
-            <label>Название:</label>
-            <div><span asp-validation-for="Name" class="text-danger"></span></div>
-            <input asp-for="Name" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label>Описание:</label>
-            <div><span asp-validation-for="Description" class="text-danger"></span></div>
-            <textarea asp-for="Description" class="form-control"></textarea>
-        </div>
-        <div class="form-group">
-            <label>Категория:</label>
-            <div><span asp-validation-for="Category" class="text-danger"></span></div>
-            @{
-            OtherStuffForProduct otherStuffForProduct = TempData["OtherStuffForProduct"] as OtherStuffForProduct;
-                <select asp-for="Category">
-                    <option disabled>Выберите категорию</option>
-                    @for (int i = 0; i < otherStuffForProduct.categories.Count; i++)
-                    {
-                        if (i == 0)
-                        {
-                            <option selected value="@otherStuffForProduct.categories[i]">@otherStuffForProduct.categories[i]</option>
-                        }
-                        else
-                        {
-                            <option value="@otherStuffForProduct.categories[i]">@otherStuffForProduct.categories[i]</option>
-                        }
-                    }
-                </select>
-                <div>
-                <label>Цвет:</label>
-                @*<select asp-items="Color" asp-for="Color">
-                    <option disabled>Выберите цвет</option>
-                    @for(int i = 0; i < colorList.Count; i++)
-                    {
-                        
-                        <option  value="@colorList[i].TypeColorID">@colorList[i].ColorType</option>
-                        
-                    }
-                </select>*@
+<h2>Edit</h2>
 
-                @for (int i = 0; i < colorList.Count; i++)
-                 {
-                     <label>@colorList[i].ColorType:</label>
-                     if (boundcolorList.Select(bcl => bcl.TypeColorID).Contains(colorList[i].TypeColorID))
-                     {
-                         <input name="colors" checked="checked" type="checkbox" value="@colorList[i].TypeColorID"/>
-                     }
-                     else
-                     {
-                         <input name="colors" type="checkbox" value="@colorList[i].TypeColorID" />
-                     }
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="ProductID" />
+    <div class="form-group">
+        <label>Название:</label>
+        <div><span asp-validation-for="Name" class="text-danger"></span></div>
+        <input asp-for="Name" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Описание:</label>
+        <div><span asp-validation-for="Description" class="text-danger"></span></div>
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+    <div class="form-group">
+        <label>Категория:</label>
+        <div><span asp-validation-for="SubCategoryID" class="text-danger"></span></div>
+
+        <select asp-for="SubCategoryID">
+            <option disabled>Выберите категорию</option>
+            @foreach (var category in Categories)
+            {
+                foreach (var subCategory in category.SubCategories)
+                {
+                    if (subCategory.SubCategoryID == Model.ProductID)
+                    {
+                        <option selected value="@subCategory.CategoryID/@subCategory.SubCategoryID">@category.CategoryName "@subCategory.SubCategoryName"</option>
                     }
-                </div>
-                <div>
-                <label>Фурнитура:</label>
-                    <select  asp-for="AccessorieForBagID">
-                        <option disabled>Выберите фурнитуру</option>
-                        @foreach(KeyValuePair<int, string> keyValue in Accesories)
-                        {
-                            if (keyValue.Key == Model.AccessorieForBagID)
-                            {
-                                <option selected value="@keyValue.Key">@keyValue.Value</option>
-                            }
-                            else
-                            {
-                                <option  value="@keyValue.Key">@keyValue.Value</option>
-                            }
-                        }
-                    </select>
-                </div>
-            @*<input asp-for="Category" class="form-control" />*@
+                    else
+                    {
+                        <option value="@subCategory.SubCategoryID">@category.CategoryName "@subCategory.SubCategoryName"</option>
+                    }
+                }
+            }
+
+        </select>
+        <div>
+            <label>Цвет:</label>
+
+            @for (int i = 0; i < colorList.Count; i++)
+            {
+                <label>@colorList[i].ColorType:</label>
+                if (boundcolorList.Select(bcl => bcl.TypeColorID).Contains(colorList[i].TypeColorID))
+                {
+                    <input name="colors" checked="checked" type="checkbox" value="@colorList[i].TypeColorID" />
+                }
+                else
+                {
+                    <input name="colors" type="checkbox" value="@colorList[i].TypeColorID" />
+                }
             }
         </div>
-        <div class="form-group">
-            <label>Цена:</label>
-            <div><span asp-validation-for="Price" class="text-danger"></span></div>
-            <input asp-for="Price" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label>Размер:</label>
-            <div><span asp-validation-for="Size" class="text-danger"></span></div>
-            <input asp-for="Size" class="form-control" />
-        </div>
         <div>
-            <label>Новый товар:</label>
-            <div><span asp-validation-for="NewProduct" class="text-danger"></span></div>
-            <input asp-for="NewProduct" class="form-control"/>
+            <label>Фурнитура:</label>
+            <select asp-for="AccessorieForBagID">
+                <option disabled>Выберите фурнитуру</option>
+                @foreach (KeyValuePair<int, string> keyValue in Accesories)
+                {
+                    if (keyValue.Key == Model.AccessorieForBagID)
+                    {
+                        <option selected value="@keyValue.Key">@keyValue.Value</option>
+                    }
+                    else
+                    {
+                        <option value="@keyValue.Key">@keyValue.Value</option>
+                    }
+                }
+            </select>
         </div>
-        <div class="text-center">
-            <button class="btn btn-primary" type="submit">Save</button>
-            <a asp-controller="Admin" asp-action="ListAdmin" class="btn btn-default">К списку</a>
-        </div>
-    </form>
+
+    </div>
+    <div class="form-group">
+        <label>Цена:</label>
+        <div><span asp-validation-for="Price" class="text-danger"></span></div>
+        <input asp-for="Price" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Размер:</label>
+        <div><span asp-validation-for="Size" class="text-danger"></span></div>
+        <input asp-for="Size" class="form-control" />
+    </div>
+    <div>
+        <label>Новый товар:</label>
+        <div><span asp-validation-for="NewProduct" class="text-danger"></span></div>
+        <input asp-for="NewProduct" class="form-control" />
+    </div>
+    <div class="text-center">
+        <button class="btn btn-primary" type="submit">Save</button>
+        <a asp-controller="Admin" asp-action="ListAdmin" class="btn btn-default">К списку</a>
+    </div>
+</form>
