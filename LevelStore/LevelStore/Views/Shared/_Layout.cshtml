@@ -5,9 +5,33 @@
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
     <link rel="stylesheet" asp-href-include="/lib/bootstrap/dist/css/*.css" />
+    <link rel="stylesheet" asp-href-include="/css/MainMenuStyleSheet.css"/>
     @RenderSection("scripts", false)
 </head>
 <body>
+<a style="width: 100%; background-color: yellow" asp-controller="Home" asp-action="Index">LOGO</a>
+<div>
+    <ul class="menu">
+        <li><a asp-controller="Product" asp-action="List">Магазин</a></li>
+        <li><a href=#>Доставка и оплата</a>
+            <ul class="submenu">
+                <li><a asp-controller="DeliveryAndPayment" asp-action="Delivery">Доставка</a></li>
+                <li><a asp-controller="DeliveryAndPayment" asp-action="Payment">Оплата</a></li>
+                <li><a asp-controller="DeliveryAndPayment" asp-action="Guarantees">Гарантии</a></li>
+            </ul>
+        </li>
+        <li><a asp-controller="Brand" asp-action="AboutTheBrand">О бренде</a></li>
+        <li><a href=#>Контакты</a>
+            <ul class="submenu">
+                <li><a asp-controller="Contact" asp-action="OurShowRoom">Наш Showroom</a></li>
+                <li><a asp-controller="Contact" asp-action="DeliveryDepartment">Отдел доставки</a></li>
+                <li><a asp-controller="Contact" asp-action="Bayer">Bayer</a></li>
+                <li><a asp-controller="Contact" asp-action="Partnership">Партнерство</a></li>
+                <li><a asp-controller="Contact" asp-action="Vacancy">Вакансии</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
 <div>
     @await Component.InvokeAsync("CartSummary")
 </div>
