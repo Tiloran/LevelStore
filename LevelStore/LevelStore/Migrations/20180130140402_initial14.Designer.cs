@@ -11,9 +11,10 @@ using System;
 namespace LevelStore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180130140402_initial14")]
+    partial class initial14
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -150,8 +151,6 @@ namespace LevelStore.Migrations
                     b.Property<int?>("AccessorieForBagID");
 
                     b.Property<string>("Description");
-
-                    b.Property<bool>("HideFromUsers");
 
                     b.Property<string>("Name")
                         .IsRequired();

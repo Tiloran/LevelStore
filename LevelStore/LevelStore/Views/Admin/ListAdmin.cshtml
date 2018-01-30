@@ -65,6 +65,7 @@
 
         <input type="hidden" name="ProductID" value="@product.product.ProductID" />
         <a asp-controller="Admin" asp-action="Edit" asp-route-productid="@product.product.ProductID">Изменить</a>
+        <a asp-controller="Admin" asp-action="Delete" asp-route-productId="@product.product.ProductID">Удалить</a>
     </div>
 
 }

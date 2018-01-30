@@ -74,9 +74,9 @@
             {
                 foreach (var subCategory in category.SubCategories)
                 {
-                    if (subCategory.SubCategoryID == Model.ProductID)
+                    if (subCategory.SubCategoryID == Model.SubCategoryID)
                     {
-                        <option selected value="@subCategory.CategoryID/@subCategory.SubCategoryID">@category.CategoryName "@subCategory.SubCategoryName"</option>
+                        <option selected value="@subCategory.SubCategoryID">@category.CategoryName "@subCategory.SubCategoryName"</option>
                     }
                     else
                     {
@@ -135,6 +135,11 @@
         <label>Новый товар:</label>
         <div><span asp-validation-for="NewProduct" class="text-danger"></span></div>
         <input asp-for="NewProduct" class="form-control" />
+    </div>
+    <div>
+        <label>Спрятать товар:</label>
+        <div><span asp-validation-for="HideFromUsers" class="text-danger"></span></div>
+        <input asp-for="HideFromUsers" class="form-control" />
     </div>
     <div class="text-center">
         <button class="btn btn-primary" type="submit">Save</button>

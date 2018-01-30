@@ -31,6 +31,15 @@ namespace LevelStore.Controllers
             return View("Edit", new Product());
         }
 
+        public IActionResult Delete(int? productId)
+        {
+            if (productId != null)
+            {
+                repository.DeleteProduct(productId);
+            }
+            return RedirectToAction("ListAdmin");
+        }
+
         
         public IActionResult Edit(int productid)
         {
@@ -94,7 +103,19 @@ namespace LevelStore.Controllers
                 return View("UploadFiles");
             }
             //Some error
-            return View();
+            TempData["Categories"] = repository.GetCategoriesWithSubCategories().ToList();
+            TempData["Colors"] = repository.TypeColors.ToList();
+            if (product.ProductID != 0)
+            {
+                int? tempId = product.ProductID;
+                TempData["BoundColors"] = repository.BoundColors.Where(i => i.ProductID == tempId).ToList();
+            }
+            else
+            {
+                TempData["BoundColors"] = new List<Color>();
+            }
+            TempData["Accesories"] = repository.Accessories.ToList();
+            return View(product);
         }
 
         public ViewResult ListAdmin(int? categoryID, int? subCategoryID)

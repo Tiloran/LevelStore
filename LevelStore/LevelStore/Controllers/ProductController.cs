@@ -22,7 +22,7 @@ namespace LevelStore.Controllers
             List<Image> images = new List<Image>();
             if (subCategoryID != null)
             {
-                products = new List<Product>(repository.Products.Where(pSCId => pSCId.SubCategoryID == subCategoryID).OrderBy(pId => pId.ProductID));
+                products = new List<Product>(repository.Products.Where(pSCId => pSCId.SubCategoryID == subCategoryID).Where(h => h.HideFromUsers == false).OrderBy(pId => pId.ProductID));
             }
             else if (categoryID != null)
             {
@@ -31,11 +31,12 @@ namespace LevelStore.Controllers
                 repository.SubCategories.Where(i => i.CategoryID == categoryID);
                 products = new List<Product>(repository.Products
                     .Where(pSCId => subCategories.Any(sCId => pSCId.SubCategoryID == sCId.SubCategoryID))
+                    .Where(h => h.HideFromUsers == false)
                     .OrderBy(pId => pId.ProductID));
             }
             else
             {
-                products = new List<Product>(repository.Products.OrderBy(p => p.ProductID));
+                products = new List<Product>(repository.Products.Where(h => h.HideFromUsers == false).OrderBy(p => p.ProductID));
             }
             images = new List<Image>(repository.Images);
 
@@ -59,7 +60,11 @@ namespace LevelStore.Controllers
         [HttpPost]
         public ViewResult ViewSingleProduct(int productId)
         {
-            Product selectedProduct = repository.Products.FirstOrDefault(p => p.ProductID == productId);
+            Product selectedProduct = repository.Products.Where(h => h.HideFromUsers == false).FirstOrDefault(p => p.ProductID == productId);
+            if (selectedProduct == null)
+            {
+                return View("List");
+            }
             List<Image> productImages = repository.Images.Where(p => p.ProductID == productId).ToList();
             selectedProduct.Images = productImages;
             var subCategory = 

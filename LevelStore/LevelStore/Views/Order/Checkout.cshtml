@@ -1,0 +1,40 @@
+﻿@model Order
+@{
+    ViewData["Title"] = "Checkout";
+    Layout = "_Layout";
+}
+
+<h2>Check out now</h2>
+<p>Please enter your details, and we'll ship your goods right away!</p>
+
+<div asp-validation-summary="All" class="text-danger"></div>
+<form asp-action="Checkout" method="post">
+    <div class="form-group">
+        <label>Имя:</label><input asp-for="FirstName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Фамилия:</label><input asp-for="LastName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Email:</label><input asp-for="Email" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Телефон :</label><input asp-for="Phone" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>№ отделения "Новой Почты":</label><input asp-for="NovaPoshta" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Город:</label><input asp-for="City" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Адрес:</label><input asp-for="Address" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Ваш комментарий:</label><input asp-for="Comment" class="form-control" />
+    </div>
+    <div class="text-center">
+        <input class="btn btn-primary" type="submit" value="Оставить заявку" />
+    </div>
+</form>>
+

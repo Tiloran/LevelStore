@@ -83,7 +83,8 @@ namespace LevelStore.Models.EF
                     NewProduct = product.NewProduct,
                     Size = product.Size,
                     Description = product.Description,
-                    AccessorieForBagID = product.AccessorieForBagID
+                    AccessorieForBagID = product.AccessorieForBagID,
+                    HideFromUsers = product.HideFromUsers
                 };
                 
                 context.Products.Add(Product);
@@ -100,6 +101,7 @@ namespace LevelStore.Models.EF
                     Product.NewProduct = product.NewProduct;
                     Product.Size = product.Size;
                     Product.AccessorieForBagID = product.AccessorieForBagID;
+                    Product.HideFromUsers = product.HideFromUsers;
                 }
             }
             context.SaveChanges();
@@ -219,9 +221,12 @@ namespace LevelStore.Models.EF
         }
 
 
-        public Product DeleteProduct(int ProductId)
+        public void DeleteProduct(int? ProductId)
         {
-            return new Product();
+            context.Colors.RemoveRange(context.Colors.Where(i => i.ProductID == ProductId).ToList());
+            context.Images.RemoveRange(context.Images.Where(i => i.ProductID == ProductId).ToList());
+            context.Products.Remove(context.Products.First(i => i.ProductID == ProductId));
+            context.SaveChanges();
         }
 
 

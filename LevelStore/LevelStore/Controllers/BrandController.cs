@@ -2,7 +2,7 @@
 
 namespace LevelStore.Controllers
 {
-    public class Brand : Controller
+    public class BrandController : Controller
     {
         public ViewResult AboutTheBrand() => View();
     }

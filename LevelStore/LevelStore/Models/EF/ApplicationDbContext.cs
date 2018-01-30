@@ -12,5 +12,7 @@ namespace LevelStore.Models.EF
         public DbSet<AccessorieForBag> AccessoriesForBags { get; set; }
         public DbSet<SubCategory> SubCategories { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<CartLine> CartLines { get; set; }
     }
 }
