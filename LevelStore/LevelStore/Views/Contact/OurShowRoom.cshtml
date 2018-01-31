@@ -4,5 +4,120 @@
     Layout = "_Layout";
 }
 
-<h2>OurShowRoom</h2>
+<div class="showroom">
+    <div class="container-fluid">
+        <div class="row showroom__wrapper">
+            <div class="col-md-12 text-center">
+                <h2 class="showroom__title">НАШ ШОУ-РУМ</h2>
+            </div>
+            <div class="row showroom__contacts">
+                <div class="col-md-5 col-left">
+                    <img src="~/images/img/showroom/showroom-1.JPG" alt="" class="img-fluid">
+                </div>
+                <div class="col-md-2">
+                    <div class="decoration align-middle" style="height: 100%;top: calc(2.5% + 9.5px);background: url(&quot;data:image/svg+xml;base64,CjxzdmcgaGVpZ2h0PSI1IiB2ZXJzaW9uPSIxLjEiIHdpZHRoPSI5IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoICBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIGQ9Ik00LjUsNC41TDUuNSw0LjUiIHN0cm9rZS13aWR0aD0iM3B4Ij48L3BhdGg+PC9zdmc+Cg==&quot;) center center repeat-y;"></div>
+                </div>
+                <div class="col-md-5 col-right">
+                    <p class="text-center text-title-light">КОНТАКТЫ</p>
+                    <div class="showroom__address">
+                        <p>Киев, ул. Ивана Кудри №5, оф. 223, <br>(бывший завод "Патона")</p>
+                        <p>вт-сб: 12-20;</p>
+                        <p>вс-пн: выходные.</p>
+                    </div>
+                    <div class="showroom__call-us">
+                        <p class="showroom__call-us--title">СВЯЗАТЬСЯ:</p>
+                        <p class="showroom__call-us--phone">(096) 399 08 56</p>
+                        <p class="showroom__call-us--phone">(099) 219 44 60</p>
+                    </div>
+                    <div class="showroom__social">
+                        <p class="showroom__social--title">МЫ В СОЦСЕТЯХ:</p>
+                        <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                        <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+
+                    </div>
+                    <img src="~/images/img/showroom/showroom-2.JPG" alt="" class="img-fluid">
+                </div>
+            </div>
+            <div class="row showroom__find-us">
+                <div class="col-md-5 col-left">
+                    <p class="showroom__find-us--title text-center text-title-light">КАК НАС НАЙТИ</p>
+                    <div class="map-responsive">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2542.427189590138!2d30.526822315167077!3d50.41451197947049!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40d4cf3ef9739bb5%3A0xcb6e7e9a8e8e6065!2sLevelBags!5e0!3m2!1sru!2sua!4v1516618221763"
+                                width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
+                    </div>
+                </div>
+                <div class="col-md-2 col-right">
+                    <div class="decoration align-middle" style="height: 100%;top: calc(2.5% + 9.5px);background: url(&quot;data:image/svg+xml;base64,CjxzdmcgaGVpZ2h0PSI1IiB2ZXJzaW9uPSIxLjEiIHdpZHRoPSI5IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoICBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIGQ9Ik00LjUsNC41TDUuNSw0LjUiIHN0cm9rZS13aWR0aD0iM3B4Ij48L3BhdGg+PC9zdmc+Cg==&quot;) center center repeat-y;"></div>
+                </div>
+                <div class="col-md-5">
+                    <img src="~/images/img/showroom/showroom-3.JPG" alt="" class="img-fluid">
+                </div>
+            </div>
+            <div class="row showroom-video">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/_kWWwT7QrtM" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+            <div class="row showroom__call-us">
+                <p>Если у вас возник вопрос или появилось предложение - свяжитесь с нами.</p>
+                <form class="showroom-form" action="" method="post">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input type="text" name="showroom-name" value="" required>
+                                        <label for="showroom-name">Имя *</label>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input type="phone" name="showroom-phone" value="" required>
+                                        <label for="showroom-phone">Телефон *</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input type="email" name="showroom-email" value="" required>
+                                        <label for="showroom-email">Email *</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group-checkbox">
+                                        <input type="checkbox" id="personal-data" name="personal-data" value="personal">
+                                        <label for="personal-data">Я согласен на обработку персональных данных</label>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <select name="showroom-topic">
+                                            <option>Общий</option>
+                                            <option>Поддержка</option>
+                                            <option>Контакты</option>
+                                            <option>Обслуживание</option>
+                                        </select>
+                                        <label for="showroom-topic">Тема вопроса</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <textarea name="showroom-message" rows="8" cols="80" required></textarea>
+                                        <label for="showroom-message">Сообщение *</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 text-center">
+                            <button type="submit" name="button" class="btn-btn">Отправить</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 

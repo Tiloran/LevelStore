@@ -4,37 +4,86 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
+
     <link rel="stylesheet" asp-href-include="/lib/bootstrap/dist/css/*.css" />
-    <link rel="stylesheet" asp-href-include="/css/MainMenuStyleSheet.css"/>
+    <link rel="stylesheet" asp-href-include="/lib/font-awesome/css/font-awesome.min" />
+    <link rel="stylesheet" asp-href-include="/css/MainMenuStyleSheet.css" />
     @RenderSection("scripts", false)
 </head>
 <body>
-<a style="width: 100%; background-color: yellow" asp-controller="Home" asp-action="Index">LOGO</a>
-<div>
-    <ul class="menu">
-        <li><a asp-controller="Product" asp-action="List">Магазин</a></li>
-        <li><a href=#>Доставка и оплата</a>
-            <ul class="submenu">
-                <li><a asp-controller="DeliveryAndPayment" asp-action="Delivery">Доставка</a></li>
-                <li><a asp-controller="DeliveryAndPayment" asp-action="Payment">Оплата</a></li>
-                <li><a asp-controller="DeliveryAndPayment" asp-action="Guarantees">Гарантии</a></li>
-            </ul>
-        </li>
-        <li><a asp-controller="Brand" asp-action="AboutTheBrand">О бренде</a></li>
-        <li><a href=#>Контакты</a>
-            <ul class="submenu">
-                <li><a asp-controller="Contact" asp-action="OurShowRoom">Наш Showroom</a></li>
-                <li><a asp-controller="Contact" asp-action="DeliveryDepartment">Отдел доставки</a></li>
-                <li><a asp-controller="Contact" asp-action="Bayer">Bayer</a></li>
-                <li><a asp-controller="Contact" asp-action="Partnership">Партнерство</a></li>
-                <li><a asp-controller="Contact" asp-action="Vacancy">Вакансии</a></li>
-            </ul>
-        </li>
-    </ul>
-</div>
-<div>
-    @await Component.InvokeAsync("CartSummary")
-</div>
-@RenderBody()
+    <a style="width: 100%; background-color: yellow" asp-controller="Home" asp-action="Index">LOGO</a>
+    <div>
+        <ul class="menu">
+            <li><a asp-controller="Product" asp-action="List">Магазин</a></li>
+            <li class="menu__line">/</li>
+            <li>
+                <a href=#>Доставка и оплата</a>
+                <ul class="submenu">
+                    <li><a asp-controller="DeliveryAndPayment" asp-action="Delivery">Доставка</a></li>
+                    <li><a asp-controller="DeliveryAndPayment" asp-action="Payment">Оплата</a></li>
+                    <li><a asp-controller="DeliveryAndPayment" asp-action="Guarantees">Гарантии</a></li>
+                </ul>
+            </li>
+            <li class="menu__line">/</li>
+            <li><a asp-controller="Brand" asp-action="AboutTheBrand">О бренде</a></li>
+            <li class="menu__line">/</li>
+            <li>
+                <a href=#>Контакты</a>
+                <ul class="submenu">
+                    <li><a asp-controller="Contact" asp-action="OurShowRoom">Наш Showroom</a></li>
+                    <li><a asp-controller="Contact" asp-action="DeliveryDepartment">Отдел доставки</a></li>
+                    <li><a asp-controller="Contact" asp-action="Bayer">Bayer</a></li>
+                    <li><a asp-controller="Contact" asp-action="Partnership">Партнерство</a></li>
+                    <li><a asp-controller="Contact" asp-action="Vacancy">Вакансии</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div>
+        @await Component.InvokeAsync("CartSummary")
+    </div>
+
+
+    @RenderBody()
+
+
+    <footer>
+        <div class="container-fluid">
+            <div class="row text-center">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-sm-6 email">
+                            <p class="footer-subheader">e-mail:</p>
+                            <p>level.pochta@gmail.com</p>
+                        </div>
+                        <div class="col-sm-6 social">
+                            <p class="footer-subheader">соц. сети:</p>
+                            <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                            <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-sm-6 address">
+                            <p class="footer-subheader">адрес:</p>
+                            <p><span>г. Киев, ул. Ивана Кудри №5 оф. 223</span></p>
+                            <p><span>График работы:</span></p>
+                            <p><span>вт-сб: 12:00-20:00</span></p>
+                            <p><span>вс-пн: выходные</span></p>
+                        </div>
+                        <div class="col-sm-6 phone">
+                            <p class="footer-subheader">телефон:</p>
+                            <p><span>(096) 399 08 56</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- JS -->
+    <script text="text/javascript" src="~/lib/jquery-3.2.1.min.js"></script>
+    <!-- Bootstrap-4 -->
+    <script type="text/javascript" src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
 </body>
 </html>
