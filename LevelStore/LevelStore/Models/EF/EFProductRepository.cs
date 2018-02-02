@@ -20,6 +20,7 @@ namespace LevelStore.Models.EF
         public IEnumerable<AccessorieForBag> Accessories => context.AccessoriesForBags;
         public IEnumerable<SubCategory> SubCategories => context.SubCategories;
         public IEnumerable<Category> Categories => context.Categories;
+        public IEnumerable<Product> ProductsWithImages => context.Products.Include(i => i.Images);
 
         public void DeleteTypeColor(int typeColorId)
         {

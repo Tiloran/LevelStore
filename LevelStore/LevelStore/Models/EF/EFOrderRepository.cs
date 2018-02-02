@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LevelStore.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace LevelStore.Models.EF
@@ -25,6 +26,25 @@ namespace LevelStore.Models.EF
                 context.Orders.Add(order);
             }
             context.SaveChanges();
+        }
+
+        public void ChangeOrder(Order order)
+        {
+            if (order != null)
+            {
+                context.Update(order);
+                context.SaveChanges();
+            }
+        }
+
+        public void ChangeStatus(OrderStatus status, int orderId)
+        {
+            Order order = context.Orders.FirstOrDefault(i => i.OrderID == orderId);
+            if (order != null)
+            {
+                order.Status = (int) status;
+                context.SaveChanges();
+            }
         }
     }
 }

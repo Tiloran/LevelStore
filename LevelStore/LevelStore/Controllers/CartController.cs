@@ -20,13 +20,17 @@ namespace LevelStore.Controllers
             return View("ListCart", cart);
         }
 
-        public RedirectToActionResult AddToCart(int productId)
+        public RedirectToActionResult AddToCart(int productId, int quantity)
         {
+            if (quantity == 0)
+            {
+                quantity = 1;
+            }
             Product product = repository.Products.FirstOrDefault(p => p.ProductID == productId);
 
             if (product != null)
             {
-                cart.AddItem(product, 1);
+                cart.AddItem(product, quantity);
             }
             return RedirectToAction("List", "Product");
         }

@@ -11,6 +11,7 @@ namespace LevelStore.Models
         IEnumerable<AccessorieForBag> Accessories { get; }
         IEnumerable<SubCategory> SubCategories { get; }
         IEnumerable<Category> Categories { get; }
+        IEnumerable<Product> ProductsWithImages { get; }
         void SaveTypeColor(TypeColor typeColor);
         List<Category> GetCategoriesWithSubCategories();
         void DeleteTypeColor(int typeColorId);

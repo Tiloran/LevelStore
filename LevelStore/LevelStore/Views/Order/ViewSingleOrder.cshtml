@@ -1,0 +1,107 @@
+﻿@model Order
+
+@{
+    ViewData["Title"] = "ViewSingleOrder";
+    Layout = "_Layout";
+    object myJson = TempData["JsonOrder"];
+}
+
+@section scripts{
+    <script src="/js/CollectInfoAboutOrderFromPage.js"></script>
+    <script src="/js/OnlyNumbers.js"></script>
+    <script type="text/javascript">
+        var MyVariable = '@myJson';
+        MyVariable = MyVariable.replace(/&quot;/g, "\"");
+        $(document).ready(function() {
+            $("#ChangeOrder").click(function (e) {
+                var MyOrder = CollectInfo(JSON.parse(MyVariable));
+                if (MyOrder == null) {
+                    return;
+                }
+
+                $.ajax({
+                    url: "/Order/ChangeOrderAjax/",
+                    type: "POST",
+                    dataType: "text json",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(MyOrder),
+                    success: function(message) {
+                        alert(message);
+                    }
+                });
+            });
+        });
+    </script>
+}
+
+    <!form>
+        <table>
+            <tr>
+                <th>ID заказа</th>
+                <th>Имя</th>
+                <th>Фамилия</th>
+                <th>Адрес</th>
+                <th>Город</th>
+                <th>Емеил</th>
+                <th>Отделение Почты</th>
+                <th>Телефон</th>
+                <th>Комментарий</th>
+                <th>Статус</th>
+            </tr>
+            <tr>
+                <td><label asp-for="OrderID">@Model.OrderID</label><input type="hidden" asp-for="OrderID" value="@Model.OrderID" /></td>
+                <td><input asp-for="FirstName" value="@Model.FirstName" /></td>
+                <td><input asp-for="LastName" value="@Model.LastName" /></td>
+                <td><input asp-for="Address" value="@Model.Address" /></td>
+                <td><input asp-for="City" value="@Model.City" /></td>
+                <td><input asp-for="Email" value="@Model.Email" /></td>
+                <td><input asp-for="NovaPoshta" value="@Model.NovaPoshta" /></td>
+                <td><input asp-for="Phone" value="@Model.Phone" /></td>
+                <td><input asp-for="Comment" value="@Model.Comment" /></td>
+                <td>
+                    <select asp-for="Status">
+                        <option disabled>Выберите статус</option>
+                        @if (Model.Status == (int) OrderStatus.Waiting)
+                        {
+                            <option value="0">Не отправлено</option>
+                            <option selected value="1">Ожидание</option>
+                            <option value="2">Отправлено</option>
+                        }
+                        else if (Model.Status == (int) OrderStatus.NotSended)
+                        {
+                            <option selected value="0">Не отправлено</option>
+                            <option value="1">Ожидание</option>
+                            <option value="2">Отправлено</option>
+                        }
+                        else
+                        {
+                            <option value="0">Не отправлено</option>
+                            <option value="1">Ожидание</option>
+                            <option selected value="2">Отправлено</option>
+                        }
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <th>Название товара</th>
+                <th>Цена товара</th>
+                <th>Количество товара</th>
+            </tr>
+            @for (int i = 0; i < Model.Lines.Count; i++)
+        {
+            <tr>
+                <td style="display: none;"><input type="hidden" value="@Model.Lines[i].CartLineID" name="Lines[@i].CartLineID" /></td>
+                <td><label name="Lines[@i].Product.Name">@Model.Lines[i].Product.Name</label></td>
+                <td>
+                    <label name="Lines[@i].Product.Price">@Model.Lines[i].Product.Price</label>
+                    <input type="hidden" value="@Model.Lines[i].Product.ProductID" name="Lines[@i].Product.ProductID" />
+                </td>
+                <td><input type="text" onfocus="OnlyNumber(this)" value="@Model.Lines[i].Quantity" name="Lines[@i].Quantity" /></td>
+            </tr>
+    }
+
+        </table>
+        <button id="ChangeOrder" type="button" class="btn btn-sm btn-danger">Изменить</button>
+    </!form>
+

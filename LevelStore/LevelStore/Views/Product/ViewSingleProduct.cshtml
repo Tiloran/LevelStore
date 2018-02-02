@@ -4,6 +4,7 @@
     Layout = "_Layout";
     string Category = TempData["Category"] as String;
     string SubCategory = TempData["SubCategory"] as String;
+    List<Product> relatedProducts = TempData["relatedProducts"] as List<Product>;
 }
 
 <div>@Model.Name</div>
@@ -19,7 +20,35 @@
 }
 else
 {
-        <img src="/images/none.png" style="width: 100px; height: 100px;" alt="none image">
+    <img src="/images/none.png" style="width: 100px; height: 100px;" alt="none image">
 }
-<a asp-controller="Cart" asp-action="AddToCart" asp-route-productId="@Model.ProductID" class="btn btn-default">Добавить в корзину</a>
+        <form asp-controller="Cart" asp-action="AddToCart">
+            <input type="hidden" name="productId" value="@Model.ProductID" />
+            <input type="number" name="quantity" value="1" min="0" max="1000" />
+            <button type="submit">Добавить в корзину</button>
+        </form>
+@*<a asp-controller="Cart" asp-action="AddToCart" asp-route-productId="@Model.ProductID" class="btn btn-default">Добавить в корзину</a>*@
 <a asp-controller="Product" asp-action="List" class="btn btn-default">К списку</a>
+@if (relatedProducts != null && relatedProducts.Any())
+{
+<div>
+    <p>Похожие товары:</p>
+    @foreach (var rProduct in relatedProducts)
+    {
+        <div>@rProduct.Name</div>
+        <div>@rProduct.Price</div>
+        if (rProduct.Images.Count > 0)
+        {
+            foreach (var image in rProduct.Images)
+            {
+                <img src="/images/@image.Name" style="width: 100px; height: 100px;" alt="@image.Alternative">
+            }
+        }
+        else
+        {
+            <img src="/images/none.png" style="width: 100px; height: 100px;" alt="none image">
+        }
+    }
+</div>
+
+}

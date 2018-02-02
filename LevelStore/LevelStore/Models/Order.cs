@@ -10,8 +10,8 @@ namespace LevelStore.Models
     public class Order
     {
         public int OrderID { get; set; }
-        public ICollection<CartLine> Lines { get; set; }
-        public bool Shipped { get; set; }
+        public IList<CartLine> Lines { get; set; }
+        public int Status { get; set; }
 
         [Required(ErrorMessage = "Введите имя")]
         public string FirstName { get; set; }

@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
     <link rel="stylesheet" asp-href-include="/lib/bootstrap/dist/css/*.css" />
-    <link rel="stylesheet" asp-href-include="/css/MainMenuStyleSheet.css"/>
+    <link rel="stylesheet" asp-href-include="/css/MainMenuStyleSheet.css" />
+    <script src="/lib/jquery/dist/jquery.js"></script>
     @RenderSection("scripts", false)
 </head>
 <body>
@@ -31,6 +32,9 @@
             </ul>
         </li>
     </ul>
+</div>
+<div>
+    @await Component.InvokeAsync("Search")
 </div>
 <div>
     @await Component.InvokeAsync("CartSummary")

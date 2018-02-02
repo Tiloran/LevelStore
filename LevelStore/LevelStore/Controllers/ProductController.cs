@@ -38,7 +38,6 @@ namespace LevelStore.Controllers
             {
                 products = new List<Product>(repository.Products.Where(h => h.HideFromUsers == false).OrderBy(p => p.ProductID));
             }
-            images = new List<Image>(repository.Images);
 
             for (int i = 0; i < products.Count; i++)
             {
@@ -65,12 +64,16 @@ namespace LevelStore.Controllers
             {
                 return View("List");
             }
+            List<Product> relatedProducts = repository.ProductsWithImages
+                .Where(sc => sc.SubCategoryID == selectedProduct.SubCategoryID
+                && sc.ProductID != selectedProduct.ProductID).Take(5).ToList();
             List<Image> productImages = repository.Images.Where(p => p.ProductID == productId).ToList();
             selectedProduct.Images = productImages;
             var subCategory = 
                 repository.SubCategories.First(sCId => sCId.SubCategoryID == selectedProduct.SubCategoryID);
             TempData["Category"] = repository.Categories.First(cId => cId.CategoryID == subCategory.CategoryID).CategoryName;
             TempData["SubCategory"] = subCategory.SubCategoryName;
+            TempData["relatedProducts"] = relatedProducts;
             return View(selectedProduct);
         }
     }
