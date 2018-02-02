@@ -1,6 +1,13 @@
-﻿<div>
-    <form asp-controller="Search" asp-action="Index">
-        <input placeholder="Поиск" name="searchString" onkeydown=""/>
-        <button type="submit" style="display: none">Поиск</button>
+﻿<script>
+    function RunSearch(e) {
+        if (e.keyCode === 13) {
+            $("#SearchButton").click();
+        }
+    }
+</script>
+<div>
+    <form asp-controller="Product" asp-action="List">
+        <input placeholder="Поиск" id="SearchField" name="searchString" onkeydown="" onkeypress="RunSearch(event)"/>
+        <button type="submit" id="SearchButton" style="display: none">Поиск</button>
     </form>
 </div>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using LevelStore.Models;
 using LevelStore.Models.ViewModels;
@@ -15,7 +16,7 @@ namespace LevelStore.Controllers
             repository = repo;
         }
 
-        public ViewResult List(int? categoryID, int? subCategoryID)
+        public ViewResult List(int? categoryID, int? subCategoryID, string searchString)
         {
             List<ProductWithImages> productAndImages = new List<ProductWithImages>();
             List<Product> products = new List<Product>();
@@ -39,6 +40,11 @@ namespace LevelStore.Controllers
                 products = new List<Product>(repository.Products.Where(h => h.HideFromUsers == false).OrderBy(p => p.ProductID));
             }
 
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                products = new List<Product>(products.Where(n => n.Name.Contains(searchString)));
+            }
+
             for (int i = 0; i < products.Count; i++)
             {
                 images = new List<Image>(repository.Images.Where(index => index.ProductID == products[i].ProductID));
@@ -51,6 +57,7 @@ namespace LevelStore.Controllers
             List<Category> categories = repository.GetCategoriesWithSubCategories();
 
             ProductsListViewModel productsListViewModel = new ProductsListViewModel { ProductAndImages = productAndImages.ToList(), Categories = categories};
+            TempData["searchString"] = searchString;
             return View(productsListViewModel);
         }
 
