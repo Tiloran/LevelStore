@@ -1,67 +1,135 @@
-﻿
-ul {
+﻿   
+.main-navigation ul{
     display: block;
-    margin: 0;
+    margin-top: 50px;
     padding: 0;
     list-style: none;
 }
 
-ul:after {
+.main-navigation ul:after {
     display: block;
     content: ' ';
     clear: both;
     float: none;
 }
 
-ul.menu > li {
-    float: left;
+.menu {
+    color: #222;
+}
+
+.menu__item {
+    display: inline-block;
     position: relative;
+    cursor: pointer;
 }
+
 .menu__line {
-    padding: 10px;
+    display: inline-block;
+    padding: 10px 30px;
 }
-ul.menu > li > a {
-        display: block;
-        padding: 10px;
-        color: white;
-        background-color: red;
-        text-decoration: none;
-    }
 
-        ul.menu > li > a:hover {
-            background-color: black;
-        }
-
-    ul.submenu {
-        display: none;
-        position: absolute;
-        width: 120px;
-        top: 37px;
-        left: 0;
-        background-color: white;
-        border: 1px solid red;
-        z-index: 100;
-    }
-
-        ul.submenu > li {
-            display: block;
-            z-index: 100;
-        }
-
-    ul.submenu > li > a {
-        display: block;
-        padding: 10px;
-        color: white;
-        background-color: red;
-        text-decoration: none;
-        z-index: 100;
-    }
-ul.submenu > li > a:hover { text-decoration: underline; }
-
-ul.menu > li:hover > ul.submenu {
+.menu__item-link {
     display: block;
+    margin: 10px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 1s;
+    color: #222;
+    font-size: 14px;
+    line-height: 16px;
+    letter-spacing: 0.4em;
+    font-family: "Cuprum", sans-serif;
+    font-weight: 700;
 }
 
+    .menu__item-link:hover,
+    .submenu__item-link:hover {
+        color: #877756;
+        text-decoration: none;
+    }
+
+.menu__item:hover > .menu__item-link {
+    color: #877756;
+    text-decoration: none;
+}
+
+
+
+.menu__item:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    z-index: -5;
+    top: 10px;
+    display: inline-block;
+    height: 1em;
+    width: 100%;
+    border-bottom: 2px solid;
+    margin-top: 10px;
+    opacity: 0;
+    color: #877756;
+    -webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
+    transition: opacity 0.35s, transform 0.35s;
+    -webkit-transform: scale(0,1);
+    transform: scale(0,1);
+}
+
+.menu__item:hover:after {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+}
+
+.submenu {
+    display: none;
+    opacity: 0;
+    position: absolute;
+    top: -14px;
+    background-color: #fff;
+    z-index: 100;
+    transition: opacity 2s;
+    width: 150px;
+    transform: translateX(-50%);
+    left: 50%;
+    text-align: center;
+}
+
+.submenu__item {
+    display: block;
+    z-index: 100;
+    margin-bottom: 2px;
+}
+
+.submenu__item-link {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    z-index: 500;
+    background-color: #FAFAFA;
+    transition: color 0.5s;
+    color: #222;
+    font-size: 10px;
+    line-height: 12px;
+    letter-spacing: 0.4em;
+    font-family: "Cuprum", sans-serif;
+    font-weight: 700;
+}
+
+a.submenu__item-link:hover {
+    letter-spacing: 0.4em;
+    color: #877756;
+    text-decoration: none;
+}
+
+.menu__item:hover > .submenu {
+    display: block;
+    opacity: 1;
+    transition: opacity 2s;
+}
+
+.nolink {
+    pointer-events: none;
+}
 
 @font-face {
     font-family: "Cuprum";
@@ -256,19 +324,6 @@ body {
     background: url("&quot;data:image/svg+xml;base64,CjxzdmcgaGVpZ2h0PSI1IiB2ZXJzaW9uPSIxLjEiIHdpZHRoPSI5IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoICBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIGQ9Ik00LjUsNC41TDUuNSw0LjUiIHN0cm9rZS13aWR0aD0iM3B4Ij48L3BhdGg+PC9zdmc+Cg==&quot;") center center repeat-y;
 }
 
-.main-navigation ul {
-    padding: 20px 0;
-    list-style-type: none;
-}
-
-    .main-navigation ul li {
-        padding: 0 20px;
-        display: inline-block;
-    }
-
-        .main-navigation ul li a {
-            display: block;
-        }
 
 .search i {
     color: black;

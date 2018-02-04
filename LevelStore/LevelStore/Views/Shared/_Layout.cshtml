@@ -6,42 +6,60 @@
     <title>@ViewBag.Title</title>
 
     <link rel="stylesheet" asp-href-include="/lib/bootstrap/dist/css/*.css" />
-    <link rel="stylesheet" asp-href-include="/lib/font-awesome/css/font-awesome.min" />
+    <link rel="stylesheet" asp-href-include="/lib/font-awesome/css/font-awesome.min.css" />
     <link rel="stylesheet" asp-href-include="/css/MainMenuStyleSheet.css" />
     @RenderSection("scripts", false)
 </head>
 <body>
-    <a style="width: 100%; background-color: yellow" asp-controller="Home" asp-action="Index">LOGO</a>
-    <div>
-        <ul class="menu">
-            <li><a asp-controller="Product" asp-action="List">Магазин</a></li>
-            <li class="menu__line">/</li>
-            <li>
-                <a href=#>Доставка и оплата</a>
-                <ul class="submenu">
-                    <li><a asp-controller="DeliveryAndPayment" asp-action="Delivery">Доставка</a></li>
-                    <li><a asp-controller="DeliveryAndPayment" asp-action="Payment">Оплата</a></li>
-                    <li><a asp-controller="DeliveryAndPayment" asp-action="Guarantees">Гарантии</a></li>
+    <header class="container-fluid">
+        <div class="row">
+            <div class="col-md-3 main-logo">
+                <a style="width: 100%; background-color: yellow" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/img/global-content/logo.png" alt="level">
+                </a>
+            </div>
+            <div class="col-md-7">
+                <div>
+                   
+                    
+                </div>
+            </div>
+            <div class="col-md-2 search">
+                <i class="fa fa-search" aria-hidden="true"></i>
+                <i class="fa fa-shopping-bag" aria-hidden="true">@await Component.InvokeAsync("CartSummary")</i>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 main-navigation text-center">
+                <ul class="menu">
+                    <li class="menu__item"><a class="menu__item-link" asp-controller="Product" asp-action="List">Магазин</a></li>
+                    <li class="menu__line">/</li>
+                    <li class="menu__item">
+                        <a href="#" class="menu__item-link nolink">Доставка и оплата</a>
+                        <ul class="submenu">
+                            <li class="submenu__item"><a class="submenu__item-link" asp-controller="DeliveryAndPayment" asp-action="Delivery">Доставка</a></li>
+                            <li class="submenu__item"><a class="submenu__item-link" asp-controller="DeliveryAndPayment" asp-action="Payment">Оплата</a></li>
+                            <li class="submenu__item"><a class="submenu__item-link" asp-controller="DeliveryAndPayment" asp-action="Guarantees">Гарантии</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu__line">/</li>
+                    <li class="menu__item"><a class="menu__item-link" asp-controller="Brand" asp-action="AboutTheBrand">О бренде</a></li>
+                    <li class="menu__line">/</li>
+                    <li class="menu__item">
+                        <a href="#" class="menu__item-link nolink">Контакты</a>
+                        <ul class="submenu">
+                            <li class="submenu__item"><a class="submenu__item-link" asp-controller="Contact" asp-action="OurShowRoom">Наш Showroom</a></li>
+                            <li class="submenu__item"><a class="submenu__item-link" asp-controller="Contact" asp-action="DeliveryDepartment">Отдел доставки</a></li>
+                            <li class="submenu__item"><a class="submenu__item-link" asp-controller="Contact" asp-action="Bayer">Bayer</a></li>
+                            <li class="submenu__item"><a class="submenu__item-link" asp-controller="Contact" asp-action="Partnership">Партнерство</a></li>
+                            <li class="submenu__item"><a class="submenu__item-link" asp-controller="Contact" asp-action="Vacancy">Вакансии</a></li>
+                        </ul>
+                    </li>
                 </ul>
-            </li>
-            <li class="menu__line">/</li>
-            <li><a asp-controller="Brand" asp-action="AboutTheBrand">О бренде</a></li>
-            <li class="menu__line">/</li>
-            <li>
-                <a href=#>Контакты</a>
-                <ul class="submenu">
-                    <li><a asp-controller="Contact" asp-action="OurShowRoom">Наш Showroom</a></li>
-                    <li><a asp-controller="Contact" asp-action="DeliveryDepartment">Отдел доставки</a></li>
-                    <li><a asp-controller="Contact" asp-action="Bayer">Bayer</a></li>
-                    <li><a asp-controller="Contact" asp-action="Partnership">Партнерство</a></li>
-                    <li><a asp-controller="Contact" asp-action="Vacancy">Вакансии</a></li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-    <div>
-        @await Component.InvokeAsync("CartSummary")
-    </div>
+            </div>
+        </div>
+    </header>
+    
 
 
     @RenderBody()
