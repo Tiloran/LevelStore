@@ -1,4 +1,5 @@
-﻿@model ProductsListViewModel
+﻿@using System.Text
+@model ProductsListViewModel
 @{
     ViewData["Title"] = "List";
     Layout = "_Layout";
@@ -7,40 +8,58 @@
     {
         searchString = String.Empty;
     }
+    var utf = Encoding.UTF8;
+    Byte[] stringBytes = utf.GetBytes(searchString);
+    StringBuilder sbBytes = new StringBuilder(stringBytes.Length * 2);
+    foreach (byte b in stringBytes)
+    {
+        sbBytes.AppendFormat("{0:X2}", b);
+    }
+
+
+
 }
 
-<script>
-    $(document).ready(function() {
-        $("#SearchField").val('@searchString');
-    });
-</script>
-<script src="/js/ShowSecondOnMouseOver.js"></script>
-
-
-<a asp-controller="Admin" asp-action="ListAdmin" class="btn btn-default">Админка</a>
-@if (Model.Categories.Any())
-{
-    <ul class="menu">
-        <li><a asp-controller="Product" asp-action="List" asp-route-searchString="">Без фильтров</a></li>
-        @foreach (var category in Model.Categories)
-        {
-            <li>
-                <a asp-controller="Product" asp-action="List" asp-route-categoryID="@category.CategoryID" asp-route-searchString="@searchString">@category.CategoryName</a>
-                @if (category.SubCategories.Any())
-                {
-                    <ul class="submenu">
-                        @foreach (var subCategory in category.SubCategories)
-                        {
-                            <li><a asp-controller="Product" asp-action="List" asp-route-subCategoryID="@subCategory.SubCategoryID" asp-route-searchString="@searchString">
-                                @category.CategoryName "@subCategory.SubCategoryName"
-                            </a></li>
-                        }
-                    </ul>
-                }
-            </li>
-        }
-    </ul>
+@section scripts{
+    <script src="/js/UnicodeToChar.js"></script>
+    <script>
+        $(document).ready(function () {
+            var searchString = convertHexToString('@sbBytes');
+            $("#SearchField").val(searchString);
+        });
+    </script>
+    <script src="/js/ShowSecondOnMouseOver.js"></script>
 }
+
+    
+
+
+    <a asp-controller="Admin" asp-action="ListAdmin" class="btn btn-default">Админка</a>
+    @if (Model.Categories.Any())
+    {
+        <ul class="menu">
+            <li><a asp-controller="Product" asp-action="List" asp-route-searchString="">Без фильтров</a></li>
+            @foreach (var category in Model.Categories)
+            {
+                <li>
+                    <a asp-controller="Product" asp-action="List" asp-route-categoryID="@category.CategoryID" asp-route-searchString="@searchString">@category.CategoryName</a>
+                    @if (category.SubCategories.Any())
+                    {
+                        <ul class="submenu">
+                            @foreach (var subCategory in category.SubCategories)
+                            {
+                                <li>
+                                    <a asp-controller="Product" asp-action="List" asp-route-subCategoryID="@subCategory.SubCategoryID" asp-route-searchString="@searchString">
+                                        @category.CategoryName "@subCategory.SubCategoryName"
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </li>
+            }
+        </ul>
+    }
 
     @foreach (var product in Model.ProductAndImages)
     {

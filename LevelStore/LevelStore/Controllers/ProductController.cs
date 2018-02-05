@@ -40,9 +40,17 @@ namespace LevelStore.Controllers
                 products = new List<Product>(repository.Products.Where(h => h.HideFromUsers == false).OrderBy(p => p.ProductID));
             }
 
+            List<Category> categories = repository.GetCategoriesWithSubCategories();
+
             if (!string.IsNullOrEmpty(searchString))
             {
-                products = new List<Product>(products.Where(n => n.Name.Contains(searchString)));
+                List<Product> searchByNameList = new List<Product>(products.Where(n => n.Name.Contains(searchString)));
+                List<Product> searchByDescriptionList = new List<Product>(products.Where(d => d.Description.Contains(searchString)));
+                List<Product> searchBySubCategoryList = new List<Product>(products.Where(p =>
+                    categories.Any(c => c.SubCategories.Any(sc => sc.SubCategoryID == p.SubCategoryID && sc.SubCategoryName.Contains(searchString))))).ToList();
+                List<Product> searchByCategoryList = new List<Product>(products.Where(p =>
+                    categories.Any(c => c.SubCategories.Any(sc => sc.SubCategoryID == p.SubCategoryID && c.CategoryName.Contains(searchString))))).ToList();
+                products = searchByNameList.Union(searchByDescriptionList).Union(searchBySubCategoryList).Union(searchByCategoryList).ToList();
             }
 
             for (int i = 0; i < products.Count; i++)
@@ -54,7 +62,6 @@ namespace LevelStore.Controllers
                     Images = images
                 });
             }
-            List<Category> categories = repository.GetCategoriesWithSubCategories();
 
             ProductsListViewModel productsListViewModel = new ProductsListViewModel { ProductAndImages = productAndImages.ToList(), Categories = categories};
             TempData["searchString"] = searchString;
