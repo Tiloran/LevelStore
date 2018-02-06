@@ -1,7 +1,7 @@
 ﻿@model Cart
 
 <div class=""> 
-    @if (Model.Lines.Count() > 0)
+    @if (Model.Lines.Any())
     {
 
         <small class="navbar-text">
@@ -10,7 +10,7 @@
         </small>
     }
         <a class="btn btn-sm btn-default navbar-btn" asp-controller="Cart" asp-action="Index">
-            Корзина
+            <i class="fa fa-shopping-bag" aria-hidden="true"></i>
         </a>
 
 </div>

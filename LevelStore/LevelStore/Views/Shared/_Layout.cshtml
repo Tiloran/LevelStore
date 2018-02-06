@@ -3,12 +3,13 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <title>@ViewBag.Title</title>
 
     <link rel="stylesheet" asp-href-include="/lib/bootstrap/dist/css/*.css" />
     <link rel="stylesheet" asp-href-include="/lib/font-awesome/css/font-awesome.min.css" />
     <link rel="stylesheet" asp-href-include="/css/MainMenuStyleSheet.css" />
+    <script src="/lib/jquery/dist/jquery.js"></script>
     @RenderSection("scripts", false)
 </head>
 <body>
@@ -26,8 +27,8 @@
                 </div>
             </div>
             <div class="col-md-2 search">
-                <i class="fa fa-search" aria-hidden="true"></i>
-                <i class="fa fa-shopping-bag" aria-hidden="true">@await Component.InvokeAsync("CartSummary")</i>
+                @await Component.InvokeAsync("Search")
+                @await Component.InvokeAsync("CartSummary")
             </div>
         </div>
         <div class="row">
