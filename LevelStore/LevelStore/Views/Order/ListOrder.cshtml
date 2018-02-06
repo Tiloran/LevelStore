@@ -8,75 +8,88 @@
 
 @if (Model.Any())
 {
-    <table class="table table-bordered table-striped">
-        <tr>
-            <th>Имя</th>
-            <th>Телефон</th>
-            <th>Продукт</th>
-            <th colspan="2">Детали</th>
-            <th></th>
-        </tr>
-        @foreach (var o in Model)
-        {
+    <form asp-controller="Order" asp-action="DownloadExcel">
+        <table class="table table-bordered table-striped">
             <tr>
-                <td><a></a></td>
-                <td>@o.FirstName</td>
-                <td>@o.Phone</td>
-                <th>Product</th>
-                <th>Quantity</th>
-                @if (o.Status == (int) OrderStatus.NotSended)
-                {
-                    <td>Не отправлено</td>
-                }
-                else if (o.Status == (int) OrderStatus.Waiting)
-                {
-                    <td>Ожидание</td>
-                }
-                else
-                {
-                    <td>Отправлено</td>
-                }
-                <td>
-                    <form asp-action="ChangeStatus" method="post">
-                        <input type="hidden" name="orderId" value="@o.OrderID"/>
-                        <select name="status">
-                            <option disabled>Выберите статус</option>
-                            @if (o.Status == (int) OrderStatus.Waiting)
-                            {
-                                <option value="0">Не отправлено</option>
-                                <option selected value="1">Ожидание</option>
-                                <option value="2">Отправлено</option>
-                            }
-                            else if (o.Status == (int) OrderStatus.NotSended)
-                            {
-                                <option selected value="0">Не отправлено</option>
-                                <option value="1">Ожидание</option>
-                                <option value="2">Отправлено</option>
-                            }
-                            else
-                            {
-                                <option value="0">Не отправлено</option>
-                                <option value="1">Ожидание</option>
-                                <option selected value="2">Отправлено</option>
-                            }
-                        </select>
-                        <button type="submit" class="btn btn-sm btn-danger">Изменить</button>
-                    </form>
-                </td>
-                <td><a asp-action="ChangeOrder" asp-route-orderId="@o.OrderID" class="btn btn-sm btn-danger">Подробно</a></td>
+                <th>Выбрать</th>
+                <th>Имя</th>
+                <th>Телефон</th>
+                <th>Продукт</th>
+                <th colspan="2"></th>
+                <th colspan="2">Статус</th>
+                <th>Детали</th>
+               
             </tr>
-            foreach (var line in o.Lines)
+            @foreach (var o in Model)
             {
                 <tr>
-                    <td colspan="2"></td>
-                    <td>@line.Product.Name</td>
-                    <td>@line.Quantity</td>
-                    <td></td>
+                    <td><input type="checkbox" value="@o.OrderID" name="checkedOrderId"/></td>
+                    <td>@o.FirstName</td>
+                    <td>@o.Phone</td>
+                    <th>Название продукта</th>
+                    <th>Количество</th>
+                    <th>Цена</th>
+                    @if (o.Status == (int) OrderStatus.NotSended)
+                    {
+                        <td>Не отправлено</td>
+                    }
+                    else if (o.Status == (int) OrderStatus.Waiting)
+                    {
+                        <td>Ожидание</td>
+                    }
+                    else
+                    {
+                        <td>Отправлено</td>
+                    }
+                    <td>
+                        <form asp-action="ChangeStatus" method="post">
+                            <input type="hidden" name="orderId" value="@o.OrderID"/>
+                            <select name="status">
+                                <option disabled>Выберите статус</option>
+                                @if (o.Status == (int) OrderStatus.Waiting)
+                                {
+                                    <option value="0">Не отправлено</option>
+                                    <option selected value="1">Ожидание</option>
+                                    <option value="2">Отправлено</option>
+                                }
+                                else if (o.Status == (int) OrderStatus.NotSended)
+                                {
+                                    <option selected value="0">Не отправлено</option>
+                                    <option value="1">Ожидание</option>
+                                    <option value="2">Отправлено</option>
+                                }
+                                else
+                                {
+                                    <option value="0">Не отправлено</option>
+                                    <option value="1">Ожидание</option>
+                                    <option selected value="2">Отправлено</option>
+                                }
+                            </select>
+                            <button type="submit" class="btn btn-sm btn-danger">Изменить</button>
+                        </form>
+                    </td>
+                    <td><a asp-action="ChangeOrder" asp-route-orderId="@o.OrderID" class="btn btn-sm btn-danger">Подробно</a></td>
                 </tr>
+                foreach (var line in o.Lines)
+                {
+                    <tr>
+                        <td colspan="3"></td>
+                        <td>@line.Product.Name</td>
+                        <td>@line.Quantity</td>
+                        <td>@line.Product.Price.ToString("C")</td>
+                    </tr>
+                }
+                <tr>
+                    <td colspan="3"></td>
+                    <td>Общая цена</td>
+                    <td colspan="2">@o.Lines.Sum(s => s.Quantity * s.Product.Price).ToString("C")</td>
+                </tr>
+                
             }
-        }
-    </table>
-    <a asp-controller="Order" asp-action="DownloadExcel"> Скачать Excel</a>
+        </table>
+        <button type="submit">Скачать Excel</button>
+    </form>
+    
 }
 else
 {
