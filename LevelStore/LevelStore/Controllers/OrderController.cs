@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using LevelStore.Models;
 using LevelStore.Models.Enums;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -13,11 +15,13 @@ namespace LevelStore.Controllers
     {
         private IOrderRepository repository;
         private Cart cart;
+        private readonly IHostingEnvironment _appEnvironment;
 
-        public OrderController(IOrderRepository repoService, Cart cartService)
+        public OrderController(IOrderRepository repoService, Cart cartService, IHostingEnvironment appEnvironment)
         {
             repository = repoService;
             cart = cartService;
+            _appEnvironment = appEnvironment;
         }
 
         public ViewResult Checkout() => View(new Order());
@@ -86,7 +90,17 @@ namespace LevelStore.Controllers
             }
             return Json("Fail");
         }
-        
+
+        public IActionResult DownloadExcel()
+        {
+            // Путь к файлу
+            string file_path = Path.Combine(_appEnvironment.ContentRootPath, "wwwroot/images/img/about/brand-logo.png");
+            // Тип файла - content-type
+            string file_type = "application/png";
+            // Имя файла - необязательно
+            string file_name = "brand-logo.png";
+            return PhysicalFile(file_path, file_type, file_name);
+        }
 
     }
 }
