@@ -62,45 +62,7 @@ namespace LevelStore.Controllers
                 {
                     return View();
                 }
-                TempData["id"] = id;
-                //TempData["ImageList"] = repository.Images.ToList();
-                List<Color> bindedColors = repository.BoundColors.Where(i => i.ProductID == id).ToList();
-                List<TypeColor> ourTypeColors = repository.TypeColors
-                    .Where(i1 => bindedColors.Any(i2 => i2.TypeColorID == i1.TypeColorID)).ToList();
-                List<Image> imageList = repository.Images.Where(i => i.ProductID == id).ToList();
-                if (imageList.Count > 1)
-                {
-                    bool NoFirst = imageList.FirstOrDefault(f => f.FirstOnScreen && f.SecondOnScreen == false) == null;
-                    if (NoFirst)
-                    {
-                        imageList.FirstOrDefault(f => f.FirstOnScreen == false && f.SecondOnScreen == false)
-                            .FirstOnScreen = true;
-                    }
-                    bool NoSecond = imageList.FirstOrDefault(s => s.FirstOnScreen == false && s.SecondOnScreen) == null;
-                    if (NoSecond)
-                    {
-                        imageList.FirstOrDefault(s => s.FirstOnScreen == false && s.SecondOnScreen == false)
-                            .SecondOnScreen = true;
-                    }
-                    bool bug = imageList.FirstOrDefault(s => s.FirstOnScreen && s.SecondOnScreen) != null;
-                    if (bug)
-                    {
-                        foreach (var image in imageList)
-                        {
-                            if (image.FirstOnScreen && image.SecondOnScreen)
-                            {
-                                image.FirstOnScreen = false;
-                                image.SecondOnScreen = false;
-                            }
-                        }
-                    }
-                }
-                List<TypeColor> boundedColors = repository.GetColorThatBindedWithImages(imageList);
-                TempData["Colors"] = ourTypeColors;
-                TempData["ImageList"] = imageList;
-                TempData["BindedColors"] = boundedColors;
-                //TempData["Colors"] = repository.TypeColors.ToList();
-                return View("UploadFiles");
+                return RedirectToActionPermanent("Edit", new {productid = id});
             }
             //Some error
             TempData["Categories"] = repository.GetCategoriesWithSubCategories().ToList();
@@ -215,16 +177,7 @@ namespace LevelStore.Controllers
             int? id = TempData["id"] as int?;
             if (id != null)
             {
-                TempData["id"] = id;
-                List<Image> imageList = repository.Images.Where(i => i.ProductID == id).ToList();
-                List<TypeColor> boundedColors = repository.GetColorThatBindedWithImages(imageList);
-                List<Color> bindedColors = repository.BoundColors.Where(i => i.ProductID == id).ToList();
-                List<TypeColor> ourTypeColors = repository.TypeColors
-                    .Where(i1 => bindedColors.Any(i2 => i2.TypeColorID == i1.TypeColorID)).ToList();
-                TempData["Colors"] = ourTypeColors;
-                TempData["ImageList"] = imageList;
-                TempData["BindedColors"] = boundedColors;
-                return View("UploadFiles");
+                return RedirectToActionPermanent("UploadFiles", new {productid = id});
             }
             else
             {
@@ -242,8 +195,46 @@ namespace LevelStore.Controllers
         }
         
 
-        public IActionResult UploadFiles()
+        public IActionResult UploadFiles(int productId)
         {
+            int id = productId;
+            TempData["id"] = id;
+            //TempData["ImageList"] = repository.Images.ToList();
+            List<Color> bindedColors = repository.BoundColors.Where(i => i.ProductID == id).ToList();
+            List<TypeColor> ourTypeColors = repository.TypeColors
+                .Where(i1 => bindedColors.Any(i2 => i2.TypeColorID == i1.TypeColorID)).ToList();
+            List<Image> imageList = repository.Images.Where(i => i.ProductID == id).ToList();
+            if (imageList.Count > 1)
+            {
+                bool NoFirst = imageList.FirstOrDefault(f => f.FirstOnScreen && f.SecondOnScreen == false) == null;
+                if (NoFirst)
+                {
+                    imageList.FirstOrDefault(f => f.FirstOnScreen == false && f.SecondOnScreen == false)
+                        .FirstOnScreen = true;
+                }
+                bool NoSecond = imageList.FirstOrDefault(s => s.FirstOnScreen == false && s.SecondOnScreen) == null;
+                if (NoSecond)
+                {
+                    imageList.FirstOrDefault(s => s.FirstOnScreen == false && s.SecondOnScreen == false)
+                        .SecondOnScreen = true;
+                }
+                bool bug = imageList.FirstOrDefault(s => s.FirstOnScreen && s.SecondOnScreen) != null;
+                if (bug)
+                {
+                    foreach (var image in imageList)
+                    {
+                        if (image.FirstOnScreen && image.SecondOnScreen)
+                        {
+                            image.FirstOnScreen = false;
+                            image.SecondOnScreen = false;
+                        }
+                    }
+                }
+            }
+            List<TypeColor> boundedColors = repository.GetColorThatBindedWithImages(imageList);
+            TempData["Colors"] = ourTypeColors;
+            TempData["ImageList"] = imageList;
+            TempData["BindedColors"] = boundedColors;
             return View();
         }
 

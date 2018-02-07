@@ -1,0 +1,21 @@
+﻿
+@{
+    ViewData["Title"] = "test1";
+    Layout = "_Layout";
+}
+
+<script>
+    function RunSearch(e) {
+        if (e.keyCode === 13) {
+            $("#SearchButton").click();
+        }
+    }
+</script>
+<i class="fa fa-search" aria-hidden="true"></i>
+<div>
+    <form asp-controller="Admin" asp-action="test1">
+        <input placeholder="Поиск" id="SearchField" name="searchString" />
+        <button type="submit" id="SearchButton" style="">Поиск</button>
+    </form>
+</div>
+<p>OLOLOLOLOLOLO</p>

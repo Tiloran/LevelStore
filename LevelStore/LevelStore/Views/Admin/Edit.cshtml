@@ -142,7 +142,11 @@
         <input asp-for="HideFromUsers" class="form-control" />
     </div>
     <div class="text-center">
-        <button class="btn btn-primary" type="submit">Save</button>
+        <button class="btn btn-primary" type="submit">Сохранить</button>
+        @if (Model.ProductID != 0)
+        {
+            <a asp-action="UploadFiles" asp-route-productId="@Model.ProductID">Картинки товара</a>
+        }
         <a asp-controller="Admin" asp-action="ListAdmin" class="btn btn-default">К списку</a>
     </div>
 </form>

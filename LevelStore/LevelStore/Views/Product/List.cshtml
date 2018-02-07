@@ -63,7 +63,7 @@
 
     @foreach (var product in Model.ProductAndImages)
     {
-        <form asp-action="ViewSingleProduct" method="post">
+        <div>
 
             <span>@product.product.Name</span>
             <span>@product.product.Price</span>
@@ -92,10 +92,9 @@
                     <img src="/images/none.png" style="width: 100px; height: 100px;" alt="None Image">
                 }
             }
-
-            <input type="hidden" name="ProductID" value="@product.product.ProductID" />
-            <button type="submit" class="btn btn-sm btn-danger">Выбрать</button>
-        </form>
+            
+            <a asp-action="ViewSingleProduct" asp-route-productId="@product.product.ProductID" class="btn btn-primary">Выбрать</a>
+        </div>
     }
 
 

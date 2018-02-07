@@ -67,10 +67,7 @@ namespace LevelStore.Controllers
             TempData["searchString"] = searchString;
             return View(productsListViewModel);
         }
-
         
-
-        [HttpPost]
         public ViewResult ViewSingleProduct(int productId)
         {
             Product selectedProduct = repository.Products.Where(h => h.HideFromUsers == false).FirstOrDefault(p => p.ProductID == productId);
