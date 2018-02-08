@@ -27,7 +27,6 @@ namespace LevelStore.Controllers
             TempData["Categories"] = repository.GetCategoriesWithSubCategories().ToList();
             TempData["Colors"] = repository.TypeColors.ToList();
             TempData["BoundColors"] = new List<Color>();
-            TempData["Accesories"] = repository.Accessories.ToList();
             return View("Edit", new Product());
         }
 
@@ -48,7 +47,6 @@ namespace LevelStore.Controllers
             TempData["Categories"] = repository.GetCategoriesWithSubCategories().ToList();
             TempData["Colors"] = repository.TypeColors.ToList();
             TempData["BoundColors"] = repository.BoundColors.Where(i=> i.ProductID == productid).ToList();
-            TempData["Accesories"] = repository.Accessories.ToList();
             return View("Edit", product);
         }
 
@@ -76,7 +74,6 @@ namespace LevelStore.Controllers
             {
                 TempData["BoundColors"] = new List<Color>();
             }
-            TempData["Accesories"] = repository.Accessories.ToList();
             return View(product);
         }
 
@@ -130,8 +127,7 @@ namespace LevelStore.Controllers
         public IActionResult AddColors(TypeColor newTypeColor)
         {
             repository.SaveTypeColor(newTypeColor);
-            TempData["ColorList"] = repository.TypeColors.ToList();
-            return View(new TypeColor());
+            return RedirectToActionPermanent("AddColors");
         }
 
         public IActionResult BindPhotoAndColor(int?[] imageID, int?[] ColorID, string[] Alternative, int? ValFirstOnScreen, int? ValSecondOnScreen)

@@ -16,7 +16,7 @@ namespace LevelStore.Models.EF
             context = ctx;
         }
 
-        public IEnumerable<Order> Orders => context.Orders.Include(o => o.Lines).ThenInclude(l => l.Product);
+        public IEnumerable<Order> Orders => context.Orders.Include(o => o.Lines).ThenInclude(l => l.Product).ThenInclude(c => c.Color);
 
         public void SaveOrder(Order order)
         {
@@ -32,6 +32,10 @@ namespace LevelStore.Models.EF
         {
             if (order != null)
             {
+                foreach (var line in order.Lines)
+                {
+                    line.Product = null;
+                }
                 context.Update(order);
                 context.SaveChanges();
             }

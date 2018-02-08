@@ -12,6 +12,8 @@
         for (var i = 0; i < order.Lines.length; i++) {
             order.Lines[i].CartLineID = $($("[name='Lines[" + i + "].CartLineID']")[0]).val();
             order.Lines[i].Quantity = $($("[name='Lines[" + i + "].Quantity']")[0]).val();
+            order.Lines[i].SelectedColor = $($("[name='Lines[" + i + "].SelectedColor']")[0]).val();
+            order.Lines[i].Furniture = $($("[name='Lines[" + i + "].Furniture']")[0]).val();
         }
     } catch (err) {
         return null;

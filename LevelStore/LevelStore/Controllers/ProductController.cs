@@ -68,9 +68,16 @@ namespace LevelStore.Controllers
             return View(productsListViewModel);
         }
         
-        public ViewResult ViewSingleProduct(int productId)
+        public ViewResult ViewSingleProduct(int productId, bool wasError)
         {
+            if (wasError)
+            {
+                ModelState.AddModelError("", "Выберите цвет и фурнитуру");
+            }
             Product selectedProduct = repository.Products.Where(h => h.HideFromUsers == false).FirstOrDefault(p => p.ProductID == productId);
+            List<TypeColor> bindedColors = repository.TypeColors.Where(tci =>
+                (repository.BoundColors.Where(i => i.ProductID == selectedProduct.ProductID).ToList()).Any(bci =>
+                    bci.TypeColorID == tci.TypeColorID)).ToList();
             if (selectedProduct == null)
             {
                 return View("List");
@@ -84,6 +91,7 @@ namespace LevelStore.Controllers
                 repository.SubCategories.First(sCId => sCId.SubCategoryID == selectedProduct.SubCategoryID);
             TempData["Category"] = repository.Categories.First(cId => cId.CategoryID == subCategory.CategoryID).CategoryName;
             TempData["SubCategory"] = subCategory.SubCategoryName;
+            TempData["BindedColors"] = bindedColors;
             TempData["relatedProducts"] = relatedProducts;
             return View(selectedProduct);
         }

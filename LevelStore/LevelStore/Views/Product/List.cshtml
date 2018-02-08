@@ -4,27 +4,14 @@
     ViewData["Title"] = "List";
     Layout = "_Layout";
     string searchString = TempData["searchString"] as string;
-    if (searchString == null)
-    {
-        searchString = String.Empty;
-    }
-    var utf = Encoding.UTF8;
-    Byte[] stringBytes = utf.GetBytes(searchString);
-    StringBuilder sbBytes = new StringBuilder(stringBytes.Length * 2);
-    foreach (byte b in stringBytes)
-    {
-        sbBytes.AppendFormat("{0:X2}", b);
-    }
-
-
-
+    searchString = EncodeToUTF8.Encode(searchString);
 }
 
 @section scripts{
     <script src="/js/UnicodeToChar.js"></script>
     <script>
         $(document).ready(function () {
-            var searchString = convertHexToString('@sbBytes');
+            var searchString = convertHexToString('@searchString');
             $("#SearchField").val(searchString);
         });
     </script>

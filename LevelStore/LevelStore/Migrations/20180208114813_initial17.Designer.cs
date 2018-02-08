@@ -11,9 +11,10 @@ using System;
 namespace LevelStore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180208114813_initial17")]
+    partial class initial17
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,15 +26,11 @@ namespace LevelStore.Migrations
                     b.Property<int>("CartLineID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("Furniture");
-
                     b.Property<int?>("OrderID");
 
                     b.Property<int?>("ProductID");
 
                     b.Property<int>("Quantity");
-
-                    b.Property<int>("SelectedColor");
 
                     b.HasKey("CartLineID");
 
@@ -139,6 +136,8 @@ namespace LevelStore.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Description");
+
+                    b.Property<int>("Furniture");
 
                     b.Property<bool>("HideFromUsers");
 

@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using LevelStore.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 
 namespace LevelStore.Controllers
 {
@@ -20,8 +21,13 @@ namespace LevelStore.Controllers
             return View("ListCart", cart);
         }
 
-        public RedirectToActionResult AddToCart(int productId, int quantity)
+        public IActionResult AddToCart(int productId, int quantity, int? furniture, int? selectedColor)
         {
+            if (furniture == null || selectedColor == null)
+            {
+                return RedirectToAction("ViewSingleProduct", new RouteValueDictionary(
+                    new { controller = "Product", action = "ViewSingleProduct", productId = productId, wasError = true}));
+            }
             if (quantity == 0)
             {
                 quantity = 1;
@@ -30,7 +36,7 @@ namespace LevelStore.Controllers
 
             if (product != null)
             {
-                cart.AddItem(product, quantity);
+                cart.AddItem(product, quantity, (int) furniture, (int) selectedColor);
             }
             return RedirectToAction("List", "Product");
         }

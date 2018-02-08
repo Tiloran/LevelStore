@@ -19,11 +19,13 @@ namespace LevelStore.Controllers
     public class OrderController : Controller
     {
         private IOrderRepository repository;
+        private IProductRepository repositoryProduct;
         private Cart cart;
         private readonly IHostingEnvironment _appEnvironment;
 
-        public OrderController(IOrderRepository repoService, Cart cartService, IHostingEnvironment appEnvironment)
+        public OrderController(IOrderRepository repoService, Cart cartService, IHostingEnvironment appEnvironment, IProductRepository repoProduct)
         {
+            repositoryProduct = repoProduct;
             repository = repoService;
             cart = cartService;
             _appEnvironment = appEnvironment;
@@ -56,9 +58,13 @@ namespace LevelStore.Controllers
             return View();
         }
         
-        public ViewResult ListOrder() => View(repository.Orders);
+        public ViewResult ListOrder()
+        {
+            TempData["BindedColors"] = repositoryProduct.TypeColors.ToList();
+            return View(repository.Orders);
+        }
 
-        [HttpPost]
+        
         public IActionResult ChangeStatus(int status, int orderId)
         {
             if (Enum.IsDefined(typeof(OrderStatus), status))
@@ -76,6 +82,7 @@ namespace LevelStore.Controllers
             {
                 return RedirectToAction("ListOrder");
             }
+            TempData["BindedColors"] = repositoryProduct.TypeColors.ToList();
             return View("ViewSingleOrder", order);
         }
 
@@ -100,6 +107,7 @@ namespace LevelStore.Controllers
         {
             List<Order> orderList = repository.Orders.Where(oi => checkedOrderId.Any(coi => coi.Equals(oi.OrderID)))
                 .ToList();
+            List<TypeColor> colors = repositoryProduct.TypeColors.ToList();
             string sWebRootFolder = _appEnvironment.WebRootPath + "/excelReports";
             string sFileName = DateTime.Now.ToString(CultureInfo.InvariantCulture)
                 .Replace("  ", "_").Trim()
@@ -172,6 +180,19 @@ namespace LevelStore.Controllers
                         row.CreateCell(2).SetCellValue(line.Product.Name);
                         row.CreateCell(3).SetCellValue(line.Quantity);
                         row.CreateCell(4).SetCellValue(line.Product.Price.ToString("C"));
+                        globalIndexRow++;
+                        row = excelSheet.CreateRow(i + globalIndexRow);
+                        cell = row.CreateCell(2);
+                        cell.SetCellValue("Фурнитура");
+                        cell.CellStyle = boldStyle;
+                        row.CreateCell(3).SetCellValue(line.Furniture == (int) Furniture.Nikel ? "Никель" : "Антик");
+                        globalIndexRow++;
+                        row = excelSheet.CreateRow(i + globalIndexRow);
+                        cell = row.CreateCell(2);
+                        cell.SetCellValue("Цвет");
+                        cell.CellStyle = boldStyle;
+                        row.CreateCell(3).SetCellValue(colors.FirstOrDefault(cn => cn.TypeColorID == line.SelectedColor)?.ColorType ?? "Неизвестный");
+
                     }
                     globalIndexRow++;
                     row = excelSheet.CreateRow(i + globalIndexRow);
@@ -179,16 +200,13 @@ namespace LevelStore.Controllers
                     cell.SetCellValue("Общая цена");
                     cell.CellStyle = boldStyle;
                     row.CreateCell(3).SetCellValue(orderList[i-1].Lines.Sum(s => s.Quantity * s.Product.Price).ToString("C"));
-
-                    
                 }
                 workbook.Write(fs);
             }
 
-            string file_path = Path.Combine(_appEnvironment.ContentRootPath, $"wwwroot/excelReports/{sFileName}");
-            string file_type = "application/xlsx";
-            return PhysicalFile(file_path, file_type, sFileName);
+            var filePath = Path.Combine(_appEnvironment.ContentRootPath, $"wwwroot/excelReports/{sFileName}");
+            const string fileType = "application/xlsx";
+            return PhysicalFile(filePath, fileType, sFileName);
         }
-
     }
 }

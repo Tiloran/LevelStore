@@ -11,9 +11,10 @@ using System;
 namespace LevelStore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180208115018_initial18")]
+    partial class initial18
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,8 +33,6 @@ namespace LevelStore.Migrations
                     b.Property<int?>("ProductID");
 
                     b.Property<int>("Quantity");
-
-                    b.Property<int>("SelectedColor");
 
                     b.HasKey("CartLineID");
 

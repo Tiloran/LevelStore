@@ -5,6 +5,7 @@
     string Category = TempData["Category"] as String;
     string SubCategory = TempData["SubCategory"] as String;
     List<Product> relatedProducts = TempData["relatedProducts"] as List<Product>;
+    List<TypeColor> bindedColors = TempData["BindedColors"] as List<TypeColor>;
 }
 
 <div>@Model.Name</div>
@@ -22,11 +23,28 @@ else
 {
     <img src="/images/none.png" style="width: 100px; height: 100px;" alt="none image">
 }
-        <form asp-controller="Cart" asp-action="AddToCart">
-            <input type="hidden" name="productId" value="@Model.ProductID" />
-            <input type="number" name="quantity" value="1" min="0" max="1000" />
-            <button type="submit">Добавить в корзину</button>
-        </form>
+    <form asp-controller="Cart" asp-action="AddToCart">
+        <input type="hidden" name="productId" value="@Model.ProductID" />
+        <input type="number" name="quantity" value="1" min="0" max="1000" />
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <select name="selectedColor">
+            <option selected disabled>Выберите цвет</option>
+            @foreach (var color in bindedColors)
+            {
+                <option value="@color.TypeColorID">@color.ColorType</option>
+            }
+        </select>
+        @{
+            int Antik = (int) Furniture.Antik;
+            int Nikel = (int)Furniture.Nikel;
+        }
+        <select name="furniture">
+            <option selected disabled>Выберите фурнитуру</option>
+            <option value="@Antik">Антик</option>
+            <option value="@Nikel">Никель</option>
+        </select>
+        <button type="submit">Добавить в корзину</button>
+    </form>
 @*<a asp-controller="Cart" asp-action="AddToCart" asp-route-productId="@Model.ProductID" class="btn btn-default">Добавить в корзину</a>*@
 <a asp-controller="Product" asp-action="List" class="btn btn-default">К списку</a>
 @if (relatedProducts != null && relatedProducts.Any())

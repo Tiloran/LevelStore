@@ -5,11 +5,6 @@
     List<TypeColor> colorList = TempData["Colors"] as List<TypeColor>;
     List<Color> boundcolorList = TempData["BoundColors"] as List<Color>;
     List<Category> Categories = TempData["Categories"] as List<Category>;
-    Dictionary<int, string> Accesories = new Dictionary<int, string>();
-    foreach (var accesorie in (TempData["Accesories"] as List<AccessorieForBag>))
-    {
-        Accesories.Add(accesorie.AccessorieForBagID, accesorie.Name);
-    }
 }
 
 @*@section scripts{
@@ -101,23 +96,6 @@
                     <input name="colors" type="checkbox" value="@colorList[i].TypeColorID" />
                 }
             }
-        </div>
-        <div>
-            <label>Фурнитура:</label>
-            <select asp-for="AccessorieForBagID">
-                <option disabled>Выберите фурнитуру</option>
-                @foreach (KeyValuePair<int, string> keyValue in Accesories)
-                {
-                    if (keyValue.Key == Model.AccessorieForBagID)
-                    {
-                        <option selected value="@keyValue.Key">@keyValue.Value</option>
-                    }
-                    else
-                    {
-                        <option value="@keyValue.Key">@keyValue.Value</option>
-                    }
-                }
-            </select>
         </div>
 
     </div>

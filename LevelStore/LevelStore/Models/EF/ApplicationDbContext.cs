@@ -9,7 +9,6 @@ namespace LevelStore.Models.EF
         public DbSet<Image> Images { get; set; }
         public DbSet<Color> Colors { get; set; }
         public DbSet<TypeColor> TypeColors { get; set; }
-        public DbSet<AccessorieForBag> AccessoriesForBags { get; set; }
         public DbSet<SubCategory> SubCategories { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Order> Orders { get; set; }

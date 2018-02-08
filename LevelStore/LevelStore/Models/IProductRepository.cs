@@ -8,7 +8,6 @@ namespace LevelStore.Models
         IEnumerable<Image> Images { get; }
         IEnumerable<TypeColor> TypeColors { get; }
         IEnumerable<Color> BoundColors { get; }
-        IEnumerable<AccessorieForBag> Accessories { get; }
         IEnumerable<SubCategory> SubCategories { get; }
         IEnumerable<Category> Categories { get; }
         IEnumerable<Product> ProductsWithImages { get; }

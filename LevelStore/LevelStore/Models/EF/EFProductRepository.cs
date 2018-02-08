@@ -17,7 +17,6 @@ namespace LevelStore.Models.EF
         public IEnumerable<Image> Images => context.Images;
         public IEnumerable<TypeColor> TypeColors  => context.TypeColors;
         public IEnumerable<Color> BoundColors => context.Colors;
-        public IEnumerable<AccessorieForBag> Accessories => context.AccessoriesForBags;
         public IEnumerable<SubCategory> SubCategories => context.SubCategories;
         public IEnumerable<Category> Categories => context.Categories;
         public IEnumerable<Product> ProductsWithImages => context.Products.Include(i => i.Images);
@@ -84,7 +83,6 @@ namespace LevelStore.Models.EF
                     NewProduct = product.NewProduct,
                     Size = product.Size,
                     Description = product.Description,
-                    AccessorieForBagID = product.AccessorieForBagID,
                     HideFromUsers = product.HideFromUsers
                 };
                 
@@ -101,7 +99,6 @@ namespace LevelStore.Models.EF
                     Product.SubCategoryID = product.SubCategoryID;
                     Product.NewProduct = product.NewProduct;
                     Product.Size = product.Size;
-                    Product.AccessorieForBagID = product.AccessorieForBagID;
                     Product.HideFromUsers = product.HideFromUsers;
                 }
             }

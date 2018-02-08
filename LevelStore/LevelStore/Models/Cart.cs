@@ -7,7 +7,7 @@ namespace LevelStore.Models
     {
         private List<CartLine> lineCollection = new List<CartLine>();
 
-        public virtual void AddItem(Product product, int quantity)
+        public virtual void AddItem(Product product, int quantity, int furniture, int selectedColor)
         {
             CartLine line = lineCollection.FirstOrDefault(p => p.Product.ProductID == product.ProductID);
 
@@ -16,7 +16,9 @@ namespace LevelStore.Models
                 lineCollection.Add(new CartLine
                 {
                     Product = product,
-                    Quantity = quantity
+                    Quantity = quantity,
+                    Furniture = furniture,
+                    SelectedColor = selectedColor
                 });
             }
             else
@@ -52,6 +54,8 @@ namespace LevelStore.Models
     {
         public int CartLineID { get; set; }
         public Product Product { get; set; }
+        public int Furniture { get; set; }
+        public int SelectedColor { get; set; }
         public int Quantity { get; set; }
     }
 }
