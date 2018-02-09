@@ -11,9 +11,10 @@ using System;
 namespace LevelStore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180209143951_initial20")]
+    partial class initial20
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -113,7 +114,7 @@ namespace LevelStore.Migrations
 
                     b.Property<string>("Comment");
 
-                    b.Property<DateTime?>("DateOfCreation")
+                    b.Property<DateTime>("DateOfCreation")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email");

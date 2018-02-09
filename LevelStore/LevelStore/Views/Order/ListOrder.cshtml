@@ -15,6 +15,7 @@
     <table class="table table-bordered table-striped">
         <tr>
             <th>Выбрать</th>
+            <th>Дата создания</th>
             <th>Имя</th>
             <th>Телефон</th>
             <th>Продукт</th>
@@ -27,6 +28,10 @@
         {
             <tr>
                 <td><input type="checkbox" value="@o.OrderID" name="checkedOId"/></td>
+                @{
+                    string dateOfCreation = o.DateOfCreation != null ? o.DateOfCreation.ToString() : "Неизвестно";
+                }
+                <td>@dateOfCreation</td>
                 <td>@o.FirstName</td>
                 <td>@o.Phone</td>
                 <th>Название продукта</th>
@@ -50,21 +55,21 @@
                             <option disabled>Выберите статус</option>
                             @if (o.Status == (int) OrderStatus.Waiting)
                             {
-                                <option value="0">Не отправлено</option>
-                                <option selected value="1">Ожидание</option>
-                                <option value="2">Отправлено</option>
+                                <option value="@Convert.ToInt32(OrderStatus.NotSended)">Не отправлено</option>
+                                <option selected value="@Convert.ToInt32(OrderStatus.Waiting)">Ожидание</option>
+                                <option value="@Convert.ToInt32(OrderStatus.Sended)">Отправлено</option>
                             }
                             else if (o.Status == (int) OrderStatus.NotSended)
                             {
-                                <option selected value="0">Не отправлено</option>
-                                <option value="1">Ожидание</option>
-                                <option value="2">Отправлено</option>
+                                <option selected value="@Convert.ToInt32(OrderStatus.NotSended)">Не отправлено</option>
+                                <option value="@Convert.ToInt32(OrderStatus.Waiting)">Ожидание</option>
+                                <option value="@Convert.ToInt32(OrderStatus.Sended)">Отправлено</option>
                             }
                             else
                             {
-                                <option value="0">Не отправлено</option>
-                                <option value="1">Ожидание</option>
-                                <option selected value="2">Отправлено</option>
+                                <option value="@Convert.ToInt32(OrderStatus.NotSended)">Не отправлено</option>
+                                <option value="@Convert.ToInt32(OrderStatus.Waiting)">Ожидание</option>
+                                <option selected value="@Convert.ToInt32(OrderStatus.Sended)">Отправлено</option>
                             }
                         </select>
                         <button class="btn btn-sm btn-danger">Изменить</button>
@@ -76,13 +81,13 @@
             foreach (var line in o.Lines)
             {
                 <tr>
-                    <td colspan="3"></td>
+                    <td colspan="4"></td>
                     <td>@line.Product.Name</td>
                     <td>@line.Quantity</td>
                     <td>@line.Product.Price.ToString("C")</td>
                 </tr>
                 <tr>
-                    <td colspan="3"></td>
+                    <td colspan="4"></td>
                     <th>Фурнитура</th>
                     @if (line.Furniture == (int) Furniture.Nikel)
                     {
@@ -94,7 +99,7 @@
                     }
                 </tr>
                 <tr>
-                    <td colspan="3"></td>
+                    <td colspan="4"></td>
                     <th>Цвет</th>
                     @{
                         string colorName = bindedColors.FirstOrDefault(cn => cn.TypeColorID == line.SelectedColor)?.ColorType ?? "Неизвестный";
@@ -103,7 +108,7 @@
                 </tr>
             }
             <tr>
-                <td colspan="3"></td>
+                <td colspan="4"></td>
                 <th>Общая цена</th>
                 <td colspan="2">@o.Lines.Sum(s => s.Quantity * s.Product.Price).ToString("C")</td>
             </tr>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -28,5 +29,8 @@ namespace LevelStore.Models
         public string Address { get; set; }
 
         public string Comment { get; set; }
+        
+        [Column(TypeName = "datetime2")]
+        public DateTime? DateOfCreation { get; set; }
     }
 }

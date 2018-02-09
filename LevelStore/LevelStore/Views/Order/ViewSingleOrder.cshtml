@@ -43,6 +43,7 @@
     <table>
         <tr>
             <th>ID заказа</th>
+            <th>Дата создания</th>
             <th>Имя</th>
             <th>Фамилия</th>
             <th>Адрес</th>
@@ -55,6 +56,10 @@
         </tr>
         <tr>
             <td><label asp-for="OrderID">@Model.OrderID</label><input type="hidden" asp-for="OrderID" value="@Model.OrderID" /></td>
+            @{
+                string dateOfCreation = Model.DateOfCreation != null ? Model.DateOfCreation.ToString() : "Неизвестно";
+            }
+            <td>@dateOfCreation</td>
             <td><input asp-for="FirstName" value="@Model.FirstName" /></td>
             <td><input asp-for="LastName" value="@Model.LastName" /></td>
             <td><input asp-for="Address" value="@Model.Address" /></td>

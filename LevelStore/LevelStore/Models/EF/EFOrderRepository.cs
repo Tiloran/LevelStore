@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using LevelStore.Models.Enums;
@@ -23,6 +24,10 @@ namespace LevelStore.Models.EF
             context.AttachRange(order.Lines.Select(l => l.Product).ToList().GroupBy(i => i.ProductID).Select(g => g.First()));
             if (order.OrderID == 0)
             {
+                if (order.DateOfCreation == null)
+                {
+                    order.DateOfCreation = DateTime.Now;
+                }
                 context.Orders.Add(order);
             }
             context.SaveChanges();

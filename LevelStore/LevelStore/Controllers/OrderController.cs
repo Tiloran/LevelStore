@@ -130,15 +130,18 @@ namespace LevelStore.Controllers
                 excelSheet.DefaultColumnWidth = 20;
                 IRow row = excelSheet.CreateRow(0);
                 cell = row.CreateCell(0);
-                cell.SetCellValue("Имя");
+                cell.SetCellValue("Дата создания");
                 cell.CellStyle = boldStyle;
                 cell = row.CreateCell(1);
-                cell.SetCellValue("Телефон");
+                cell.SetCellValue("Имя");
                 cell.CellStyle = boldStyle;
                 cell = row.CreateCell(2);
+                cell.SetCellValue("Телефон");
+                cell.CellStyle = boldStyle;
+                cell = row.CreateCell(3);
                 cell.SetCellValue("Продукт");
                 cell.CellStyle = boldStyle;
-                cell = row.CreateCell(5);
+                cell = row.CreateCell(6);
                 cell.SetCellValue("Статус");
                 cell.CellStyle = boldStyle;
 
@@ -148,58 +151,59 @@ namespace LevelStore.Controllers
                 {
 
                     row = excelSheet.CreateRow(i + globalIndexRow);
-                    row.CreateCell(0).SetCellValue(orderList[i-1].FirstName + " " + orderList[i - 1].LastName);
-                    row.CreateCell(1).SetCellValue(orderList[i-1].Phone);
+                    row.CreateCell(0).SetCellValue(orderList[i - 1].DateOfCreation.ToString());
+                    row.CreateCell(1).SetCellValue(orderList[i-1].FirstName + " " + orderList[i - 1].LastName);
+                    row.CreateCell(2).SetCellValue(orderList[i-1].Phone);
 
-                    cell = row.CreateCell(2);
+                    cell = row.CreateCell(3);
                     cell.SetCellValue("Название продукта");
                     cell.CellStyle = boldStyle;
-                    cell = row.CreateCell(3);
+                    cell = row.CreateCell(4);
                     cell.SetCellValue("Количество");
                     cell.CellStyle = boldStyle;
-                    cell = row.CreateCell(4);
+                    cell = row.CreateCell(5);
                     cell.SetCellValue("Цена");
                     cell.CellStyle = boldStyle;
                     
                     if (orderList[i - 1].Status == (int) OrderStatus.Waiting)
                     {
-                        row.CreateCell(5).SetCellValue("Ожидание");
+                        row.CreateCell(6).SetCellValue("Ожидание");
                     }
                     else if (orderList[i - 1].Status == (int) OrderStatus.NotSended)
                     {
-                        row.CreateCell(5).SetCellValue("Не отослано");
+                        row.CreateCell(6).SetCellValue("Не отослано");
                     }
                     else
                     {
-                        row.CreateCell(5).SetCellValue("Отослано");
+                        row.CreateCell(6).SetCellValue("Отослано");
                     }
                     foreach (var line in orderList[i-1].Lines)
                     {
                         globalIndexRow++;
                         row = excelSheet.CreateRow(i + globalIndexRow);
-                        row.CreateCell(2).SetCellValue(line.Product.Name);
-                        row.CreateCell(3).SetCellValue(line.Quantity);
-                        row.CreateCell(4).SetCellValue(line.Product.Price.ToString("C"));
+                        row.CreateCell(3).SetCellValue(line.Product.Name);
+                        row.CreateCell(4).SetCellValue(line.Quantity);
+                        row.CreateCell(5).SetCellValue(line.Product.Price.ToString("C"));
                         globalIndexRow++;
                         row = excelSheet.CreateRow(i + globalIndexRow);
-                        cell = row.CreateCell(2);
+                        cell = row.CreateCell(3);
                         cell.SetCellValue("Фурнитура");
                         cell.CellStyle = boldStyle;
-                        row.CreateCell(3).SetCellValue(line.Furniture == (int) Furniture.Nikel ? "Никель" : "Антик");
+                        row.CreateCell(4).SetCellValue(line.Furniture == (int) Furniture.Nikel ? "Никель" : "Антик");
                         globalIndexRow++;
                         row = excelSheet.CreateRow(i + globalIndexRow);
-                        cell = row.CreateCell(2);
+                        cell = row.CreateCell(3);
                         cell.SetCellValue("Цвет");
                         cell.CellStyle = boldStyle;
-                        row.CreateCell(3).SetCellValue(colors.FirstOrDefault(cn => cn.TypeColorID == line.SelectedColor)?.ColorType ?? "Неизвестный");
+                        row.CreateCell(4).SetCellValue(colors.FirstOrDefault(cn => cn.TypeColorID == line.SelectedColor)?.ColorType ?? "Неизвестный");
 
                     }
                     globalIndexRow++;
                     row = excelSheet.CreateRow(i + globalIndexRow);
-                    cell = row.CreateCell(2);
+                    cell = row.CreateCell(3);
                     cell.SetCellValue("Общая цена");
                     cell.CellStyle = boldStyle;
-                    row.CreateCell(3).SetCellValue(orderList[i-1].Lines.Sum(s => s.Quantity * s.Product.Price).ToString("C"));
+                    row.CreateCell(4).SetCellValue(orderList[i-1].Lines.Sum(s => s.Quantity * s.Product.Price).ToString("C"));
                 }
                 workbook.Write(fs);
             }
