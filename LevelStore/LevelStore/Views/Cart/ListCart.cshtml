@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Cart";
     Layout = "_Layout";
+    List<TypeColor> colors = TempData["colors"] as List<TypeColor>;
 }
 
 <h2>Ваша корзина</h2>
@@ -10,6 +11,8 @@
         <tr>
             <th>Количество</th>
             <th>Шмотка</th>
+            <th>Фурнитура</th>
+            <th>Цвет</th>
             <th class="text-right">Цена</th>
             <th class="text-right">Общая цена</th>
         </tr>
@@ -20,6 +23,19 @@
             <tr>
                 <td class="text-center">@line.Quantity</td>
                 <td class="text-left">@line.Product.Name</td>
+                @if (line.Furniture == (int) Furniture.Nikel)
+                {
+                    <td>Никель</td>
+                }
+                else
+                {
+                    <td>Антик</td>
+                }
+                @{
+                    string colorName = colors.FirstOrDefault(cn => cn.TypeColorID == line.SelectedColor)?.ColorType ?? "Неизвестный";
+                }
+                <td>@colorName</td>
+
                 <td class="text-right">@line.Product.Price.ToString("C")</td>
                 <td class="text-right">@((line.Quantity * line.Product.Price).ToString("C"))</td>
                 <td>

@@ -20,7 +20,7 @@ namespace LevelStore.Models.EF
 
         public void SaveOrder(Order order)
         {
-            context.AttachRange(order.Lines.Select(l => l.Product));
+            context.AttachRange(order.Lines.Select(l => l.Product).ToList().GroupBy(i => i.ProductID).Select(g => g.First()));
             if (order.OrderID == 0)
             {
                 context.Orders.Add(order);

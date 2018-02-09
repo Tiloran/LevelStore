@@ -9,7 +9,7 @@ namespace LevelStore.Models
 
         public virtual void AddItem(Product product, int quantity, int furniture, int selectedColor)
         {
-            CartLine line = lineCollection.FirstOrDefault(p => p.Product.ProductID == product.ProductID);
+            CartLine line = lineCollection.FirstOrDefault(p => p.Product.ProductID == product.ProductID && p.Furniture == furniture && p.SelectedColor == selectedColor);
 
             if (line == null)
             {

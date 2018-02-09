@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using LevelStore.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -18,6 +19,8 @@ namespace LevelStore.Controllers
 
         public ViewResult Index()
         {
+            List<TypeColor> colors = repository.TypeColors.ToList();
+            TempData["colors"] = colors;
             return View("ListCart", cart);
         }
 
@@ -25,7 +28,7 @@ namespace LevelStore.Controllers
         {
             if (furniture == null || selectedColor == null)
             {
-                return RedirectToAction("ViewSingleProduct", new RouteValueDictionary(
+                return RedirectToAction($"ViewSingleProduct", new RouteValueDictionary(
                     new { controller = "Product", action = "ViewSingleProduct", productId = productId, wasError = true}));
             }
             if (quantity == 0)
