@@ -8,6 +8,10 @@
     List<TypeColor> bindedColors = TempData["BindedColors"] as List<TypeColor>;
 }
 
+@section scripts{
+    <script src="/js/ShowAndHideColorImages.js"></script>
+}
+
 <div>@Model.Name</div>
 <div>@Model.Price</div>
 <div>@Model.Description</div>
@@ -16,57 +20,58 @@
 {
     foreach (var image in Model.Images)
     {
-        <img src="/images/@image.Name" style="width: 100px; height: 100px;" alt="@image.Alternative">
+        int colorId = bindedColors.FirstOrDefault(cn => cn.TypeColorID == image.TypeColorID)?.TypeColorID ?? 0;
+        <img color="@colorId" src="/images/@image.Name" style="width: 100px; height: 100px;" alt="@image.Alternative">
     }
 }
 else
 {
     <img src="/images/none.png" style="width: 100px; height: 100px;" alt="none image">
 }
-    <form asp-controller="Cart" asp-action="AddToCart">
-        <input type="hidden" name="productId" value="@Model.ProductID" />
-        <input type="number" name="quantity" value="1" min="0" max="1000" />
-        <div asp-validation-summary="All" class="text-danger"></div>
-        <select name="selectedColor">
-            <option selected disabled>Выберите цвет</option>
-            @foreach (var color in bindedColors)
-            {
-                <option value="@color.TypeColorID">@color.ColorType</option>
-            }
-        </select>
-        @{
-            int Antik = (int) Furniture.Antik;
-            int Nikel = (int)Furniture.Nikel;
+<form asp-controller="Cart" asp-action="AddToCart">
+    <input type="hidden" name="productId" value="@Model.ProductID" />
+    <input type="number" name="quantity" value="1" min="0" max="1000" />
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <select onchange="HideAndShowImages(this)" name="selectedColor">
+        <option value="0" selected >Выберите цвет</option>
+        @foreach (var color in bindedColors)
+        {
+            <option value="@color.TypeColorID">@color.ColorType</option>
         }
-        <select name="furniture">
-            <option selected disabled>Выберите фурнитуру</option>
-            <option value="@Antik">Антик</option>
-            <option value="@Nikel">Никель</option>
-        </select>
-        <button type="submit">Добавить в корзину</button>
-    </form>
+    </select>
+    @{
+        int Antik = (int)Furniture.Antik;
+        int Nikel = (int)Furniture.Nikel;
+    }
+    <select name="furniture">
+        <option selected disabled>Выберите фурнитуру</option>
+        <option value="@Antik">Антик</option>
+        <option value="@Nikel">Никель</option>
+    </select>
+    <button type="submit">Добавить в корзину</button>
+</form>
 @*<a asp-controller="Cart" asp-action="AddToCart" asp-route-productId="@Model.ProductID" class="btn btn-default">Добавить в корзину</a>*@
 <a asp-controller="Product" asp-action="List" class="btn btn-default">К списку</a>
 @if (relatedProducts != null && relatedProducts.Any())
 {
-<div>
-    <p>Похожие товары:</p>
-    @foreach (var rProduct in relatedProducts)
-    {
-        <div>@rProduct.Name</div>
-        <div>@rProduct.Price</div>
-        if (rProduct.Images.Count > 0)
+    <div>
+        <p>Похожие товары:</p>
+        @foreach (var rProduct in relatedProducts)
         {
-            foreach (var image in rProduct.Images)
+            <div>@rProduct.Name</div>
+            <div>@rProduct.Price</div>
+            if (rProduct.Images.Count > 0)
             {
-                <img src="/images/@image.Name" style="width: 100px; height: 100px;" alt="@image.Alternative">
+                foreach (var image in rProduct.Images)
+                {
+                    <img src="/images/@image.Name" style="width: 100px; height: 100px;" alt="@image.Alternative">
+                }
+            }
+            else
+            {
+                <img src="/images/none.png" style="width: 100px; height: 100px;" alt="none image">
             }
         }
-        else
-        {
-            <img src="/images/none.png" style="width: 100px; height: 100px;" alt="none image">
-        }
-    }
-</div>
+    </div>
 
 }

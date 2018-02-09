@@ -26,7 +26,7 @@ namespace LevelStore.Controllers
 
         public IActionResult AddToCart(int productId, int quantity, int? furniture, int? selectedColor)
         {
-            if (furniture == null || selectedColor == null)
+            if (furniture == null || selectedColor == null || selectedColor == 0)
             {
                 return RedirectToAction($"ViewSingleProduct", new RouteValueDictionary(
                     new { controller = "Product", action = "ViewSingleProduct", productId = productId, wasError = true}));
