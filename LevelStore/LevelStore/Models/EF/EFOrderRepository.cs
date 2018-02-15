@@ -20,8 +20,9 @@ namespace LevelStore.Models.EF
         public IEnumerable<Order> Orders => context.Orders.Include(o => o.Lines).ThenInclude(l => l.Product).ThenInclude(c => c.Color);
 
         public void SaveOrder(Order order)
-        {
-            context.AttachRange(order.Lines.Select(l => l.Product).ToList().GroupBy(i => i.ProductID).Select(g => g.First()));
+        {            
+            context.CartLines.UpdateRange(order.Lines);
+            context.SaveChanges();
             if (order.OrderID == 0)
             {
                 if (order.DateOfCreation == null)

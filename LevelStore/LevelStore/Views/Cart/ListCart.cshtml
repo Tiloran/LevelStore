@@ -3,6 +3,8 @@
     ViewData["Title"] = "Cart";
     Layout = "_Layout";
     List<TypeColor> colors = TempData["colors"] as List<TypeColor>;
+    List<Share> shares = TempData["Shares"] as List<Share>;
+    decimal TotalPrice = 0;
 }
 
 <h2>Ваша корзина</h2>
@@ -20,39 +22,67 @@
     <tbody>
         @foreach (var line in Model.Lines)
         {
-            <tr>
-                <td class="text-center">@line.Quantity</td>
-                <td class="text-left">@line.Product.Name</td>
-                @if (line.Furniture == (int) Furniture.Nikel)
-                {
-                    <td>Никель</td>
+        <tr>
+            <td class="text-center">@line.Quantity</td>
+            <td class="text-left">@line.Product.Name</td>
+            @if (line.Furniture == (int)Furniture.Nikel)
+            {
+        <td>Никель</td>
+            }
+            else
+            {
+        <td>Антик</td>
+            }
+            @{
+                string colorName = colors.FirstOrDefault(cn => cn.TypeColorID == line.SelectedColor)?.ColorType ?? "Неизвестный";
+            }
+            <td>@colorName</td>
+            @{
+                            decimal price;
+                            bool WasShare = false;
+                            if (line.Product.ShareID != null)
+                            {
+                                Share share = shares.First(i => i.ShareId == line.Product.ShareID);
+                                if (share.Enabled)
+                                {
+                                    price = line.Product.Price / 100 * (decimal)share.KoefPrice;
+                                    WasShare = true;
+                                }
+                                else
+                                {
+                                    price = line.Product.Price;
+                                }
+                            }
+                            else
+                            {
+                                price = line.Product.Price;
+                            }
+                            if (WasShare)
+                            {
+                    <td class="text-right"><del>@line.Product.Price.ToString("C")</del>@price.ToString("C")</td>
+
                 }
                 else
                 {
-                    <td>Антик</td>
+                    <td class="text-right">@price.ToString("C")</td>
                 }
-                @{
-                    string colorName = colors.FirstOrDefault(cn => cn.TypeColorID == line.SelectedColor)?.ColorType ?? "Неизвестный";
-                }
-                <td>@colorName</td>
-
-                <td class="text-right">@line.Product.Price.ToString("C")</td>
-                <td class="text-right">@((line.Quantity * line.Product.Price).ToString("C"))</td>
-                <td>
-                    <form asp-action="RemoveFromCart" method="post">
-                        <input type="hidden" name="ProductID" value="@line.Product.ProductID" />
-                        @*<input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />*@
-                        <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
-                    </form>
-                </td>
-            </tr>
+                TotalPrice = TotalPrice + line.Quantity * price;
+                }            
+            <td class="text-right">@((line.Quantity * price).ToString("C"))</td>
+            <td>
+                <form asp-action="RemoveFromCart" method="post">
+                    <input type="hidden" name="ProductID" value="@line.Product.ProductID" />
+                    <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
+                </form>
+            </td>
+        </tr>
 
         }
     </tbody>
     <tfoot>
         <tr>
-            <td colspan="3" class="text-right">Total:</td>
-            <td class="text-right">@Model.ComputeTotalValue().ToString("C")</td>
+            <td colspan="3" class="text-right">Полная цена:</td>            
+            <td class="text-right">@TotalPrice.ToString("C")</td>
         </tr>
     </tfoot>
 </table>

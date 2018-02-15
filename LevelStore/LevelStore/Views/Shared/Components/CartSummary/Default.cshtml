@@ -1,14 +1,51 @@
-﻿@model Cart
+﻿@model CartWithSharesViewModel
+
 
 <div class=""> 
-    @if (Model.Lines.Any())
+    @if (Model.cart.Lines.Any())
     {
 
-        <small class="navbar-text">
-            @Model.Lines.Sum(x => x.Quantity) шмоток
-            @Model.ComputeTotalValue().ToString("C")
-        </small>
-    }
+    <small class="navbar-text">
+        @if (Model.cart.Lines.Sum(x => x.Quantity) == 1)
+        {
+            <span>@Model.cart.Lines.Sum(x => x.Quantity) товар</span>
+        }
+        else
+        {
+            <span>@Model.cart.Lines.Sum(x => x.Quantity) товаров</span>
+        }        
+        @{
+            decimal TotalPrice = 0;
+            bool WasShare = false;
+            foreach (var cart in Model.cart.Lines)
+            {
+                if (cart.Product.ShareID != null)
+                {
+                    Share share = Model.shares.First(i => i.ShareId == cart.Product.ShareID);
+                    if (share.Enabled)
+                    {
+                        TotalPrice += cart.Quantity * (TotalPrice + cart.Product.Price / 100 * (decimal)(share.KoefPrice));
+                        WasShare = true;
+                    }
+                    else
+                    {
+                        TotalPrice += cart.Product.Price * cart.Quantity;
+                    }
+                }
+                else
+                {
+                    TotalPrice += cart.Product.Price * cart.Quantity;
+                }
+            }
+            if (WasShare)
+            {
+            <del>@Model.cart.ComputeTotalValue().ToString("C")</del>
+            }
+            @TotalPrice.ToString("C")
+            }
+
+    </small>
+            }
         <a class="btn btn-sm btn-default navbar-btn" asp-controller="Cart" asp-action="Index">
             <i class="fa fa-shopping-bag" aria-hidden="true"></i>
         </a>

@@ -23,7 +23,7 @@ namespace LevelStore.Controllers
         }
 
         public ViewResult Create()
-        {
+        {            
             TempData["Categories"] = repository.GetCategoriesWithSubCategories().ToList();
             TempData["Colors"] = repository.TypeColors.ToList();
             TempData["BoundColors"] = new List<Color>();

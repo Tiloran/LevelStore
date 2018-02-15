@@ -3,6 +3,8 @@
     ViewData["Title"] = "ListOrder";
     Layout = "_Layout";
     List<TypeColor> bindedColors = TempData["BindedColors"] as List<TypeColor>;
+    List<Share> shares = TempData["Shares"] as List<Share>;
+    
 }
 
 @section scripts{
@@ -26,6 +28,7 @@
         </tr>
         @foreach (var o in Model)
         {
+            decimal TotalPrice = 0;
             <tr>
                 <td><input type="checkbox" value="@o.OrderID" name="checkedOId"/></td>
                 @{
@@ -78,14 +81,27 @@
                 </td>
                 <td><a asp-action="ChangeOrder" asp-route-orderId="@o.OrderID" class="btn btn-sm btn-danger">Подробно</a></td>
             </tr>
-            foreach (var line in o.Lines)
-            {
-                <tr>
-                    <td colspan="4"></td>
-                    <td>@line.Product.Name</td>
-                    <td>@line.Quantity</td>
-                    <td>@line.Product.Price.ToString("C")</td>
-                </tr>
+                    foreach (var line in o.Lines)
+                    {
+            <tr>
+                <td colspan="4"></td>
+                <td>@line.Product.Name</td>
+                <td>@line.Quantity</td>
+                @{                    
+                        decimal price = line.PriceAfterCheckout;
+                        if (line.KoefPriceAfterCheckout != null)
+                        {
+                            price = price / 100 * (decimal)line.KoefPriceAfterCheckout;
+                            <td class="text-right"><del>@line.PriceAfterCheckout.ToString("C")</del>@price.ToString("C")</td>
+                        }
+                            else
+                            {
+                                <td class="text-right">@price.ToString("C")</td>
+
+                            }
+                                TotalPrice = TotalPrice + line.Quantity * price;
+                    }
+            </tr>
                 <tr>
                     <td colspan="4"></td>
                     <th>Фурнитура</th>
@@ -110,7 +126,7 @@
             <tr>
                 <td colspan="4"></td>
                 <th>Общая цена</th>
-                <td colspan="2">@o.Lines.Sum(s => s.Quantity * s.Product.Price).ToString("C")</td>
+                <td colspan="2">@TotalPrice.ToString("C")</td>
             </tr>
 
         }

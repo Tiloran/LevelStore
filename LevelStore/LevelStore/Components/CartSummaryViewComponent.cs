@@ -1,20 +1,30 @@
 ﻿using LevelStore.Models;
+using LevelStore.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace LevelStore.Components
 {
     public class CartSummaryViewComponent : ViewComponent
     {
         private readonly Cart cart;
+        private readonly IShareRepository shareRepository;
 
-        public CartSummaryViewComponent(Cart cartService)
+        public CartSummaryViewComponent(Cart cartService, IShareRepository sharesRepo)
         {
             cart = cartService;
+            shareRepository = sharesRepo;
         }
 
         public IViewComponentResult Invoke()
         {
-            return View(cart);
+            CartWithSharesViewModel cartWithShares = new CartWithSharesViewModel
+            {
+                cart = cart,
+                shares = shareRepository.Shares
+            };      
+            
+            return View(cartWithShares);
         }
     }
 }

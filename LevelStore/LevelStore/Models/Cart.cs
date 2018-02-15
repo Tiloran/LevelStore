@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using LevelStore.Models.EF;
 
@@ -34,24 +36,7 @@ namespace LevelStore.Models
         }
 
         public virtual decimal ComputeTotalValue()
-        {
-            //EFShareRepository tempRepo = new EFShareRepository();
-            //int TotalQuantity = 0;
-            //decimal TotalPrice = 0;
-            //foreach (var cart in lineCollection)
-            //{
-            //    TotalQuantity += cart.Quantity;
-            //    if (cart.Product.ShareID != null)
-            //    {
-            //        Share share = repository.Shares.First(i => i.ShareId == cart.Product.ShareID);
-            //        TotalPrice = TotalPrice + cart.Product.Price / 100 * (decimal)(share.KoefPrice);
-            //    }
-            //    else
-            //    {
-            //        TotalPrice += cart.Product.Price;
-            //    }
-            //}
-            //return TotalQuantity * TotalPrice;
+        {            
             return lineCollection.Sum(e => e.Quantity * e.Product.Price);
         }
 
@@ -74,6 +59,9 @@ namespace LevelStore.Models
         public Product Product { get; set; }
         public int Furniture { get; set; }
         public int SelectedColor { get; set; }
+        public decimal PriceAfterCheckout { get; set; }
+        [Range(0, 100)]
+        public double? KoefPriceAfterCheckout { get; set; }
         public int Quantity { get; set; }
     }
 }

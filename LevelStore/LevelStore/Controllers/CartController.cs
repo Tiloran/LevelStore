@@ -9,11 +9,13 @@ namespace LevelStore.Controllers
     public class CartController : Controller
     {
         private readonly IProductRepository repository;
+        private readonly IShareRepository shareRepository;
         private readonly Cart cart;
 
-        public CartController(IProductRepository repo, Cart cartService)
+        public CartController(IProductRepository repo, Cart cartService, IShareRepository shareRepo)
         {
             repository = repo;
+            shareRepository = shareRepo;
             cart = cartService;
         }
 
@@ -21,6 +23,7 @@ namespace LevelStore.Controllers
         {
             List<TypeColor> colors = repository.TypeColors.ToList();
             TempData["colors"] = colors;
+            TempData["Shares"] = shareRepository.Shares.ToList();
             return View("ListCart", cart);
         }
 

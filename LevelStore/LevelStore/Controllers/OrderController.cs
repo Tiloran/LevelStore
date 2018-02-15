@@ -20,15 +20,17 @@ namespace LevelStore.Controllers
     {
         private readonly IOrderRepository repository;
         private readonly IProductRepository repositoryProduct;
+        private readonly IShareRepository repositoryShares;
         private readonly Cart cart;
         private readonly IHostingEnvironment _appEnvironment;
 
-        public OrderController(IOrderRepository repoService, Cart cartService, IHostingEnvironment appEnvironment, IProductRepository repoProduct)
+        public OrderController(IOrderRepository repoService, Cart cartService, IHostingEnvironment appEnvironment, IProductRepository repoProduct, IShareRepository repoShare)
         {
             repositoryProduct = repoProduct;
             repository = repoService;
             cart = cartService;
             _appEnvironment = appEnvironment;
+            repositoryShares = repoShare;
         }
 
         public ViewResult Checkout() => View(new Order());
@@ -42,7 +44,19 @@ namespace LevelStore.Controllers
             }
             if (ModelState.IsValid)
             {
-                order.Lines = cart.Lines.ToArray();
+                order.Lines = cart.Lines.ToArray();                
+                foreach(var line in order.Lines)
+                {
+                    if(line.Product.ShareID != null)
+                    {
+                        Share share = repositoryShares.Shares.First(i => i.ShareId == line.Product.ShareID);
+                        if (share.Enabled)
+                        {                            
+                            line.KoefPriceAfterCheckout = share.KoefPrice;
+                        }
+                    }
+                    line.PriceAfterCheckout = line.Product.Price;
+                }
                 repository.SaveOrder(order);
                 return RedirectToAction(nameof(Completed));
             }
@@ -61,6 +75,7 @@ namespace LevelStore.Controllers
         public ViewResult ListOrder()
         {
             TempData["BindedColors"] = repositoryProduct.TypeColors.ToList();
+            TempData["Shares"] = repositoryShares.Shares.ToList();
             return View(repository.Orders);
         }
 
