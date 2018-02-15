@@ -13,8 +13,8 @@ namespace LevelStore.Controllers
 {
     public class AdminController : Controller
     {
-        private IProductRepository repository;
-        private IHostingEnvironment _appEnvironment;
+        private readonly IProductRepository repository;
+        private readonly IHostingEnvironment _appEnvironment;
 
         public AdminController(IProductRepository repo, IHostingEnvironment appEnvironment)
         {

@@ -18,9 +18,9 @@ namespace LevelStore.Controllers
 {
     public class OrderController : Controller
     {
-        private IOrderRepository repository;
-        private IProductRepository repositoryProduct;
-        private Cart cart;
+        private readonly IOrderRepository repository;
+        private readonly IProductRepository repositoryProduct;
+        private readonly Cart cart;
         private readonly IHostingEnvironment _appEnvironment;
 
         public OrderController(IOrderRepository repoService, Cart cartService, IHostingEnvironment appEnvironment, IProductRepository repoProduct)

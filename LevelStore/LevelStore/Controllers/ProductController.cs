@@ -9,11 +9,13 @@ namespace LevelStore.Controllers
 {
     public class ProductController : Controller
     {
-        private IProductRepository repository;
+        private readonly IProductRepository repository;
+        private readonly IShareRepository shareRepository;
 
-        public ProductController(IProductRepository repo)
+        public ProductController(IProductRepository repo, IShareRepository shareRepo)
         {
             repository = repo;
+            shareRepository = shareRepo;
         }
 
         public ViewResult List(int? categoryID, int? subCategoryID, string searchString)
@@ -64,6 +66,8 @@ namespace LevelStore.Controllers
             }
 
             ProductsListViewModel productsListViewModel = new ProductsListViewModel { ProductAndImages = productAndImages.ToList(), Categories = categories};
+            TempData["Shares"] = shareRepository.Shares.Where(i =>
+                productsListViewModel.ProductAndImages.Any(id => i.ShareId == id.product.ShareID)).ToList();
             TempData["searchString"] = searchString;
             return View(productsListViewModel);
         }
@@ -93,6 +97,10 @@ namespace LevelStore.Controllers
             TempData["SubCategory"] = subCategory.SubCategoryName;
             TempData["BindedColors"] = bindedColors;
             TempData["relatedProducts"] = relatedProducts;
+            if (selectedProduct.ShareID != null)
+            {
+                TempData["Share"] = shareRepository.Shares.FirstOrDefault(i => i.ShareId == selectedProduct.ShareID);
+            }
             return View(selectedProduct);
         }
     }

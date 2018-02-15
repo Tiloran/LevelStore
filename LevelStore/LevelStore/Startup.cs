@@ -1,4 +1,6 @@
-﻿using LevelStore.Models;
+﻿using System;
+using LevelStore.Infrastructure.Tasks;
+using LevelStore.Models;
 using LevelStore.Models.EF;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,12 +9,13 @@ using Microsoft.Azure.KeyVault.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RecurrentTasks;
 
 namespace LevelStore
 {
     public class Startup
     {
-        private IConfigurationRoot Configuration;
+        private readonly IConfigurationRoot Configuration;
 
         public Startup(IHostingEnvironment env)
         {
@@ -29,8 +32,10 @@ namespace LevelStore
                 option.UseSqlServer(Configuration["Data:SportStoreProducts:ConnectionString"]));
             services.AddTransient<IProductRepository, EFProductRepository>();
             services.AddTransient<IOrderRepository, EFOrderRepository>();
-            services.AddScoped<Cart>(sp => SessionCart.GetCart(sp));
+            services.AddTransient<IShareRepository, EFShareRepository>();
+            services.AddScoped(SessionCart.GetCart);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTask<WorkWihShares>();
             services.AddMemoryCache();
             services.AddSession();
             services.AddMvc();
@@ -43,7 +48,7 @@ namespace LevelStore
             app.UseStatusCodePages();
             app.UseStaticFiles();
             app.UseSession();
-            app.UseMvcWithDefaultRoute();
+            app.StartTask<WorkWihShares>(TimeSpan.FromMinutes(1));
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

@@ -18,5 +18,6 @@ namespace LevelStore.Models
         public bool NewProduct { get; set; }
         public bool HideFromUsers { get; set; }
         public List<Image> Images { get; set; }
+        public int? ShareID { get; set; }
     }
 }

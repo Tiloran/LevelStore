@@ -1,9 +1,9 @@
-﻿@using System.Text
-@model ProductsListViewModel
+﻿@model ProductsListViewModel
 @{
     ViewData["Title"] = "List";
     Layout = "_Layout";
     string searchString = TempData["searchString"] as string;
+    List<Share> shares = TempData["Shares"] as List<Share>;
     searchString = EncodeToUTF8.Encode(searchString);
 }
 
@@ -16,73 +16,106 @@
         });
     </script>
     <script src="/js/ShowSecondOnMouseOver.js"></script>
+    <script src="/js/jquery.countdown.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('[data-countdown]').each(function() {
+                var $this = $(this), finalDate = $(this).data('countdown');
+                $this.countdown(finalDate, function(event) {
+                    $this.html(event.strftime('%D дней %H:%M:%S'));
+                });
+            });
+        });
+    </script>
 }
 
-    
 
 
-    <a asp-controller="Admin" asp-action="ListAdmin" class="btn btn-default">Админка</a>
-    @if (Model.Categories.Any())
-    {
-        <ul class="menu">
-            <li><a asp-controller="Product" asp-action="List" asp-route-searchString="">Без фильтров</a></li>
-            @foreach (var category in Model.Categories)
-            {
-                <li>
-                    <a asp-controller="Product" asp-action="List" asp-route-categoryID="@category.CategoryID" asp-route-searchString="@searchString">@category.CategoryName</a>
-                    @if (category.SubCategories.Any())
-                    {
-                        <ul class="submenu">
-                            @foreach (var subCategory in category.SubCategories)
-                            {
-                                <li>
-                                    <a asp-controller="Product" asp-action="List" asp-route-subCategoryID="@subCategory.SubCategoryID" asp-route-searchString="@searchString">
-                                        @category.CategoryName "@subCategory.SubCategoryName"
-                                    </a>
-                                </li>
-                            }
-                        </ul>
-                    }
-                </li>
-            }
-        </ul>
-    }
 
-    @foreach (var product in Model.ProductAndImages)
-    {
-        <div>
-
-            <span>@product.product.Name</span>
-            <span>@product.product.Price</span>
-            <div>@product.product.Description</div>
-
-            @if (product.product.NewProduct)
-            {
-                <div style="background-color: red; width: 100px;">NEW</div>
-            }
-            @{
-                try
+<a asp-controller="Admin" asp-action="ListAdmin" class="btn btn-default">Админка</a>
+@if (Model.Categories.Any())
+{
+    <ul class="menu">
+        <li><a asp-controller="Product" asp-action="List" asp-route-searchString="">Без фильтров</a></li>
+        @foreach (var category in Model.Categories)
+        {
+            <li>
+                <a asp-controller="Product" asp-action="List" asp-route-categoryID="@category.CategoryID" asp-route-searchString="@searchString">@category.CategoryName</a>
+                @if (category.SubCategories.Any())
                 {
-                    if (product.Images.Count > 0 && product.Images.FirstOrDefault(f => f.FirstOnScreen).Name != null && product.Images.FirstOrDefault(f => f.SecondOnScreen).Name != null)
-                    {
-                        <img src="/images/@product.Images.FirstOrDefault(f => f.FirstOnScreen).Name" id="@product.product.ProductID" name="FirstAndSecondImages" onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" style="width: 100px; height: 100px;" alt="@product.Images.FirstOrDefault(f => f.FirstOnScreen).Alternative">
-                        <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.FirstOrDefault(f => f.FirstOnScreen).Name" imageAlternative="@product.Images.FirstOrDefault(f => f.FirstOnScreen).Alternative" />
-                        <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.FirstOrDefault(f => f.SecondOnScreen).Name" imageAlternative="@product.Images.FirstOrDefault(f => f.SecondOnScreen).Alternative" />
-                    }
-                    else
-                    {
-                        <img src="/images/none.png" style="width: 100px; height: 100px;" alt="None Image">
-                    }
+                    <ul class="submenu">
+                        @foreach (var subCategory in category.SubCategories)
+                        {
+                            <li>
+                                <a asp-controller="Product" asp-action="List" asp-route-subCategoryID="@subCategory.SubCategoryID" asp-route-searchString="@searchString">
+                                    @category.CategoryName "@subCategory.SubCategoryName"
+                                </a>
+                            </li>
+                        }
+                    </ul>
                 }
-                catch
-                {
-                    <img src="/images/none.png" style="width: 100px; height: 100px;" alt="None Image">
-                }
+            </li>
+        }
+    </ul>
+}
+
+@foreach (var product in Model.ProductAndImages)
+{
+    <div>
+        @{
+        decimal price = product.product.Price;
+        decimal newPrice = price;
+        }
+
+        @if (product.product.NewProduct)
+        {
+            <div style="background-color: red; width: 100px;">NEW</div>
+        }
+        @if (product.product.ShareID != null)
+        {
+            Share share = shares.First(i => i.ShareId == product.product.ShareID);
+            if (share.DateOfStart <= DateTime.Now && share.Enabled)
+            {
+                <div>Акция</div>
+                <div data-countdown="@share.DateOfEnd.ToString("yyyy/MM/dd HH:mm:ss").Replace('.', '/')"></div>
+                newPrice = price / 100 * (decimal) (share.KoefPrice);
+
             }
-            
-            <a asp-action="ViewSingleProduct" asp-route-productId="@product.product.ProductID" class="btn btn-primary">Выбрать</a>
-        </div>
+        }
+        <span>@product.product.Name</span>
+        @if (newPrice != price)
+        {
+            <span><del>@price</del></span>
+            <span>@newPrice</span>
+        }
+        else
+        {
+            <span>@price</span>
+        }
+        <div>@product.product.Description</div>
+        @{
+        try
+        {
+            if (product.Images.Count > 0 && product.Images.FirstOrDefault(f => f.FirstOnScreen).Name != null && product.Images.FirstOrDefault(f => f.SecondOnScreen).Name != null)
+            {
+                <img src="/images/@product.Images.FirstOrDefault(f => f.FirstOnScreen).Name" id="@product.product.ProductID" name="FirstAndSecondImages" onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" style="width: 100px; height: 100px;" alt="@product.Images.FirstOrDefault(f => f.FirstOnScreen).Alternative">
+                <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.FirstOrDefault(f => f.FirstOnScreen).Name" imageAlternative="@product.Images.FirstOrDefault(f => f.FirstOnScreen).Alternative" />
+                <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.FirstOrDefault(f => f.SecondOnScreen).Name" imageAlternative="@product.Images.FirstOrDefault(f => f.SecondOnScreen).Alternative" />
+        }
+        else
+        {
+            <img src="/images/none.png" style="width: 100px; height: 100px;" alt="None Image">
     }
+}
+catch
+{
+    <img src="/images/none.png" style="width: 100px; height: 100px;" alt="None Image">
+}
+        }
+
+        <a asp-action="ViewSingleProduct" asp-route-productId="@product.product.ProductID" class="btn btn-primary">Выбрать</a>
+    </div>
+}
 
 
 

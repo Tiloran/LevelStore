@@ -8,8 +8,8 @@ namespace LevelStore.Controllers
 {
     public class CartController : Controller
     {
-        private IProductRepository repository;
-        private Cart cart;
+        private readonly IProductRepository repository;
+        private readonly Cart cart;
 
         public CartController(IProductRepository repo, Cart cartService)
         {

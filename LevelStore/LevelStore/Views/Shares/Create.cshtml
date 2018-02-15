@@ -1,0 +1,48 @@
+﻿@model Share
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "_Layout";
+}
+
+<h2>Create</h2>
+
+<h4>Share</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label">Дата начала акции</label>
+                <input asp-for="DateOfStart" class="form-control" />
+                <span asp-validation-for="DateOfStart" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Дата конца акции</label>
+                <input asp-for="DateOfEnd" class="form-control" />
+                <span asp-validation-for="DateOfEnd" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="height: 100px;">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="Enabled" /> Включить/Выключить
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Коеф. снижения цены</label>
+                <input asp-for="KoefPrice" class="form-control" />
+                <span asp-validation-for="KoefPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

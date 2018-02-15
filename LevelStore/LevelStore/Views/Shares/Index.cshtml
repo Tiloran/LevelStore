@@ -1,0 +1,61 @@
+﻿@model IEnumerable<Share>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "_Layout";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    Дата начала акции
+                </th>
+                <th>
+                    Дата конца акции
+                </th>
+                <th>
+                    Включено/Выключено
+                </th>
+                <th>
+                    Коеф. снижения цены
+                </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @item.DateOfStart
+            </td>
+            <td>
+                @item.DateOfEnd
+            </td>
+            @if (item.Enabled)
+            {
+                <td>Вкл</td>
+            }
+            else
+            {
+                <td>Выкл</td>
+            }
+            @{
+                string koefString = item.KoefPrice + "%";
+            }
+            <td>
+                @koefString
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-shareid="@item.ShareId">Edit</a> |
+                <a asp-action="Delete" asp-route-shareid="@item.ShareId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

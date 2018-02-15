@@ -14,7 +14,7 @@ namespace LevelStore.Models
         void SaveTypeColor(TypeColor typeColor);
         List<Category> GetCategoriesWithSubCategories();
         void DeleteTypeColor(int typeColorId);
-        int? SaveProduct(Product product, List<int> colorsID);
+        int? SaveProduct(Product product, List<int> colorsID = null);
         void AddImages(List<string> images, int? id);
         List<TypeColor> GetColorThatBindedWithImages(List<Image> images);
         void DeleteProduct(int? productID);

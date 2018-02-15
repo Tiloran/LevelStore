@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using LevelStore.Models.EF;
 
 namespace LevelStore.Models
 {
     public class Cart
     {
-        private List<CartLine> lineCollection = new List<CartLine>();
+        private readonly List<CartLine> lineCollection = new List<CartLine>();
 
         public virtual void AddItem(Product product, int quantity, int furniture, int selectedColor)
         {
@@ -34,6 +35,23 @@ namespace LevelStore.Models
 
         public virtual decimal ComputeTotalValue()
         {
+            //EFShareRepository tempRepo = new EFShareRepository();
+            //int TotalQuantity = 0;
+            //decimal TotalPrice = 0;
+            //foreach (var cart in lineCollection)
+            //{
+            //    TotalQuantity += cart.Quantity;
+            //    if (cart.Product.ShareID != null)
+            //    {
+            //        Share share = repository.Shares.First(i => i.ShareId == cart.Product.ShareID);
+            //        TotalPrice = TotalPrice + cart.Product.Price / 100 * (decimal)(share.KoefPrice);
+            //    }
+            //    else
+            //    {
+            //        TotalPrice += cart.Product.Price;
+            //    }
+            //}
+            //return TotalQuantity * TotalPrice;
             return lineCollection.Sum(e => e.Quantity * e.Product.Price);
         }
 

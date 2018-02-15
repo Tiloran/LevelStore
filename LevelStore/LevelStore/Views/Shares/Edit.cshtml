@@ -1,0 +1,127 @@
+﻿@using Microsoft.CodeAnalysis
+@model Share
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "_Layout";
+    List<Category> catogieList = TempData["Categories"] as List<Category> ?? new List<Category>();
+}
+
+@section scripts{
+    <script src="/js/RemoveThisElem.js"></script>
+    <script type="text/javascript">
+        
+        function RunAjaxSearch(e, mustClick) {
+            if (e.keyCode === 13 || mustClick === true) {
+                $("#AjaxSearchProductForShares").click();
+            }
+        }
+
+        function search() {
+            var searchString = $("#search-input").val();
+            var subCategoryId = $("#category-input").val();
+            var CategoryId = $("#category-input").find('option:selected').attr("CategoryId"); 
+            var searchData = {
+                "searchString": searchString,
+                "categoryId": CategoryId,
+                "subCategoryId": subCategoryId
+            }
+            
+            $.ajax({
+                url: "/Shares/SharesAjaxSearch/",
+                type: "POST",
+                dataType: "text json",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(searchData),
+                success: function(products) {
+                    ShowProductList(products);
+                }
+            });
+        };
+
+        function ShowProductList(products) {
+            var productBlock = $("#SelectedProductBlock");
+            productBlock.empty();
+            if (products.length > 0) {
+                for (var i = 0; i < products.length; i++) {
+                    productBlock.append(
+                        "<div>" +
+                        "<input checked=\"checked\" type=\"checkbox\" value=\"" + products[i].productID + "\" name=\"Products[" + i +"]\" /> " +
+                        products[i].name +
+                        " <button type=\"button\" onclick=\"DeleteElem((this).parentElement)\">Удалить</button>" +
+                        "</div>"
+                    );
+                }
+            }
+        }
+    </script>
+}
+
+<h2>Edit</h2>
+
+<h4>Share</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ShareId" />
+            <div class="form-group">
+                <label class="control-label">Дата начала акции</label>
+                <input asp-for="DateOfStart" class="form-control" />
+                <span asp-validation-for="DateOfStart" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Дата конца акции</label>
+                <input asp-for="DateOfEnd" class="form-control" />
+                <span asp-validation-for="DateOfEnd" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="height: 100px;">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="Enabled" /> Включить/Выключить
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Коеф. снижения цены</label>
+                <input asp-for="KoefPrice" class="form-control" />
+                <span asp-validation-for="KoefPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+            Список товаров для акции
+            <div id="SelectedProductBlock">
+                @for (int i = 0; i < Model.Products?.Count; i++)
+                {
+                    <div>
+                        <input checked="checked" type="checkbox" value="@Model.Products[i].ProductID" name="Products[@i]"/>
+                        @Model.Products[i].Name
+                        <button type="button" onclick="DeleteElem((this).parentElement)">Удалить</button>
+                    </div>
+                }
+            </div>
+        </form>
+        <div>
+            <button id="AjaxSearchProductForShares" onclick="search()">Поиск</button>
+            <input id="search-input" onkeypress="RunAjaxSearch(event, false)"/>
+            <select id="category-input" onchange="RunAjaxSearch(event, true)">
+                <option selected CategoryId="0" value="0">Любая категория</option>
+                @foreach (var category in catogieList)
+                {
+                    <option CategoryId="@category.CategoryID" value="0">@category.CategoryName</option>
+                    foreach (var subCategory in category.SubCategories)
+                    {
+                        <option CategoryId="@subCategory.CategoryID" value="@subCategory.SubCategoryID">@category.CategoryName "@subCategory.SubCategoryName"</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

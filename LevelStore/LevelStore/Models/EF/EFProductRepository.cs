@@ -20,6 +20,7 @@ namespace LevelStore.Models.EF
         public IEnumerable<SubCategory> SubCategories => context.SubCategories;
         public IEnumerable<Category> Categories => context.Categories;
         public IEnumerable<Product> ProductsWithImages => context.Products.Include(i => i.Images);
+        
 
         public void DeleteTypeColor(int typeColorId)
         {
@@ -63,8 +64,12 @@ namespace LevelStore.Models.EF
             
             context.SaveChanges();
         }
-        public int? SaveProduct(Product product, List<int> colorsID)
+        public int? SaveProduct(Product product, List<int> colorsID = null)
         {
+            if (colorsID == null)
+            {
+                colorsID = new List<int>();
+            }
             if (colorsID.Count == 0)
             {
                 if (context.TypeColors.FirstOrDefault() != null)
@@ -100,6 +105,7 @@ namespace LevelStore.Models.EF
                     Product.NewProduct = product.NewProduct;
                     Product.Size = product.Size;
                     Product.HideFromUsers = product.HideFromUsers;
+                    Product.ShareID = product.ShareID;
                 }
             }
             context.SaveChanges();
