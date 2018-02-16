@@ -63,5 +63,6 @@ namespace LevelStore.Models
         [Range(0, 100)]
         public double? KoefPriceAfterCheckout { get; set; }
         public int Quantity { get; set; }
+        public int? OrderID { get; set; }
     }
 }

@@ -15,15 +15,12 @@ namespace LevelStore
             var scope = host.Services.CreateScope();
 
             var services = scope.ServiceProvider;
-            try
-            {
+            
+            
                 var context = services.GetRequiredService<ApplicationDbContext>();
-                AddColorsAndAcessories.EnsurePopulated(context);
-            }
-            catch
-            {
-                // ignored
-            }
+                SeedingDB.EnsurePopulated(context);
+            
+            
             host.Run();
         }
 
