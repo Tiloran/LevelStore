@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using LevelStore.Models;
 using LevelStore.Models.Enums;
+using LevelStore.Models.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -72,11 +73,26 @@ namespace LevelStore.Controllers
             return View();
         }
         
-        public ViewResult ListOrder()
+        public ViewResult ListOrder(int page)
         {
+            if (page <= 0)
+            {
+                page = 1;
+            }
+            int pageSize = 1;
+            int count = repository.Orders.Count();
+            var items = repository.Orders.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+            PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
+            OrderListViewModel orderListviewModel = new OrderListViewModel
+            {
+                PageViewModel = pageViewModel,
+                Orders = items
+            };
+
             TempData["BindedColors"] = repositoryProduct.TypeColors.ToList();
             TempData["Shares"] = repositoryShares.Shares.ToList();
-            return View(repository.Orders);
+            return View(orderListviewModel);
         }
 
         
@@ -192,13 +208,23 @@ namespace LevelStore.Controllers
                     {
                         row.CreateCell(6).SetCellValue("Отослано");
                     }
+                    decimal totalPrice = 0;
                     foreach (var line in orderList[i-1].Lines)
                     {
                         globalIndexRow++;
                         row = excelSheet.CreateRow(i + globalIndexRow);
                         row.CreateCell(3).SetCellValue(line.Product.Name);
                         row.CreateCell(4).SetCellValue(line.Quantity);
-                        row.CreateCell(5).SetCellValue(line.Product.Price.ToString("C"));
+                        decimal price = 0;
+                        if(line.KoefPriceAfterCheckout != null)
+                        {
+                            price = (line.PriceAfterCheckout / 100) * line.PriceAfterCheckout;
+                        }
+                        else
+                        {
+                            price = line.PriceAfterCheckout;
+                        }
+                        row.CreateCell(5).SetCellValue(price.ToString("C"));
                         globalIndexRow++;
                         row = excelSheet.CreateRow(i + globalIndexRow);
                         cell = row.CreateCell(3);
@@ -211,14 +237,14 @@ namespace LevelStore.Controllers
                         cell.SetCellValue("Цвет");
                         cell.CellStyle = boldStyle;
                         row.CreateCell(4).SetCellValue(colors.FirstOrDefault(cn => cn.TypeColorID == line.SelectedColor)?.ColorType ?? "Неизвестный");
-
+                        totalPrice += price;
                     }
                     globalIndexRow++;
                     row = excelSheet.CreateRow(i + globalIndexRow);
                     cell = row.CreateCell(3);
                     cell.SetCellValue("Общая цена");
                     cell.CellStyle = boldStyle;
-                    row.CreateCell(4).SetCellValue(orderList[i-1].Lines.Sum(s => s.Quantity * s.Product.Price).ToString("C"));
+                    row.CreateCell(4).SetCellValue(totalPrice.ToString("C"));
                 }
                 workbook.Write(fs);
             }

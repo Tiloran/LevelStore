@@ -1,18 +1,67 @@
-﻿@model IEnumerable<Order>
+﻿@model OrderListViewModel
 @{
     ViewData["Title"] = "ListOrder";
     Layout = "_Layout";
     List<TypeColor> bindedColors = TempData["BindedColors"] as List<TypeColor>;
     List<Share> shares = TempData["Shares"] as List<Share>;
-    
+
 }
 
 @section scripts{
     <script src="/js/GetIdForExcelDownload.js"></script>
 }
 <h2>ListOrder</h2>
+<div>
+    @if (Model.PageViewModel.HasPreviousPage)
+    {
+        <a asp-action="ListOrder"
+           asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+           class="btn btn-default btn">
+            <i class="glyphicon glyphicon-chevron-left"></i>
+            Назад
+        </a>
+    }
+    @if (Model.PageViewModel.PageNumber != 1)
+    {
+        <a asp-action="ListOrder" asp-route-page="1">1</a>
+    }
 
-@if (Model.Any())
+    @for (int i = 1; i <= 3; i++)
+    {
+        if (Model.PageViewModel.PageNumber - i > 1)
+        {
+            int temp = Model.PageViewModel.PageNumber - i;
+            <a asp-action="ListOrder" asp-route-page="@temp">@temp</a>
+        }
+    }
+    
+    <a asp-action="ListOrder" asp-route-page="@Model.PageViewModel.PageNumber" style="color: red;">@Model.PageViewModel.PageNumber</a>
+    
+
+    @for (int i = 1; i <= 3; i++)
+    {
+        if (Model.PageViewModel.PageNumber + i < Model.PageViewModel.TotalPages)
+        {
+            int temp = Model.PageViewModel.PageNumber + i;
+            <a asp-action="ListOrder" asp-route-page="@temp">@temp</a>
+        }
+    }
+    @if (Model.PageViewModel.PageNumber != Model.PageViewModel.TotalPages)
+    {
+        <a asp-action="ListOrder" asp-route-page="@Model.PageViewModel.TotalPages">@Model.PageViewModel.TotalPages</a>
+    }
+
+    @if (Model.PageViewModel.HasNextPage)
+    {
+        <a asp-action="ListOrder"
+           asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+           class="btn btn-default btn">
+            Вперед
+            <i class="glyphicon glyphicon-chevron-right"></i>
+        </a>
+    }
+</div>
+@if (Model.Orders.Any())
 {
     <table class="table table-bordered table-striped">
         <tr>
@@ -26,11 +75,11 @@
             <th>Детали</th>
 
         </tr>
-        @foreach (var o in Model)
+        @foreach (var o in Model.Orders)
         {
             decimal TotalPrice = 0;
             <tr>
-                <td><input type="checkbox" value="@o.OrderID" name="checkedOId"/></td>
+                <td><input type="checkbox" value="@o.OrderID" name="checkedOId" /></td>
                 @{
                     string dateOfCreation = o.DateOfCreation != null ? o.DateOfCreation.ToString() : "Неизвестно";
                 }
@@ -40,11 +89,11 @@
                 <th>Название продукта</th>
                 <th>Количество</th>
                 <th>Цена</th>
-                @if (o.Status == (int) OrderStatus.NotSended)
+                @if (o.Status == (int)OrderStatus.NotSended)
                 {
                     <td>Не отправлено</td>
                 }
-                else if (o.Status == (int) OrderStatus.Waiting)
+                else if (o.Status == (int)OrderStatus.Waiting)
                 {
                     <td>Ожидание</td>
                 }
@@ -56,13 +105,13 @@
                     <form asp-action="ChangeStatus" asp-route-orderId="@o.OrderID">
                         <select name="status">
                             <option disabled>Выберите статус</option>
-                            @if (o.Status == (int) OrderStatus.Waiting)
+                            @if (o.Status == (int)OrderStatus.Waiting)
                             {
                                 <option value="@Convert.ToInt32(OrderStatus.NotSended)">Не отправлено</option>
                                 <option selected value="@Convert.ToInt32(OrderStatus.Waiting)">Ожидание</option>
                                 <option value="@Convert.ToInt32(OrderStatus.Sended)">Отправлено</option>
                             }
-                            else if (o.Status == (int) OrderStatus.NotSended)
+                            else if (o.Status == (int)OrderStatus.NotSended)
                             {
                                 <option selected value="@Convert.ToInt32(OrderStatus.NotSended)">Не отправлено</option>
                                 <option value="@Convert.ToInt32(OrderStatus.Waiting)">Ожидание</option>
@@ -81,31 +130,31 @@
                 </td>
                 <td><a asp-action="ChangeOrder" asp-route-orderId="@o.OrderID" class="btn btn-sm btn-danger">Подробно</a></td>
             </tr>
-                    foreach (var line in o.Lines)
-                    {
-            <tr>
-                <td colspan="4"></td>
-                <td>@line.Product.Name</td>
-                <td>@line.Quantity</td>
-                @{                    
+            foreach (var line in o.Lines)
+            {
+                <tr>
+                    <td colspan="4"></td>
+                    <td>@line.Product.Name</td>
+                    <td>@line.Quantity</td>
+                    @{
                         decimal price = line.PriceAfterCheckout;
                         if (line.KoefPriceAfterCheckout != null)
                         {
                             price = price / 100 * (decimal)line.KoefPriceAfterCheckout;
                             <td class="text-right"><del>@line.PriceAfterCheckout.ToString("C")</del>@price.ToString("C")</td>
                         }
-                            else
-                            {
-                                <td class="text-right">@price.ToString("C")</td>
+                        else
+                        {
+                            <td class="text-right">@price.ToString("C")</td>
 
-                            }
-                                TotalPrice = TotalPrice + line.Quantity * price;
+                        }
+                        TotalPrice = TotalPrice + line.Quantity * price;
                     }
-            </tr>
+                </tr>
                 <tr>
                     <td colspan="4"></td>
                     <th>Фурнитура</th>
-                    @if (line.Furniture == (int) Furniture.Nikel)
+                    @if (line.Furniture == (int)Furniture.Nikel)
                     {
                         <td>Никель</td>
                     }
