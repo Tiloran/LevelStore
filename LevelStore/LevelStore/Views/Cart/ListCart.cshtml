@@ -91,3 +91,172 @@
     <a class="btn btn-primary" asp-action="Checkout" asp-controller="Order">Checkout</a>
 </div>
 
+@*
+    <div class="shop-cart__wrapper">
+        <div class="container-fluid">
+            <div class="shop-cart text-center">
+                <p class="shop-cart__subtitle">Корзина</p>
+                <!-- Пункти таблиці-->
+                <div class="row  shop-cart__tbl-title">
+                    <div class="col-sm-5">
+                        <p>Продукт</p>
+                    </div>
+                    <div class="col-sm-2">
+                        <p>Цена</p>
+                    </div>
+                    <div class="col-sm-2">
+                        <p>Количество</p>
+                    </div>
+                    <div class="col-sm-2">
+                        <p>Сумма</p>
+                    </div>
+                </div>
+                <!-- Вибраний товар який в корзині -->
+                <div class="row shop-cart__item">
+                    <div class="col-sm-2 shop-cart__item--img">
+                        <a target="_blank" href="http://level.com.ua/shop/loft" class="shop-cart__img"><img src="//shop.web01.widgets.vigbo.com/vigbo-cms/storage/shops/52277/products/8776070/images/preview-35229425070ca40c943cd5ec878c507c.jpg" alt="Лофт" class="copy-protect" height="72"></a>
+                    </div>
+                    <div class="col-sm-3 shop-cart__item--info">
+                        <a class="shop-cart-tbl-product" target="_blank" href="http://level.com.ua/shop/loft">
+                            <span class="shop-cart__item--name">Лофт</span><br><span>(Цвет: черный, Фурнитура: антик)</span>
+                        </a>
+                    </div>
+                    <div class="col-sm-2 shop-cart__item--price"><span class="desktop-invisible">Цена:&nbsp&nbsp</span><span class="shop-cart__item--text">4 000 грн.</span></div>
+                    <div class="col-sm-2 shop-cart__item--count">
+                        <span class="desktop-invisible">Количество:&nbsp&nbsp</span> <input type="text" size="5" value="2">
+                    </div>
+                    <div class="col-sm-2 shop-cart__item--sum-price"><span class="desktop-invisible">Сумма:&nbsp&nbsp</span><span class="shop-cart__item--text"> 4 000 грн.</span></div>
+                    <div class="col-sm-1 shop-cart__item--delete"><a href="">Удалить из корзины</a></div>
+                </div>
+                <!-- Вибраний товар який в корзині -->
+                <div class="row shop-cart__item">
+                    <div class="col-sm-2 shop-cart__item--img">
+                        <a target="_blank" href="http://level.com.ua/shop/loft" class="shop-cart__img"><img src="//shop.web01.widgets.vigbo.com/vigbo-cms/storage/shops/52277/products/8776070/images/preview-35229425070ca40c943cd5ec878c507c.jpg" alt="Лофт" class="copy-protect" height="72"></a>
+                    </div>
+                    <div class="col-sm-3 shop-cart__item--info">
+                        <a class="shop-cart-tbl-product" target="_blank" href="http://level.com.ua/shop/loft">
+                            <span class="shop-cart__item--name">Лофт </span><br><span>(Цвет: черный, Фурнитура: антик)</span>
+                        </a>
+                    </div>
+                    <div class="col-sm-2 shop-cart__item--price"><span class="desktop-invisible">Цена:&nbsp&nbsp</span><span class="shop-cart__item--text">4 000 грн.</span></div>
+                    <div class="col-sm-2 shop-cart__item--count">
+                        <span class="desktop-invisible">Количество:&nbsp&nbsp</span> <input type="text" size="5" value="2" class="textbox skuCount" data-max-quantity="1000">
+                    </div>
+                    <div class="col-sm-2 shop-cart__item--sum-price"><span class="desktop-invisible">Сумма:&nbsp&nbsp</span><span class="shop-cart__item--text"> 4 000 грн.</span></div>
+                    <div class="col-sm-1 shop-cart__item--delete"><a href="">Удалить из корзины</a></div>
+                </div>
+                <!-- Загальна ціна-->
+                <div class="row shop-cart__total-price">
+                    <div class="col-9 col-sm-9 text-left">Общая стоимость заказа/покупки:</div>
+                    <div class="col-3 col-sm-2">8 000 грн</div>
+                </div>
+                <!-- Вибір доставки-->
+                <div class="row text-left shop-cart__dostavka">
+                    <div class="col-sm-12"><p class="shop-cart__subtitle">Выберите способ доставки</p></div>
+                    <div class="col-8 col-sm-5">Возможные варианты доставки</div>
+                    <div class="col-4 col-sm-5">Стоимость</div>
+                </div>
+                <div class="shop-cart__dostavka-types">
+                    <div class="row text-left shop-cart__dostavka-type">
+                        <div class="col-8 col-sm-5">
+                            <input type="radio" id="delivery-method__nova-poshta" class="shop-cart__dostavka--radio" name="delivery-method">
+                            <label for="delivery-method__nova-poshta">Новая почта</label>
+                        </div>
+                        <div class="col-4 col-sm-5"><span>0 грн.</span></div>
+                    </div>
+                    <div class="row text-left shop-cart__dostavka-type">
+                        <div class="col-8 col-sm-5">
+                            <input type="radio" id="delivery-method__kurjer" class="shop-cart__dostavka--radio" name="delivery-method">
+                            <label for="delivery-method__kurjer">Курьером к дверям</label>
+                        </div>
+                        <div class="col-4 col-sm-5"><span>0 грн.</span></div>
+                    </div>
+                    <div class="row text-left shop-cart__dostavka-type">
+                        <div class="col-8 col-sm-5">
+                            <input type="radio" id="delivery-method__samovivoz" class="shop-cart__dostavka--radio" name="delivery-method">
+                            <label for="delivery-method__samovivoz">Самовывоз с Showroom ул.Ивана Кудри 5 оф.223</label>
+                        </div>
+                        <div class="col-4 col-sm-5"><span>0 грн.</span></div>
+                    </div>
+                </div>
+                <!-- Промо код і ціна зі знижкою -->
+                <div class="shop-cart__promo">
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <input type="text" placeholder="Введите промо-код">
+                            <a href="#">ПРИМЕНИТЬ</a>
+                        </div>
+                        <div class="col-sm-5">
+                            <p class="row shop-cart__promo--total">Итоговая сумма к оплате: <span>4 000 грн.</span></p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Загальна інформація -->
+                <div class="row">
+                    <div class="col-sm-7 text-left shop-cart__information">
+                        <p class="shop-cart__subtitle">Важная информация:</p>
+                        <p>После осуществления заказа в интернет-магазине Level, наш менеджер обязательно свяжется с Вами по телефону для подтверждения заказа.</p>
+                        <p>
+                            Level предоставляет бесплатную доставку при покупке на сумму от 400 грн. Доставка осуществляется только по Украине. В случае наличия изделия на складе, в течении 2-3-х рабочих дней, в зависимости от времени совершения заказа и предоплаты,
+                            изделие уже будет у Вас.
+                        </p>
+                        <ul>
+                            СПОСОБЫ ОПЛАТЫ И ДОСТАВКИ:
+                            <li>Оплата на карту ПриватБанка на банковский счет Level (реквизиты Вам отправят после подтверждения заказа).</li>
+                            <li>Оплата наложенным платежом (Новая Почта).</li>
+                            <li>Расчет наличными с курьером. Курьерская доставка осуществляется в городе Киев и только в будние дни.</li>
+                            <li>Оплата покупки в шоу-руме.</li>
+                            <li class="text-danger-custom">
+                                В случае наложенного платежа и расчета с курьером необходимо внести предоплату на карту ПриватБанка в размере 100 грн*, остальную сумму при получении. На осуществление предоплаты предоставляется 3 рабочих дня. Если оплата не была произведена
+                                в эти сроки, заказ будет аннулирован.
+                            </li>
+                        </ul>
+                        <p class="text-danger-custom">*в случае несвоевременного отказа от покупки, данная сумма не возвращается, так как она оплачивает услуги курьера и Новой Почты.</p>
+                        <ul>
+                            <li class="text-danger-custom">В дни скидок, если сумма заказа составляет менее 1000 грн или скидка превышает 10%, доставка за счет покупателя.</li>
+                        </ul>
+                    </div>
+                    <!-- Форма -->
+                    <div class="col-sm-5">
+                        <form>
+                            <div class="form-group">
+                                <input type="phone" name="cart-name" value="" required>
+                                <label for="cart-name">Имя*</label>
+                            </div>
+                            <div class="form-group">
+                                <input type="phone" name="cart-surname" value="">
+                                <label for="cart-surname">Фамилия</label>
+                            </div>
+                            <div class="form-group">
+                                <input type="phone" name="cart-email" value="">
+                                <label for="cart-email">Email*</label>
+                            </div>
+                            <div class="form-group">
+                                <input type="phone" name="cart-phone" value="" required>
+                                <label for="cart-phone">Телефон*</label>
+                            </div>
+                            <div class="form-group">
+                                <input type="phone" name="cart-nova-poshta" value="">
+                                <label for="cart-nova-poshta">№ отделения "Новой почты"</label>
+                            </div>
+                            <div class="form-group">
+                                <input type="phone" name="cart-city" value="">
+                                <label for="cart-city">Город</label>
+                            </div>
+                            <div class="form-group">
+                                <input type="phone" name="cart-street" value="">
+                                <label for="cart-street">Улица, номер дома и квартиры</label>
+                            </div>
+                            <div class="form-group">
+                                <textarea name="cart-comment" rows="5" cols="80"></textarea>
+                                <label for="cart-comment">Комментарий</label>
+                            </div>
+                            <button type="submit" name="button" class="btn-btn">Отправить</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+*@
+
