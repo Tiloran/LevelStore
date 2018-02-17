@@ -1,143 +1,12 @@
-﻿   
-.main-navigation ul{
-    display: block;
-    margin-top: 50px;
-    padding: 0;
-    list-style: none;
-}
-
-.main-navigation ul:after {
-    display: block;
-    content: ' ';
-    clear: both;
-    float: none;
-}
-
-.menu {
-    color: #222;
-}
-
-.menu__item {
-    display: inline-block;
-    position: relative;
-    cursor: pointer;
-}
-
-.menu__line {
-    display: inline-block;
-    padding: 10px 30px;
-}
-
-.menu__item-link {
-    display: block;
-    margin: 10px;
-    text-decoration: none;
-    cursor: pointer;
-    transition: color 1s;
-    color: #222;
-    font-size: 14px;
-    line-height: 16px;
-    letter-spacing: 0.4em;
-    font-family: "Cuprum", sans-serif;
-    font-weight: 700;
-}
-
-    .menu__item-link:hover,
-    .submenu__item-link:hover {
-        color: #877756;
-        text-decoration: none;
-    }
-
-.menu__item:hover > .menu__item-link {
-    color: #877756;
-    text-decoration: none;
-}
-
-
-
-.menu__item:after {
-    content: '';
-    position: absolute;
-    left: 0;
-    z-index: -5;
-    top: 10px;
-    display: inline-block;
-    height: 1em;
-    width: 100%;
-    border-bottom: 2px solid;
-    margin-top: 10px;
-    opacity: 0;
-    color: #877756;
-    -webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
-    transition: opacity 0.35s, transform 0.35s;
-    -webkit-transform: scale(0,1);
-    transform: scale(0,1);
-}
-
-.menu__item:hover:after {
-    opacity: 1;
-    -webkit-transform: scale(1);
-    transform: scale(1);
-}
-
-.submenu {
-    display: none;
-    opacity: 0;
-    position: absolute;
-    top: -14px;
-    background-color: #fff;
-    z-index: 100;
-    transition: opacity 2s;
-    width: 150px;
-    transform: translateX(-50%);
-    left: 50%;
-    text-align: center;
-}
-
-.submenu__item {
-    display: block;
-    z-index: 100;
-    margin-bottom: 2px;
-}
-
-.submenu__item-link {
-    display: block;
-    padding: 10px;
-    text-decoration: none;
-    z-index: 500;
-    background-color: #FAFAFA;
-    transition: color 0.5s;
-    color: #222;
-    font-size: 10px;
-    line-height: 12px;
-    letter-spacing: 0.4em;
-    font-family: "Cuprum", sans-serif;
-    font-weight: 700;
-}
-
-a.submenu__item-link:hover {
-    letter-spacing: 0.4em;
-    color: #877756;
-    text-decoration: none;
-}
-
-.menu__item:hover > .submenu {
-    display: block;
-    opacity: 1;
-    transition: opacity 2s;
-}
-
-.nolink {
-    pointer-events: none;
-}
-
-@font-face {
+﻿@font-face {
     font-family: "Cuprum";
     src: url("../fonts/cuprum-regular.eot");
     src: url("../fonts/cuprum-regular.eot?iefix") format("eot"), url("../fonts/cuprum-regular.woff") format("woff"), url("../fonts/cuprum-regular.woff2") format("woff2"), url("../fonts/cuprum-regular.ttf") format("truetype"), url("../fonts/cuprum-regular.svg#FontName") format("svg");
 }
 
 body {
+    font-family: 'Cuprum', sans-serif;
+    font-stretch: extra-condensed;
     /* Input styles */
     /* End of input styles */
 }
@@ -298,6 +167,322 @@ body {
         color: #B22222;
     }
 
+.desktop-header {
+    display: block;
+}
+
+@media (max-width: 992px) {
+    .desktop-header {
+        display: none;
+    }
+}
+
+.mobile-header {
+    display: none;
+}
+
+@media (max-width: 992px) {
+    .mobile-header {
+        display: block;
+    }
+}
+
+.main-navigation ul {
+    display: block;
+    margin-top: 50px;
+    padding: 0;
+    list-style: none;
+}
+
+    .main-navigation ul:after {
+        display: block;
+        content: ' ';
+        clear: both;
+        float: none;
+    }
+
+.main-navigation .menu {
+    color: #222;
+}
+
+.main-navigation .menu__item {
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+}
+
+.main-navigation .menu__line {
+    display: inline-block;
+    padding: 10px 30px;
+}
+
+.main-navigation .menu__item-link {
+    display: block;
+    margin: 10px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 1s;
+    color: #000000;
+    font-size: 14px;
+    line-height: 16px;
+    letter-spacing: 0.4em;
+    font-family: "Cuprum", sans-serif;
+    font-weight: 700;
+}
+
+    .main-navigation .menu__item-link:hover, .main-navigation .submenu__item-link:hover {
+        color: #877756;
+        text-decoration: none;
+    }
+
+.main-navigation .menu__item:hover > .menu__item-link {
+    color: #877756;
+    text-decoration: none;
+}
+
+.main-navigation .menu__item:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    z-index: -5;
+    top: 10px;
+    display: inline-block;
+    height: 1em;
+    width: 100%;
+    border-bottom: 2px solid;
+    margin-top: 10px;
+    opacity: 0;
+    color: #877756;
+    -webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
+    transition: opacity 0.35s, transform 0.35s;
+    -webkit-transform: scale(0, 1);
+    transform: scale(0, 1);
+}
+
+.main-navigation .menu__item:hover:after {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+}
+
+.main-navigation .submenu {
+    display: none;
+    opacity: 0;
+    position: absolute;
+    top: -14px;
+    background-color: #fff;
+    z-index: 100;
+    transition: opacity 2s;
+    width: 150px;
+    transform: translateX(-50%);
+    left: 50%;
+}
+
+.main-navigation .submenu__item {
+    display: block;
+    z-index: 100;
+    margin-bottom: 2px;
+}
+
+.main-navigation .submenu__item-link {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    z-index: 500;
+    background-color: #FAFAFA;
+    transition: color 0.5s;
+    color: #000000;
+    font-size: 10px;
+    line-height: 12px;
+    letter-spacing: 0.4em;
+    font-family: "Cuprum", sans-serif;
+    font-weight: 700;
+}
+
+.main-navigation a.submenu__item-link:hover {
+    letter-spacing: 0.4em;
+    color: #877756;
+    text-decoration: none;
+}
+
+.main-navigation .menu__item:hover > .submenu {
+    display: block;
+    opacity: 1;
+    transition: opacity 2s;
+}
+
+.main-navigation .nolink {
+    pointer-events: none;
+}
+
+.mobile-header a, .mobile-header button {
+    color: #ffffff;
+}
+
+.mobile-header__accordion {
+    text-align: center;
+}
+
+    .mobile-header__accordion ul {
+        padding: 0;
+        list-style-type: none;
+    }
+
+.shop__navigation .shop__menu .menu__item-link {
+    font-size: 10px;
+}
+
+.shop__navigation .shop__menu .menu__line {
+    padding: 0 10px;
+}
+
+.shop__content .shop__item {
+    margin-top: 40px;
+    text-align: center;
+}
+
+.shop__content .shop__item-img-wrapper {
+    height: 270px;
+    overflow: hidden;
+}
+
+    .shop__content .shop__item-img-wrapper:hover {
+        cursor: pointer;
+    }
+
+        .shop__content .shop__item-img-wrapper:hover .shop__item-img-main {
+            display: none;
+        }
+
+        .shop__content .shop__item-img-wrapper:hover .shop__item-img-hover {
+            display: block;
+        }
+
+.shop__content .shop__item-img-main {
+    transform: scale(1.4);
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.shop__content .shop__item-img-hover {
+    display: none;
+    transform: scale(1.3);
+    width: 100%;
+    height: auto;
+}
+
+.shop__content .shop__item-title {
+    display: block;
+}
+
+.single-item__wrapper {
+    padding: 80px 0;
+    font-family: "Cuprum", sans-serif;
+}
+
+    .single-item__wrapper .slider .slider-nav {
+        position: relative;
+    }
+
+    .single-item__wrapper .slider .slick-next, .single-item__wrapper .slider .slick-prev {
+        z-index: 500;
+        font-size: 20px;
+        position: absolute;
+        top: 25%;
+        background-color: inherit;
+        padding: 0;
+        border-radius: 50%;
+        cursor: pointer;
+        color: #000000;
+        border: none;
+        outline: none;
+    }
+
+    .single-item__wrapper .slider .slick-next {
+        right: 0;
+    }
+
+    .single-item__wrapper .slider .slick-prev {
+        left: 0;
+    }
+
+    .single-item__wrapper .slider ul.slick-dots {
+        padding: 0;
+        text-align: center;
+        list-style-type: none;
+    }
+
+        .single-item__wrapper .slider ul.slick-dots li {
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+            .single-item__wrapper .slider ul.slick-dots li button {
+                width: 2px;
+                height: 15px;
+                border: 2px solid #000000;
+                font-size: 0;
+                border-radius: 50%;
+                outline: none;
+                transition: all 0.2s linear;
+            }
+
+                .single-item__wrapper .slider ul.slick-dots li button:hover {
+                    cursor: pointer;
+                    background-color: #000000;
+                }
+
+            .single-item__wrapper .slider ul.slick-dots li.slick-active button {
+                background-color: #000000;
+            }
+
+.single-item__title {
+    font-size: 28px;
+    line-height: 28px;
+}
+
+.single-item__price {
+    font-size: 24px;
+}
+
+.single-item__description, .single-item__size {
+    font-size: 18px;
+    font-stretch: extra-condensed;
+}
+
+.single-item__select {
+    display: block;
+    width: 220px;
+    margin-bottom: 15px;
+    color: #858585;
+    position: relative;
+    border: 1px solid #ccc;
+}
+
+    .single-item__select:hover {
+        color: #000000;
+    }
+
+.single-item__add-btn {
+    width: 220px;
+    padding: 10px;
+    color: #ffffff;
+    background-color: #000000;
+    outline: none;
+    border: none;
+    font-size: 13px;
+    text-align: center;
+    text-transform: uppercase;
+    transition: all 0.3s linear;
+}
+
+    .single-item__add-btn:hover {
+        cursor: pointer;
+        color: #ffffff;
+        background-color: #858585;
+    }
+
 .left-side {
     background: #3b4539;
 }
@@ -323,7 +508,6 @@ body {
     top: calc(2.5% + 9.5px);
     background: url("&quot;data:image/svg+xml;base64,CjxzdmcgaGVpZ2h0PSI1IiB2ZXJzaW9uPSIxLjEiIHdpZHRoPSI5IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoICBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIGQ9Ik00LjUsNC41TDUuNSw0LjUiIHN0cm9rZS13aWR0aD0iM3B4Ij48L3BhdGg+PC9zdmc+Cg==&quot;") center center repeat-y;
 }
-
 
 .search i {
     color: black;
@@ -372,7 +556,7 @@ body {
     .main-wrap .sms-present-block a.btn-link {
         padding: 5px 30px;
         margin: 25px 0;
-        font-family: Cuprum;
+        font-family: "Cuprum", sans-serif;
         font-weight: 500;
         border: 2px solid #000000;
         letter-spacing: 0.15em;
@@ -483,7 +667,6 @@ body {
     margin: 20px auto;
     display: block;
     text-align: center;
-    font-family: 'Cuprum', sans-serif;
     font-size: 17px;
     font-weight: 600;
     font-stretch: extra-condensed;
@@ -512,7 +695,6 @@ body {
 
         .dostavka__text ul li {
             margin: 15px 0;
-            font-family: 'Cuprum', sans-serif;
             font-size: 17px;
             font-stretch: extra-condensed;
             letter-spacing: 0;
@@ -542,7 +724,6 @@ body {
     text-align: center;
     list-style-position: inside;
     font-stretch: extra-condensed;
-    font-family: 'Cuprum', sans-serif;
     letter-spacing: 0;
     line-height: 1.3;
 }
@@ -575,7 +756,6 @@ body {
     .garantija__text ul li {
         margin-bottom: 5px;
         font-stretch: extra-condensed;
-        font-family: 'Cuprum', sans-serif;
         font-size: 20px;
         letter-spacing: 0;
         line-height: 1.3;
@@ -648,7 +828,6 @@ body {
 
     .vacancy__description p, .vacancy__description span {
         margin-bottom: 30px;
-        font-family: 'Cuprum', sans-serif;
         font-size: 22px;
         letter-spacing: 0;
         line-height: 1.3;
@@ -669,6 +848,7 @@ body {
     padding: 50px 0;
     border-bottom: 2px dotted #000000;
 }
+
 .about .col-12 {
     padding: 0;
 }
@@ -687,7 +867,6 @@ body {
 }
 
 .about__about-me {
-    font-family: 'Cuprum', sans-serif;
     font-size: 27px;
 }
 
@@ -697,7 +876,6 @@ body {
 }
 
 .about__creator-link {
-    font-family: 'Cuprum', sans-serif;
     font-size: 17px;
     color: #000000;
 }
@@ -710,7 +888,6 @@ body {
 .about__about-us {
     display: block;
     margin-bottom: 30px;
-    font-family: 'Cuprum', sans-serif;
     font-size: 18px;
     font-weight: 700;
     font-stretch: extra-condensed;
@@ -719,7 +896,6 @@ body {
 .about__title {
     display: block;
     margin-bottom: 40px;
-    font-family: 'Cuprum', sans-serif;
     font-size: 34px;
     font-weight: 500;
     letter-spacing: 0em;
@@ -727,7 +903,6 @@ body {
 }
 
 .about__text {
-    font-family: 'Cuprum', sans-serif;
     font-size: 20px;
     letter-spacing: 0em;
     line-height: 1.8;
@@ -738,7 +913,6 @@ body {
 }
 
 .about__text-logo {
-    font-family: 'Cuprum', sans-serif;
     font-size: 17px;
     color: #000000;
 }
@@ -757,7 +931,6 @@ body {
 .showroom__title {
     margin: 50px 0;
     font-stretch: extra-condensed;
-    font-family: 'Cuprum', sans-serif;
     font-size: 25px;
     letter-spacing: 0.1em;
     line-height: 1.3em;
@@ -837,7 +1010,6 @@ body {
     margin: 40px auto;
     text-align: center;
     font-stretch: extra-condensed;
-    font-family: 'Cuprum', sans-serif;
     font-size: 20px;
 }
 
@@ -850,7 +1022,6 @@ body {
     margin-bottom: 50px;
     font-size: 40px;
     font-stretch: extra-condensed;
-    font-family: 'Cuprum', sans-serif;
     letter-spacing: 0.3em;
     line-height: 1.6em;
 }
@@ -861,7 +1032,6 @@ body {
 }
 
 .bayer__partners--city {
-    font-family: 'Cuprum', sans-serif;
     font-stretch: extra-condensed;
     font-size: 40px;
     letter-spacing: 0.3em;
@@ -869,13 +1039,11 @@ body {
 }
 
 .bayer__partners--about, .bayer__partners--address, .bayer__partners--phone, .bayer__partners--worktime {
-    font-family: 'Cuprum', sans-serif;
     font-size: 19px;
     line-height: 23px;
 }
 
 .partnerstvo {
-    font-family: 'Cuprum', sans-serif;
     padding-bottom: 100px;
     border-bottom: 2px dotted #000000;
 }
@@ -898,7 +1066,6 @@ body {
 
 .colors__title {
     margin-bottom: 50px;
-    font-family: 'Cuprum', sans-serif;
     font-size: 31px;
     letter-spacing: 0.3em;
     line-height: 1.6em;
@@ -918,7 +1085,6 @@ body {
 }
 
 .colors__text {
-    font-family: 'Cuprum', sans-serif;
     font-size: 20px;
     letter-spacing: 0em;
     line-height: 1.3;
@@ -929,7 +1095,6 @@ body {
     text-align: center;
     letter-spacing: 0em;
     line-height: 1.3;
-    font-family: 'Cuprum', sans-serif;
     font-size: 16px;
     color: #000000;
     background-color: #EBEBEB;
@@ -942,14 +1107,12 @@ body {
 
 .podarki__wrapper {
     padding: 80px 0;
-    font-family: 'Cuprum', sans-serif;
     border-bottom: 2px dotted #000000;
 }
 
 .podarki__title {
     padding: 0 20%;
     padding-bottom: 50px;
-    font-family: 'Cuprum', sans-serif;
     font-size: 29px;
     letter-spacing: 0em;
     line-height: 1.4em;
@@ -959,14 +1122,12 @@ body {
 .podarki__text {
     padding: 0 10%;
     padding-bottom: 50px;
-    font-family: 'Cuprum', sans-serif;
     line-height: 1.3em;
     font-size: 20px;
 }
 
 .podarki__list-header {
     padding-bottom: 20px;
-    font-family: 'Cuprum', sans-serif;
     letter-spacing: 0em;
     line-height: 1.3;
     font-size: 24px;
@@ -979,7 +1140,6 @@ body {
 
     .podarki__list li {
         font-stretch: extra-condensed;
-        font-family: 'Cuprum', sans-serif;
         line-height: 1.3em;
         font-size: 20px;
     }
@@ -1001,7 +1161,6 @@ footer {
         min-height: 50px;
         letter-spacing: 0.05em;
         line-height: 2.4;
-        font-family: 'Cuprum', sans-serif;
         font-size: 12px;
         font-weight: 700;
         text-transform: uppercase;
@@ -1011,7 +1170,6 @@ footer {
         margin: 0;
         letter-spacing: 0.05em;
         line-height: 2.4;
-        font-family: 'Cuprum', sans-serif;
         font-size: 14px;
     }
 
@@ -1040,7 +1198,6 @@ footer {
     margin: 0;
     letter-spacing: 0em;
     line-height: 1.3;
-    font-family: 'Cuprum', sans-serif;
     font-size: 24px;
 }
 

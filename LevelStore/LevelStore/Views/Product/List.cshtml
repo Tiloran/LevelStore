@@ -6,66 +6,74 @@
 <script src="/lib/jquery/dist/jquery.js"></script>
 <script src="/js/ShowSecondOnMouseOver.js"></script>
 
+<div class="shop__wrap">
+    <div class="row">
+        <div class="col-md-12 main-navigation shop__navigation text-center">
 
-<a asp-controller="Admin" asp-action="ListAdmin" class="btn btn-default">Админка</a>
-@if (Model.Categories.Any())
-{
-    <ul class="menu">
-        <li><a asp-controller="Product" asp-action="List">Без фильтров</a></li>
-        @foreach (var category in Model.Categories)
-        {
-            <li>
-                <a asp-controller="Product" asp-action="List" asp-route-categoryID="@category.CategoryID">@category.CategoryName</a>
-                @if (category.SubCategories.Any())
-                {
-                    <ul class="submenu">
-                        @foreach (var subCategory in category.SubCategories)
-                        {
-                            <li><a asp-controller="Product" asp-action="List" asp-route-subCategoryID="@subCategory.SubCategoryID">@category.CategoryName "@subCategory.SubCategoryName"</a></li>
-                        }
-                    </ul>
-                }
-            </li>
-        }
-    </ul>
-}
-
-    @foreach (var product in Model.ProductAndImages)
-    {
-        <form asp-action="ViewSingleProduct" method="post">
-
-            <span>@product.product.Name</span>
-            <span>@product.product.Price</span>
-            <div>@product.product.Description</div>
-
-            @if (product.product.NewProduct)
+            <a asp-controller="Admin" asp-action="ListAdmin" class="btn btn-default">Админка</a>
+            @if (Model.Categories.Any())
             {
-                <div style="background-color: red; width: 100px;">NEW</div>
-            }
-            @{
-                try
-                {
-                    if (product.Images.Count > 0 && product.Images.FirstOrDefault(f => f.FirstOnScreen).Name != null && product.Images.FirstOrDefault(f => f.SecondOnScreen).Name != null)
+                <ul class="menu shop__menu">
+                    <li class="menu__item"><a  class="menu__item-link" asp-controller="Product" asp-action="List">Без фильтров</a></li>
+                    @foreach (var category in Model.Categories)
                     {
-                        <img src="/images/@product.Images.FirstOrDefault(f => f.FirstOnScreen).Name" id="@product.product.ProductID" name="FirstAndSecondImages" onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" style="width: 100px; height: 100px;" alt="@product.Images.FirstOrDefault(f => f.FirstOnScreen).Alternative">
-                        <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.FirstOrDefault(f => f.FirstOnScreen).Name" imageAlternative="@product.Images.FirstOrDefault(f => f.FirstOnScreen).Alternative" />
-                        <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.FirstOrDefault(f => f.SecondOnScreen).Name" imageAlternative="@product.Images.FirstOrDefault(f => f.SecondOnScreen).Alternative" />
+                        <li class="menu__item">
+                            <a class="menu__item-link nolink" asp-controller="Product" asp-action="List" asp-route-categoryID="@category.CategoryID">@category.CategoryName</a>
+                            @if (category.SubCategories.Any())
+                            {
+                                <ul class="submenu">
+                                    @foreach (var subCategory in category.SubCategories)
+                                    {
+                                        <li class="submenu__item"><a class="submenu__item-link" asp-controller="Product" asp-action="List" asp-route-subCategoryID="@subCategory.SubCategoryID">@category.CategoryName "@subCategory.SubCategoryName"</a></li>
+                                    }
+                                </ul>
+                            }
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row shop__content">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                @foreach (var product in Model.ProductAndImages)
+            {
+                <form asp-action="ViewSingleProduct" method="post">
+
+                    <span>@product.product.Name</span>
+                    <span>@product.product.Price</span>
+                    <div>@product.product.Description</div>
+
+                    @if (product.product.NewProduct)
+                {
+                    <div style="background-color: red; width: 100px;">NEW</div>
+            }
+                    @{
+                    try
+                    {
+                        if (product.Images.Count > 0 && product.Images.FirstOrDefault(f => f.FirstOnScreen).Name != null && product.Images.FirstOrDefault(f => f.SecondOnScreen).Name != null)
+                        {
+                            <img src="/images/@product.Images.FirstOrDefault(f => f.FirstOnScreen).Name" id="@product.product.ProductID" name="FirstAndSecondImages" onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" style="width: 100px; height: 100px;" alt="@product.Images.FirstOrDefault(f => f.FirstOnScreen).Alternative">
+                            <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.FirstOrDefault(f => f.FirstOnScreen).Name" imageAlternative="@product.Images.FirstOrDefault(f => f.FirstOnScreen).Alternative" />
+                            <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.FirstOrDefault(f => f.SecondOnScreen).Name" imageAlternative="@product.Images.FirstOrDefault(f => f.SecondOnScreen).Alternative" />
                     }
                     else
                     {
                         <img src="/images/none.png" style="width: 100px; height: 100px;" alt="None Image">
-                    }
-                }
-                catch
-                {
-                    <img src="/images/none.png" style="width: 100px; height: 100px;" alt="None Image">
                 }
             }
+            catch
+            {
+                <img src="/images/none.png" style="width: 100px; height: 100px;" alt="None Image">
+        }
+                    }
 
-            <input type="hidden" name="ProductID" value="@product.product.ProductID" />
-            <button type="submit" class="btn btn-sm btn-danger">Выбрать</button>
-        </form>
-    }
-
-
-
+                    <input type="hidden" name="ProductID" value="@product.product.ProductID" />
+                    <button type="submit" class="btn btn-sm btn-danger">Выбрать</button>
+                </form>
+        }
+            </div>
+        </div>
+    </div>
+        </div>
