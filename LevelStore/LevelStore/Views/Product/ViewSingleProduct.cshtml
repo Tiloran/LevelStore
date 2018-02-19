@@ -14,9 +14,9 @@
     <script src="/js/jquery.countdown.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $('[data-countdown]').each(function() {
+            $('[data-countdown]').each(function () {
                 var $this = $(this), finalDate = $(this).data('countdown');
-                $this.countdown(finalDate, function(event) {
+                $this.countdown(finalDate, function (event) {
                     $this.html(event.strftime('%D дней %H:%M:%S'));
                 });
             });
@@ -31,7 +31,7 @@
 <div class="container-fluid single-item__wrapper">
     <div class="row">
 
-        
+
 
         <div class="col-md-6">
             <div class="slider slider-for">
@@ -78,7 +78,7 @@
                 {
                     <div>Акция</div>
                     <div data-countdown="@share.DateOfEnd.ToString("yyyy/MM/dd HH:mm:ss").Replace('.', '/')"></div>
-                    newPrice = price / 100 * (decimal) (share.KoefPrice);
+                    newPrice = price / 100 * (decimal)(share.KoefPrice);
                 }
             }
 
@@ -107,7 +107,7 @@
                 <input type="hidden" name="productId" value="@Model.ProductID" />
                 <input type="number" name="quantity" value="1" min="0" max="1000" />
                 <div asp-validation-summary="All" class="text-danger"></div>
-                <select name="single-item__color selectedColor" class="single-item__select" onchange="HideAndShowImages(this)">
+                <select name="selectedColor" class="single-item__select" onchange="HideAndShowImages(this)">
                     <option value="0" selected>Выберите цвет</option>
                     @foreach (var color in bindedColors)
                     {
@@ -115,10 +115,10 @@
                     }
                 </select>
                 @{
-            int Antik = (int)Furniture.Antik;
-            int Nikel = (int)Furniture.Nikel;
+                    int Antik = (int)Furniture.Antik;
+                    int Nikel = (int)Furniture.Nikel;
                 }
-                <select name="single-item__furniture furniture">
+                <select name="furniture">
                     <option selected disabled>Выберите фурнитуру</option>
                     <option value="@Antik">Антик</option>
                     <option value="@Nikel">Никель</option>
@@ -126,29 +126,29 @@
                 <button type="submit" class="single-item__add-btn">Добавить в корзину</button>
             </form>
         </div>
-            <a asp-controller="Product" asp-action="List" class="btn btn-default">К списку</a>
-            @if (relatedProducts != null && relatedProducts.Any())
-            {
-                <div>
-                    <p>Похожие товары:</p>
-                    @foreach (var rProduct in relatedProducts)
+        <a asp-controller="Product" asp-action="List" class="btn btn-default">К списку</a>
+        @if (relatedProducts != null && relatedProducts.Any())
+        {
+            <div>
+                <p>Похожие товары:</p>
+                @foreach (var rProduct in relatedProducts)
+                {
+                    <div><a asp-controller="Product" asp-action="ViewSingleProduct" asp-route-productId="@rProduct.ProductID">@rProduct.Name</a></div>
+                    <div>@rProduct.Price</div>
+                    if (rProduct.Images.Count > 0)
                     {
-                        <div>@rProduct.Name</div>
-                        <div>@rProduct.Price</div>
-                        if (rProduct.Images.Count > 0)
+                        foreach (var image in rProduct.Images)
                         {
-                            foreach (var image in rProduct.Images)
-                            {
-                                <img src="/images/@image.Name" style="width: 100px; height: 100px;" alt="@image.Alternative">
-                            }
-                        }
-                        else
-                        {
-                            <img src="/images/none.png" style="width: 100px; height: 100px;" alt="none image">
+                            <img src="/images/@image.Name" style="width: 100px; height: 100px;" alt="@image.Alternative">
                         }
                     }
-                </div>
+                    else
+                    {
+                        <img src="/images/None.jpg" style="width: 100px; height: 100px;" alt="none image">
+                    }
+                }
+            </div>
 
-            }
-        </div>
+        }
     </div>
+</div>

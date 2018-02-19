@@ -40,7 +40,7 @@
                     @foreach (var category in Model.Categories)
                     {
                         <li class="menu__item">
-                            <a class="menu__item-link nolink" asp-controller="Product" asp-action="List" asp-route-categoryID="@category.CategoryID" asp-route-searchString="@searchString">@category.CategoryName</a>
+                            <a class="menu__item-link" asp-controller="Product" asp-action="List" asp-route-categoryID="@category.CategoryID" asp-route-searchString="@searchString">@category.CategoryName</a>
                             @if (category.SubCategories.Any())
                             {
                                 <ul class="submenu">
@@ -108,12 +108,12 @@
                                 }
                                 else
                                 {
-                                    <img src="/images/none.png" style="width: 100px; height: 100px;" alt="None Image">
+                                    <img src="/images/None.jpg" style="width: 100px; height: 100px;" alt="">
                                 }
                             }
                             catch
                             {
-                                <img src="/images/none.png" style="width: 100px; height: 100px;" alt="None Image">
+                                <img src="/images/None.jpg" style="width: 100px; height: 100px;" alt="">
                             }
                         }
 

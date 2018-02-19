@@ -122,6 +122,30 @@ namespace LevelStore.Models
                     },
                     new Product
                     {
+                        Name = "Тревел-мини",
+                        Description =
+                            "Кошелек, который, станет для Вас незаменимым и надежным другом, так как благодаря своей компактности, всегда будет с Вами. Имеет одно отделение для мелочи на кнопке, одно большое отделение для купюр, два для кредитных карт и визиток. Закрывается на кнопку.",
+                        NewProduct = true,
+                        Price = 550,
+                        Size = "Размер: 20х10 см",
+                        SubCategoryID = categories.First(c => c.CategoryName == "Кошельки").SubCategories
+                            .First(sb => sb.SubCategoryName == "CrazyHouse").SubCategoryID
+
+                    },
+                    new Product
+                    {
+                        Name = "Левый",
+                        Description =
+                            "Кошелек, который поражает своей компактностью и оригинальностью дизайна. Имеет одно большое отделение для купюр, и три для кредитных карт и визиток. Закрывается на кнопку.",
+                        NewProduct = true,
+                        Price = 400,
+                        Size = "Размер: 10х9,5 см",
+                        SubCategoryID = categories.First(c => c.CategoryName == "Кошельки").SubCategories
+                            .First(sb => sb.SubCategoryName == "CrazyHouse").SubCategoryID
+
+                    },
+                    new Product
+                    {
                         Name = "Капля",
                         Description =
                             "Компактная на вид, но весьма вместительная сумочка, которая позволит всегда носить с собой все необходимое. Имеет прочную тканевую подкладку, карман на молнии и одно большое отделение. Также у изделия присутствует длинная ручка на кобурной застежке. Закрывается на магниты.",
@@ -186,6 +210,16 @@ namespace LevelStore.Models
                     },
                     new Color
                     {
+                        ProductID = products.First(n => n.Name == "Тревел-мини").ProductID,
+                        TypeColorID = firstColor.TypeColorID
+                    },
+                    new Color
+                    {
+                        ProductID = products.First(n => n.Name == "Левый").ProductID,
+                        TypeColorID = firstColor.TypeColorID
+                    },
+                    new Color
+                    {
                         ProductID = products.First(n => n.Name == "Капля").ProductID,
                         TypeColorID = firstColor.TypeColorID
                     },
@@ -223,6 +257,34 @@ namespace LevelStore.Models
                         SecondOnScreen = true,
                         TypeColorID = firstColor.TypeColorID,
                         ProductID = products.First(n => n.Name == "Средний").ProductID
+                    },
+                    new Image
+                    {
+                        Name = "Кошель(CrazyHouse)3.jpg",
+                        FirstOnScreen = true,
+                        TypeColorID = firstColor.TypeColorID,
+                        ProductID = products.First(n => n.Name == "Тревел-мини").ProductID
+                    },
+                    new Image
+                    {
+                        Name = "Кошель(CrazyHouse)4.jpg",
+                        SecondOnScreen = true,
+                        TypeColorID = firstColor.TypeColorID,
+                        ProductID = products.First(n => n.Name == "Тревел-мини").ProductID
+                    },
+                    new Image
+                    {
+                        Name = "Кошель(CrazyHouse)5.jpg",
+                        SecondOnScreen = true,
+                        TypeColorID = firstColor.TypeColorID,
+                        ProductID = products.First(n => n.Name == "Левый").ProductID
+                    },
+                    new Image
+                    {
+                        Name = "Кошель(CrazyHouse)6.jpg",
+                        SecondOnScreen = true,
+                        TypeColorID = firstColor.TypeColorID,
+                        ProductID = products.First(n => n.Name == "Левый").ProductID
                     },
                     new Image
                     {

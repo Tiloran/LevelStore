@@ -14,6 +14,9 @@ namespace LevelStore.Models
         public IList<CartLine> Lines { get; set; }
         public int Status { get; set; }
 
+        [Required]
+        public int DeliveryWay { get; set; }
+
         [Required(ErrorMessage = "Введите имя")]
         public string FirstName { get; set; }
         [Required(ErrorMessage = "Введите фамилию")]
