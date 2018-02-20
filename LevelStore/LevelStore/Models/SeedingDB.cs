@@ -275,7 +275,7 @@ namespace LevelStore.Models
                     new Image
                     {
                         Name = "Кошель(CrazyHouse)5.jpg",
-                        SecondOnScreen = true,
+                        FirstOnScreen = true,
                         TypeColorID = firstColor.TypeColorID,
                         ProductID = products.First(n => n.Name == "Левый").ProductID
                     },
