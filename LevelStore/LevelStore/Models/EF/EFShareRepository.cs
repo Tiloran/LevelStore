@@ -8,7 +8,7 @@ namespace LevelStore.Models.EF
 {
     public class EFShareRepository : IShareRepository
     {
-        private ApplicationDbContext context;
+        private readonly ApplicationDbContext context;
 
         public EFShareRepository(ApplicationDbContext ctx)
         {

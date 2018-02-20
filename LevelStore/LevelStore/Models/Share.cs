@@ -22,5 +22,6 @@ namespace LevelStore.Models
         [Required]
         [Range(0, 100)]
         public double KoefPrice { get; set; }
+        public bool Fake { get; set; }
     }
 }

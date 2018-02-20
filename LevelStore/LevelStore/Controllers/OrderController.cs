@@ -34,38 +34,7 @@ namespace LevelStore.Controllers
             repositoryShares = repoShare;
         }
 
-        public ViewResult Checkout() => View(new Order());
-
-        [HttpPost]
-        public IActionResult Checkout(Order order)
-        {
-            if (!cart.Lines.Any())
-            {
-                ModelState.AddModelError("", "Ваша корзина пуста!");
-            }
-            if (ModelState.IsValid)
-            {
-                order.Lines = cart.Lines.ToArray();                
-                foreach(var line in order.Lines)
-                {
-                    if(line.Product.ShareID != null)
-                    {
-                        Share share = repositoryShares.Shares.First(i => i.ShareId == line.Product.ShareID);
-                        if (share.Enabled)
-                        {                            
-                            line.KoefPriceAfterCheckout = share.KoefPrice;
-                        }
-                    }
-                    line.PriceAfterCheckout = line.Product.Price;
-                }
-                repository.SaveOrder(order);
-                return RedirectToAction(nameof(Completed));
-            }
-            else
-            {
-                return View(order);
-            }
-        }
+        
 
         public ViewResult Completed()
         {
@@ -79,9 +48,9 @@ namespace LevelStore.Controllers
             {
                 page = 1;
             }
-            int pageSize = 1;
+            int pageSize = 3;
             int count = repository.Orders.Count();
-            var items = repository.Orders.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            var items = repository.Orders.OrderByDescending(d => d.DateOfCreation).Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
             PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
             OrderListViewModel orderListviewModel = new OrderListViewModel
@@ -116,12 +85,7 @@ namespace LevelStore.Controllers
             TempData["BindedColors"] = repositoryProduct.TypeColors.ToList();
             return View("ViewSingleOrder", order);
         }
-
-        [HttpPost]
-        public ViewResult ChangeOrder(Order order)
-        {
-            return View("ListOrder");
-        }
+        
 
         [HttpPost]
         public IActionResult ChangeOrderAjax([FromBody] Order order)
@@ -215,14 +179,10 @@ namespace LevelStore.Controllers
                         row = excelSheet.CreateRow(i + globalIndexRow);
                         row.CreateCell(3).SetCellValue(line.Product.Name);
                         row.CreateCell(4).SetCellValue(line.Quantity);
-                        decimal price = 0;
-                        if(line.KoefPriceAfterCheckout != null)
+                        decimal price = line.PriceAfterCheckout;
+                        if (line.KoefPriceAfterCheckout != null && line.FakeShare == false)
                         {
-                            price = (line.PriceAfterCheckout / 100) * line.PriceAfterCheckout;
-                        }
-                        else
-                        {
-                            price = line.PriceAfterCheckout;
+                            price = line.PriceAfterCheckout / 100 * (decimal)(100 - line.KoefPriceAfterCheckout);
                         }
                         row.CreateCell(5).SetCellValue(price.ToString("C"));
                         globalIndexRow++;
@@ -237,7 +197,7 @@ namespace LevelStore.Controllers
                         cell.SetCellValue("Цвет");
                         cell.CellStyle = boldStyle;
                         row.CreateCell(4).SetCellValue(colors.FirstOrDefault(cn => cn.TypeColorID == line.SelectedColor)?.ColorType ?? "Неизвестный");
-                        totalPrice += price;
+                        totalPrice += price * line.Quantity;
                     }
                     globalIndexRow++;
                     row = excelSheet.CreateRow(i + globalIndexRow);

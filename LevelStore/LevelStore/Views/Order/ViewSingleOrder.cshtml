@@ -1,4 +1,5 @@
-﻿@model Order
+﻿@using System.Globalization
+@model Order
 @{
     ViewData["Title"] = "ViewSingleOrder";
     Layout = "_Layout";
@@ -108,15 +109,32 @@
                     decimal price = Model.Lines[i].PriceAfterCheckout;
                     if (Model.Lines[i].KoefPriceAfterCheckout != null)
                     {
-                        price = price / 100 * (decimal)Model.Lines[i].KoefPriceAfterCheckout;
-                        <label class="text-right" name="Lines[@i].Product.Price"><del>@Model.Lines[i].PriceAfterCheckout.ToString("C")</del>@price.ToString("C")</label>
+                        if (Model.Lines[i].FakeShare == true)
+                        {
+                            price = price / 100 * (decimal) (Model.Lines[i].KoefPriceAfterCheckout + 100);
+                        }
+                        else
+                        {
+                            price = price / 100 * (decimal) (100 - Model.Lines[i].KoefPriceAfterCheckout);
+                        }
+
+                        if (Model.Lines[i].PriceAfterCheckout > price)
+                        {
+                            <label class="text-right" name="Lines[@i].Product.Price"><del>@Model.Lines[i].PriceAfterCheckout.ToString(CultureInfo.InvariantCulture)</del>@price.ToString(CultureInfo.InvariantCulture) грн.</label>
+                        }
+                        else
+                        {
+                            <label class="text-right" name="Lines[@i].Product.Price"><del>@price.ToString(CultureInfo.InvariantCulture)</del>@Model.Lines[i].PriceAfterCheckout.ToString(CultureInfo.InvariantCulture) грн.</label>
+
+                        }
+
                     }
                     else
                     {
-                        <label class="text-right" name="Lines[@i].Product.Price">@price.ToString("C")</label>
+                        <label class="text-right" name="Lines[@i].Product.Price">@price.ToString() грн.</label>
                     }
 
-                 }                
+                }
                 <input type="hidden" value="@Model.Lines[i].Product.ProductID" name="Lines[@i].Product.ProductID" />
                 </td>
                 <td><input type="text" onfocus="OnlyNumber(this)" value="@Model.Lines[i].Quantity" name="Lines[@i].Quantity" /></td>
@@ -124,18 +142,18 @@
                 <td>
                     <select name="Lines[@i].Furniture">
                         @{
-                    int Nikel = (int)Furniture.Nikel;
-                    int Antik = (int)Furniture.Antik;
-                    if (Model.Lines[i].Furniture == (int)Furniture.Nikel)
-                    {
-                        <option selected value="@Nikel">Никель</option>
-                        <option value="@Antik">Антик</option>
-            }
-            else
-            {
-                <option value="@Nikel">Никель</option>
-                <option selected value="@Antik">Антик</option>
-    }
+                            int Nikel = (int)Furniture.Nikel;
+                            int Antik = (int)Furniture.Antik;
+                            if (Model.Lines[i].Furniture == (int) Furniture.Nikel)
+                            {
+                                <option selected value="@Nikel">Никель</option>
+                                <option value="@Antik">Антик</option>
+                            }
+                            else
+                            {
+                                <option value="@Nikel">Никель</option>
+                                <option selected value="@Antik">Антик</option>
+                            }
                         }
                     </select>
                 </td>
@@ -143,29 +161,29 @@
                 <td>
                     <select name="Lines[@i].SelectedColor">
                         @{
-                    bool wasColor = false;
-                    foreach (var bindedColor in @Model.Lines[i].Product.Color)
-                    {
-                        int? colorID = colors.First(c => c.TypeColorID == bindedColor.TypeColorID)?.TypeColorID;
-                        if (colorID == Model.Lines[i].SelectedColor)
-                        {
-                            wasColor = true;
-                            <option selected value="@colorID">@colors.First(c => c.TypeColorID == colorID).ColorType</option>
-                }
-                else if (colorID == null)
-                {
-                    wasColor = true;
-                    <option selected value="0">Неизвестный</option>
-        }
-        else
-        {
-            <option value="@colorID">@colors.First(c => c.TypeColorID == colorID).ColorType</option>
-}
-}
-if (wasColor == false)
-{
-        <option selected value="0">Неизвестный</option>
-}
+                            bool wasColor = false;
+                            foreach (var bindedColor in @Model.Lines[i].Product.Color)
+                            {
+                                int? colorID = colors.First(c => c.TypeColorID == bindedColor.TypeColorID)?.TypeColorID;
+                                if (colorID == Model.Lines[i].SelectedColor)
+                                {
+                                    wasColor = true;
+                                    <option selected value="@colorID">@colors.First(c => c.TypeColorID == colorID).ColorType</option>
+                                }
+                                else if (colorID == null)
+                                {
+                                    wasColor = true;
+                                    <option selected value="0">Неизвестный</option>
+                                }
+                                else
+                                {
+                                    <option value="@colorID">@colors.First(c => c.TypeColorID == colorID).ColorType</option>
+                                }
+                            }
+                            if (wasColor == false)
+                            {
+                                <option selected value="0">Неизвестный</option>
+                            }
                         }
 
                     </select>

@@ -83,7 +83,15 @@
                             {
                                 <div>Акция</div>
                                 <div data-countdown="@share.DateOfEnd.ToString("yyyy/MM/dd HH:mm:ss").Replace('.', '/')"></div>
-                                newPrice = price / 100 * (decimal) (share.KoefPrice);
+                                if (share.Fake)
+                                {
+                                    price = price / 100 * (decimal) (share.KoefPrice + 100);
+                                }
+                                else
+                                {
+                                    newPrice = price / 100 * (decimal)(100 - share.KoefPrice);
+                                }
+
                             }
                         }
                         <span>@product.product.Name</span>

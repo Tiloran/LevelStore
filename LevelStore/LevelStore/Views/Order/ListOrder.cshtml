@@ -1,4 +1,5 @@
-﻿@model OrderListViewModel
+﻿@using System.Globalization
+@model OrderListViewModel
 @{
     ViewData["Title"] = "ListOrder";
     Layout = "_Layout";
@@ -132,25 +133,47 @@
             </tr>
             foreach (var line in o.Lines)
             {
-                <tr>
-                    <td colspan="4"></td>
-                    <td>@line.Product.Name</td>
-                    <td>@line.Quantity</td>
-                    @{
-                        decimal price = line.PriceAfterCheckout;
-                        if (line.KoefPriceAfterCheckout != null)
+            <tr>
+                <td colspan="4"></td>
+                <td>@line.Product.Name</td>
+                <td>@line.Quantity</td>
+                @{
+                    decimal price = line.PriceAfterCheckout;
+                    if (line.KoefPriceAfterCheckout != null)
+                    {
+                        if (line.FakeShare == true)
                         {
-                            price = price / 100 * (decimal)line.KoefPriceAfterCheckout;
-                            <td class="text-right"><del>@line.PriceAfterCheckout.ToString("C")</del>@price.ToString("C")</td>
+                            price = price / 100 * (decimal) (line.KoefPriceAfterCheckout + 100);
                         }
                         else
                         {
-                            <td class="text-right">@price.ToString("C")</td>
-
+                            price = price / 100 * (decimal) (100 - line.KoefPriceAfterCheckout);
                         }
-                        TotalPrice = TotalPrice + line.Quantity * price;
+                        if (line.PriceAfterCheckout > price)
+                        {
+                            <td class="text-right"><del>@line.PriceAfterCheckout.ToString(CultureInfo.InvariantCulture)</del>@price.ToString(CultureInfo.InvariantCulture) грн.</td>
+                        }
+                        else
+                        {
+                            <td class="text-right"><del>@price.ToString()</del>@line.PriceAfterCheckout.ToString(CultureInfo.InvariantCulture) грн.</td>
+                        }
+
                     }
-                </tr>
+                    else
+                    {
+                        <td class="text-right">@price.ToString(CultureInfo.InvariantCulture) грн.</td>
+
+                    }
+                    if (line.PriceAfterCheckout > price)
+                    {
+                        TotalPrice += line.Quantity * price;
+                    }
+                    else
+                    {
+                        TotalPrice += line.Quantity * line.PriceAfterCheckout;
+                    }
+                }
+            </tr>
                 <tr>
                     <td colspan="4"></td>
                     <th>Фурнитура</th>
@@ -175,7 +198,7 @@
             <tr>
                 <td colspan="4"></td>
                 <th>Общая цена</th>
-                <td colspan="2">@TotalPrice.ToString("C")</td>
+                <td colspan="2">@TotalPrice.ToString(CultureInfo.InvariantCulture) грн.</td>
             </tr>
 
         }

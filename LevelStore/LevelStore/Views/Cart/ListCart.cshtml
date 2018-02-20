@@ -61,32 +61,52 @@
                 </div>
 
                 @{
-        decimal price;
-        bool WasShare = false;
-        if (line.Product.ShareID != null)
-        {
-            Share share = shares.First(i => i.ShareId == line.Product.ShareID);
-            if (share.Enabled)
-            {
-                price = line.Product.Price / 100 * (decimal)share.KoefPrice;
-                WasShare = true;
-            }
-            else
-            {
-                price = line.Product.Price;
-            }
-        }
-        else
-        {
-            price = line.Product.Price;
-        }
+                    decimal price;
+                    bool WasShare = false;
+                    if (line.Product.ShareID != null)
+                    {
+                        Share share = shares.First(i => i.ShareId == line.Product.ShareID);
+                        if (share.Enabled)
+                        {
+                            if (share.Fake)
+                            {
+                                price = line.Product.Price / 100 * (decimal) (share.KoefPrice + 100);
+                            }
+                            else
+                            {
+                                price = line.Product.Price / 100 * (decimal) (100 - share.KoefPrice);
+                            }
+                            WasShare = true;
+                        }
+                        else
+                        {
+                            price = line.Product.Price;
+                        }
+                    }
+                    else
+                    {
+                        price = line.Product.Price;
+                    }
                     if (WasShare)
                     {
                         <div class="col-sm-2 shop-cart__item--price">
                             <span class="desktop-invisible">Цена:&nbsp&nbsp</span>
-                            <span class="shop-cart__item--text">
-                                <del>@line.Product.Price.ToString(CultureInfo.InvariantCulture)</del>@price.ToString(CultureInfo.InvariantCulture) грн.
-                            </span>
+                            @if (line.Product.Price > price)
+                            {
+                                <span class="shop-cart__item--text">
+
+                                    <del>@line.Product.Price.ToString(CultureInfo.InvariantCulture)</del>@price.ToString(CultureInfo.InvariantCulture) грн.
+
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="shop-cart__item--text">
+
+                                    <del>@price.ToString(CultureInfo.InvariantCulture)</del>@line.Product.Price.ToString(CultureInfo.InvariantCulture) грн.
+
+                                </span>
+                            }
                         </div>
                     }
                     else
@@ -96,14 +116,30 @@
                             <span class="shop-cart__item--text">@price.ToString(CultureInfo.InvariantCulture) грн.</span>
                         </div>
                     }
-                    TotalPrice = TotalPrice + line.Quantity * price;
+                    if (line.Product.Price > price)
+                    {
+                        TotalPrice += line.Quantity * price;
+                    }
+                    else
+                    {
+                        TotalPrice += line.Quantity * line.Product.Price;
+                    }
+
                 }
 
                 <div class="col-sm-2 shop-cart__item--count">
                     <span class="desktop-invisible">Количество: </span> <input type="number" size="5" min="0" step="1" value="@line.Quantity">
                 </div>
                 @{
-                    decimal priceWithQuantity = line.Quantity * price;
+                    decimal priceWithQuantity = 0;
+                    if (line.Product.Price > price)
+                    {
+                        priceWithQuantity = line.Quantity * price;
+                    }
+                    else
+                    {
+                        priceWithQuantity = line.Quantity * line.Product.Price;
+                    }
                 }
                 <div class="col-sm-2 shop-cart__item--sum-price"><span class="desktop-invisible">Сумма:&nbsp&nbsp</span><span class="shop-cart__item--text"> @priceWithQuantity.ToString(CultureInfo.InvariantCulture) грн.</span></div>
                 <div class="col-sm-1 shop-cart__item--delete"><a asp-action="RemoveFromCart" asp-route-productId="@line.Product.ProductID">Удалить из корзины</a></div>
@@ -241,10 +277,7 @@
                 </div>
             </div>
         </form>
-
-                <div class="text-center">
-                    <a class="btn btn-primary" asp-action="Checkout" asp-controller="Order">Checkout</a>
-                </div>
+                
             </div>
         </div>
     </div>

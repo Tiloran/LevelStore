@@ -72,6 +72,7 @@ namespace LevelStore.Controllers
                         if (share.Enabled)
                         {
                             line.KoefPriceAfterCheckout = share.KoefPrice;
+                            line.FakeShare = share.Fake;
                         }
                     }
                     line.PriceAfterCheckout = line.Product.Price;

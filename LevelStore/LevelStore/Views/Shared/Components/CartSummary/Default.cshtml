@@ -1,4 +1,5 @@
-﻿@model CartWithSharesViewModel
+﻿@using System.Globalization
+@model CartWithSharesViewModel
 
 
 <div class=""> 
@@ -13,36 +14,53 @@
         else
         {
             <span>@Model.cart.Lines.Sum(x => x.Quantity) товаров</span>
-        }        
+        }
         @{
             decimal TotalPrice = 0;
+            decimal originalPrice = 0;
             bool WasShare = false;
-            foreach (var cart in Model.cart.Lines)
+            foreach (var line in Model.cart.Lines)
             {
-                if (cart.Product.ShareID != null)
+                if (line.Product.ShareID != null)
                 {
-                    Share share = Model.shares.First(i => i.ShareId == cart.Product.ShareID);
+                    Share share = Model.shares.First(i => i.ShareId == line.Product.ShareID);
                     if (share.Enabled)
                     {
-                        TotalPrice += cart.Quantity * (TotalPrice + cart.Product.Price / 100 * (decimal)(share.KoefPrice));
+                        if (share.Fake)
+                        {
+                            originalPrice += line.Quantity * line.Product.Price / 100 * (decimal) (share.KoefPrice + 100);
+                            TotalPrice += line.Quantity * line.Product.Price;
+                        }
+                        else
+                        {
+                            TotalPrice += line.Quantity * line.Product.Price / 100 * (decimal) (100 - share.KoefPrice);
+                            originalPrice += line.Quantity * line.Product.Price;
+                        }
                         WasShare = true;
                     }
                     else
                     {
-                        TotalPrice += cart.Product.Price * cart.Quantity;
+                        TotalPrice += line.Quantity * line.Product.Price;
+                        originalPrice += line.Quantity * line.Product.Price;
                     }
                 }
                 else
                 {
-                    TotalPrice += cart.Product.Price * cart.Quantity;
+                    TotalPrice += line.Quantity * line.Product.Price;
+                    originalPrice += line.Quantity * line.Product.Price;
                 }
             }
             if (WasShare)
             {
-            <del>@Model.cart.ComputeTotalValue().ToString("C")</del>
+                <del>@originalPrice.ToString(CultureInfo.InvariantCulture)</del>
+                <span>@TotalPrice.ToString(CultureInfo.InvariantCulture) грн.</span>
             }
-            @TotalPrice.ToString("C")
+            else
+            {
+                <span>@TotalPrice.ToString(CultureInfo.InvariantCulture) грн.</span>
             }
+
+        }
 
     </small>
             }

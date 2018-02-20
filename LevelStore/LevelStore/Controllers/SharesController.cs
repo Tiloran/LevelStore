@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using LevelStore.Models;
 using LevelStore.Models.AjaxModels;
-using LevelStore.Models.EF;
-using LevelStore.Models.Enums;
 
 namespace LevelStore.Controllers
 {
@@ -29,32 +23,13 @@ namespace LevelStore.Controllers
             return View(repository.Shares.ToList());
         }
 
-        // GET: Shares/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Shares/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        public IActionResult Create(Share share)
-        {
-            if (ModelState.IsValid)
-            {
-                repository.SaveShare(share);
-                return RedirectToAction(nameof(Index));
-            }
-            return View(share);
-        }
-
+        
         // GET: Shares/Edit/5
         public IActionResult Edit(int? shareid)
         {
-            if (shareid == null)
+            if (shareid == null || shareid == 0)
             {
-                return NotFound();
+                return View(new Share());
             }
 
             var share = repository.Shares.SingleOrDefault(m => m.ShareId == shareid);

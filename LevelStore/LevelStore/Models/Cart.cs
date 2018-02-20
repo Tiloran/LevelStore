@@ -62,6 +62,7 @@ namespace LevelStore.Models
         public decimal PriceAfterCheckout { get; set; }
         [Range(0, 100)]
         public double? KoefPriceAfterCheckout { get; set; }
+        public bool? FakeShare { get; set; }
         public int Quantity { get; set; }
         public int? OrderID { get; set; }
     }
