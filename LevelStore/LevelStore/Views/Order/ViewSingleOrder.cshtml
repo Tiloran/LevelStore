@@ -2,7 +2,7 @@
 @model Order
 @{
     ViewData["Title"] = "ViewSingleOrder";
-    Layout = "_Layout";
+    Layout = "_LayoutAdmin";
     string myJson = TempData["JsonOrder"].ToString();
 
     myJson = EncodeToUTF8.Encode(myJson);

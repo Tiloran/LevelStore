@@ -2,70 +2,81 @@
 @model CartWithSharesViewModel
 
 
-<div class=""> 
-    @if (Model.cart.Lines.Any())
-    {
+<div class="">
+    <a class="btn btn-sm btn-default navbar-btn" asp-controller="Cart" asp-action="Index">
+        @if (Model.cart.Lines.Any())
+        {
 
-    <small class="navbar-text">
-        @if (Model.cart.Lines.Sum(x => x.Quantity) == 1)
-        {
-            <span>@Model.cart.Lines.Sum(x => x.Quantity) товар</span>
-        }
-        else
-        {
-            <span>@Model.cart.Lines.Sum(x => x.Quantity) товаров</span>
-        }
-        @{
-            decimal TotalPrice = 0;
-            decimal originalPrice = 0;
-            bool WasShare = false;
-            foreach (var line in Model.cart.Lines)
-            {
-                if (line.Product.ShareID != null)
-                {
-                    Share share = Model.shares.First(i => i.ShareId == line.Product.ShareID);
-                    if (share.Enabled)
+            <div class="navbar-text">
+                @{
+                    int quantity = Model.cart.Lines.Sum(x => x.Quantity);
+                    string quantityName;
+                    if (quantity == 1)
                     {
-                        if (share.Fake)
-                        {
-                            originalPrice += line.Quantity * line.Product.Price / 100 * (decimal) (share.KoefPrice + 100);
-                            TotalPrice += line.Quantity * line.Product.Price;
-                        }
-                        else
-                        {
-                            TotalPrice += line.Quantity * line.Product.Price / 100 * (decimal) (100 - share.KoefPrice);
-                            originalPrice += line.Quantity * line.Product.Price;
-                        }
-                        WasShare = true;
+                        quantityName = "товар";
                     }
                     else
                     {
-                        TotalPrice += line.Quantity * line.Product.Price;
-                        originalPrice += line.Quantity * line.Product.Price;
+                        quantityName = "товаров";
                     }
                 }
-                else
-                {
-                    TotalPrice += line.Quantity * line.Product.Price;
-                    originalPrice += line.Quantity * line.Product.Price;
-                }
-            }
-            if (WasShare)
-            {
-                <del>@originalPrice.ToString(CultureInfo.InvariantCulture)</del>
-                <span>@TotalPrice.ToString(CultureInfo.InvariantCulture) грн.</span>
-            }
-            else
-            {
-                <span>@TotalPrice.ToString(CultureInfo.InvariantCulture) грн.</span>
-            }
+                    <div><div style="background-color: red; color: aliceblue;">@quantity</div> @quantityName</div>
+               
+                @{
+                    decimal TotalPrice = 0;
+                    decimal originalPrice = 0;
+                    bool WasShare = false;
+                    foreach (var line in Model.cart.Lines)
+                    {
+                        if (line.Product.ShareID != null)
+                        {
+                            Share share = Model.shares.First(i => i.ShareId == line.Product.ShareID);
+                            if (share.Enabled)
+                            {
+                                if (share.Fake)
+                                {
+                                    originalPrice += line.Quantity * line.Product.Price / 100 * (decimal) (share.KoefPrice + 100);
+                                    TotalPrice += line.Quantity * line.Product.Price;
+                                }
+                                else
+                                {
+                                    TotalPrice += line.Quantity * line.Product.Price / 100 * (decimal) (100 - share.KoefPrice);
+                                    originalPrice += line.Quantity * line.Product.Price;
+                                }
+                                WasShare = true;
+                            }
+                            else
+                            {
+                                TotalPrice += line.Quantity * line.Product.Price;
+                                originalPrice += line.Quantity * line.Product.Price;
+                            }
+                        }
+                        else
+                        {
+                            TotalPrice += line.Quantity * line.Product.Price;
+                            originalPrice += line.Quantity * line.Product.Price;
+                        }
+                    }
+                    if (WasShare)
+                    {
+                        <del>@originalPrice.ToString(CultureInfo.InvariantCulture)</del>
+                        <span>@TotalPrice.ToString(CultureInfo.InvariantCulture) грн.</span>
+                    }
+                    else
+                    {
+                        <span>@TotalPrice.ToString(CultureInfo.InvariantCulture) грн.</span>
+                    }
 
+                }
+
+            </div>
+                    }
+        else
+        {
+            <i class="fa fa-shopping-bag" aria-hidden="true"></i>
         }
 
-    </small>
-            }
-        <a class="btn btn-sm btn-default navbar-btn" asp-controller="Cart" asp-action="Index">
-            <i class="fa fa-shopping-bag" aria-hidden="true"></i>
-        </a>
+        
+    </a>
 
 </div>

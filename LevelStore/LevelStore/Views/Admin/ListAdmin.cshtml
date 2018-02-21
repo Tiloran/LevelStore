@@ -1,38 +1,12 @@
 ﻿@model ProductsListViewModel
 @{
     ViewData["Title"] = "ListAdmin";
-    Layout = "_Layout";
+    Layout = "_LayoutAdmin";
 }
 
 <script src="/js/ShowSecondOnMouseOver.js"></script>
 
-<a asp-controller="Product" asp-action="List" class="btn btn-default">К юзерскому списку</a>
-<a asp-controller="Admin" asp-action="Create" class="btn btn-default">Добавить товар</a>
-<a asp-controller="Admin" asp-action="AddColors" class="btn btn-default">Добавить/Цвет</a>
-<a asp-controller="Order" asp-action="ListOrder" asp-route-page="1" class="btn btn-default">Заявки</a>
-<a asp-controller="Shares" asp-action="Index" class="btn btn-default">Акции</a>
 
-@if (Model.Categories.Any())
-{
-    <ul class="menu">
-        <li><a asp-controller="Product" asp-action="List">Без фильтров</a></li>
-        @foreach (var category in Model.Categories)
-        {
-            <li>
-                <a asp-controller="Product" asp-action="List" asp-route-categoryID="@category.CategoryID">@category.CategoryName</a>
-                @if (category.SubCategories.Any())
-                {
-                    <ul class="submenu">
-                        @foreach (var subCategory in category.SubCategories)
-                        {
-                            <li><a asp-controller="Product" asp-action="List" asp-route-subCategoryID="@subCategory.SubCategoryID">@category.CategoryName "@subCategory.SubCategoryName"</a></li>
-                        }
-                    </ul>
-                }
-            </li>
-        }
-    </ul>
-}
 
 @foreach (var product in Model.ProductAndImages)
 {

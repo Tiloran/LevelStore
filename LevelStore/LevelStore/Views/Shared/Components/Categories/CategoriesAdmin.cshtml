@@ -1,0 +1,24 @@
+﻿@model IEnumerable<Category>
+@{
+     if (Model.Any())
+     {
+         <ul class="menu">
+             <li><a asp-controller="Product" asp-action="List">Без фильтров</a></li>
+             @foreach (var category in Model)
+             {
+                 <li>
+                     <a asp-controller="Product" asp-action="List" asp-route-categoryID="@category.CategoryID">@category.CategoryName</a>
+                     @if (category.SubCategories.Any())
+                     {
+                         <ul class="submenu">
+                             @foreach (var subCategory in category.SubCategories)
+                             {
+                                 <li><a asp-controller="Product" asp-action="List" asp-route-subCategoryID="@subCategory.SubCategoryID">@category.CategoryName "@subCategory.SubCategoryName"</a></li>
+                             }
+                         </ul>
+                     }
+                 </li>
+             }
+         </ul>
+     }
+}

@@ -1,49 +1,11 @@
 ﻿@model Product
 @{
     ViewData["Title"] = "Edit";
-    Layout = "_Layout";
+    Layout = "_LayoutAdmin";
     List<TypeColor> colorList = TempData["Colors"] as List<TypeColor>;
     List<Color> boundcolorList = TempData["BoundColors"] as List<Color>;
     List<Category> Categories = TempData["Categories"] as List<Category>;
 }
-
-@*@section scripts{
-        <script src="/lib/jquery/dist/jquery.js"></script>
-        <script type="text/javascript">
-            var ololo = 0;
-            $(document).ready(function() {
-                $("#upload").click(function(e) {
-                    e.preventDefault();
-
-                    var fileUpload = $("#files").get(0);
-                    var files = fileUpload.files;
-                    var data = new FormData();
-                    for (var i = 0; i < files.length ; i++) {
-                        data.append(files[i].name, files[i]);
-                    }
-
-                    $.ajax({
-                        url: "/Admin/UploadFilesAjax/",
-                        type: "POST",
-                        contentType: false,
-                        processData: false,
-                        data: data,
-                        success: function (message) {
-                            for (var i = 1; i < files.length + 1 ; i++) {
-                                $("#fileList").append("<input name=\"Images[" + i + "].Name \" Value=\"" + files[i].name + "\"/>");
-                            }
-                            alert(message);
-                        },
-                        error: function () {
-                            alert("There was error uploading files!");
-                        }
-
-                    });
-                    e.preventDefault();
-                });
-            });
-        </script>
-    }*@
 
 <h2>Edit</h2>
 
