@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using DNTBreadCrumb.Core;
 using LevelStore.Models;
 using LevelStore.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LevelStore.Controllers
 {
+    [BreadCrumb(Title = "Магазин", UseDefaultRouteUrl = true, Order = 0, GlyphIcon = "fa fa-angle-double-right")]
     public class ProductController : Controller
     {
         private readonly IProductRepository repository;
@@ -18,6 +19,7 @@ namespace LevelStore.Controllers
             shareRepository = shareRepo;
         }
 
+        [BreadCrumb(Order = 1)]
         public ViewResult List(int? categoryID, int? subCategoryID, string searchString)
         {
             List<ProductWithImages> productAndImages = new List<ProductWithImages>();
@@ -58,7 +60,7 @@ namespace LevelStore.Controllers
             for (int i = 0; i < products.Count; i++)
             {
                 images = new List<Image>(repository.Images.Where(index => index.ProductID == products[i].ProductID));
-                productAndImages.Add(new ProductWithImages()
+                productAndImages.Add(new ProductWithImages
                 {
                     product = products[i],
                     Images = images
@@ -71,9 +73,14 @@ namespace LevelStore.Controllers
             TempData["searchString"] = searchString;
             return View(productsListViewModel);
         }
-        
-        public ViewResult ViewSingleProduct(int productId, bool wasError)
+
+        [BreadCrumb(Title = "Товар", Order = 2, GlyphIcon = "fa fa-angle-double-right")]
+        public IActionResult ViewSingleProduct(int productId, bool wasError)
         {
+            if (!repository.Products.Select(i => i.ProductID).Contains(productId))
+            {
+                return NotFound();
+            }
             if (wasError)
             {
                 ModelState.AddModelError("", "Выберите цвет и фурнитуру");
@@ -101,6 +108,11 @@ namespace LevelStore.Controllers
             {
                 TempData["Share"] = shareRepository.Shares.FirstOrDefault(i => i.ShareId == selectedProduct.ShareID);
             }
+
+            HttpContext.SetCurrentBreadCrumbTitle(selectedProduct.Name);
+            
+            
+            
             return View(selectedProduct);
         }
     }

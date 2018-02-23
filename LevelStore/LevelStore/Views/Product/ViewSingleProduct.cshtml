@@ -123,8 +123,8 @@
                     }
                 </select>
                 @{
-                    int Antik = (int)Furniture.Antik;
-                    int Nikel = (int)Furniture.Nikel;
+                    int Antik = (int) Furniture.Antik;
+                    int Nikel = (int) Furniture.Nikel;
                 }
                 <select name="furniture">
                     <option selected disabled>Выберите фурнитуру</option>
@@ -132,9 +132,10 @@
                     <option value="@Nikel">Никель</option>
                 </select>
                 <button type="submit" class="single-item__add-btn">Добавить в корзину</button>
+                <a href='javascript:history.go(-1)' class="btn btn-primary">Другие товары</a>
             </form>
         </div>
-        <a asp-controller="Product" asp-action="List" class="btn btn-default">К списку</a>
+        
         @if (relatedProducts != null && relatedProducts.Any())
         {
             <div>

@@ -29,7 +29,7 @@ namespace LevelStore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(option =>
-                option.UseSqlServer(Configuration["Data:SportStoreProducts:ConnectionString"]));
+                option.UseSqlServer(Configuration["Data:LevelStore:ConnectionString"]));
             services.AddTransient<IProductRepository, EFProductRepository>();
             services.AddTransient<IOrderRepository, EFOrderRepository>();
             services.AddTransient<IShareRepository, EFShareRepository>();
@@ -51,6 +51,10 @@ namespace LevelStore
             app.StartTask<WorkWihShares>(TimeSpan.FromMinutes(1));
             app.UseMvc(routes =>
             {
+                routes.MapRoute(
+                    name: "",
+                    template: "{controller}/{action=List}/"
+                );
                 routes.MapRoute(
                     name: "default",
                     template: "{controller}/{action}/{id?}",

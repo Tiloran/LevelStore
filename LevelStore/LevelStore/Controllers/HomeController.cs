@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DNTBreadCrumb.Core;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LevelStore.Controllers
 {

@@ -2,15 +2,16 @@
 
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" charset="utf-8"/>
+    <meta name="viewport" content="width=device-width" charset="utf-8" />
 
     <title>@ViewBag.Title</title>
 
-    <link rel="stylesheet" asp-href-include="/lib/bootstrap/dist/css/*.css"/>
-    <link rel="stylesheet" asp-href-include="/lib/font-awesome/css/font-awesome.min.css"/>
-    <link rel="stylesheet" asp-href-include="/css/MainMenuStyleSheet.css"/>
+    <link rel="stylesheet" asp-href-include="/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" asp-href-include="/lib/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" asp-href-include="/css/MainMenuStyleSheet.css" />
     <script src="/js/jQuery/jquery.min.js"></script>
-    
+    <script src="/js/jsrender.min.js"></script>
+
     @RenderSection("scripts", false)
 </head>
 <body>
@@ -62,78 +63,12 @@
             </div>
         </div>
     </header>
-    @* <header class="mobile-header">
-            <div>
-                <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
-                    <!-- Brand -->
-        <a href="/" asp-controller="Home" asp-action="Index">
-            <img src="img/global-content/logo.png" alt="level">
-        </a>
-        <div class="navbar-brand shopping-basket">
-            <a href="#"><i class="fa fa-shopping-bag"></i></a>
-        </div>
-        <!-- Toggler/collapsibe Button -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <!-- Navbar links -->
-        <div class="collapse navbar-collapse" id="collapsibleNavbar">
-            <div id="accordion" class="mobile-header__accordion">
-                <div class="mobile-header__menu">
-                    <div class="card-header mobile-header__menu-item" id="headingOne">
-                        <button class="btn btn-link main-navigation menu__item-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            <a href="#">Магазин</a>
-                        </button>
-                    </div>
-                </div>
-                <div class="mobile-header__menu">
-                    <div class="card-header mobile-header__menu-item" id="headingTwo">
-                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                            <a href="#">Доставка и оплата</a>
-                        </button>
-                    </div>
-                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-                        <ul class="submenu">
-                            <li class="submenu__item"><a href="#" class="submenu__item-link" asp-controller="DeliveryAndPayment" asp-action="Delivery">Доставка</a></li>
-                            <li class="submenu__item"><a href="#" class="submenu__item-link" asp-controller="DeliveryAndPayment" asp-action="Payment">Оплата</a></li>
-                            <li class="submenu__item"><a href="#" class="submenu__item-link" asp-controller="DeliveryAndPayment" asp-action="Guarantees">Гарантии</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="mobile-header__menu">
-                    <div class="card-header mobile-header__menu-item" id="headingThree">
-                        <a href="#" class="menu__item-link" asp-controller="Brand" asp-action="AboutTheBrand">О бренде</a>
-                    </div>
-                </div>
-                <div class="mobile-header__menu">
-                    <div class="card-header mobile-header__menu-item" id="headingFour">
-                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseThree">
-                            <a href="#">Контакты</a>
-                        </button>
-                    </div>
-                    <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
-                        <div class="card-body">
-                            <ul class="submenu">
-                                <li class="submenu__item"><a href="#" class="submenu__item-link" asp-controller="Contact" asp-action="OurShowRoom">Наш Showroom</a></li>
-                                <li class="submenu__item"><a href="#" class="submenu__item-link" asp-controller="Contact" asp-action="DeliveryDepartment">Отдел доставки</a></li>
-                                <li class="submenu__item"><a href="#" class="submenu__item-link" asp-controller="Contact" asp-action="Bayer">Bayer</a></li>
-                                <li class="submenu__item"><a href="#" class="submenu__item-link" asp-controller="Contact" asp-action="Partnership">Партнерство</a></li>
-                                <li class="submenu__item"><a href="#" class="submenu__item-link" asp-controller="Contact" asp-action="Vacancy">Вакансии</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <form class="form-inline search-form__mobile" action="">
-                    <input class="form-control search-form__mobile--input" type="text" placeholder="Поиск...">
-                    <button class="btn btn-success search-form__mobile--btn" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
-                </form>
-            </div>
-        </div>
-        </nav>
-        </div>
-        </header>
-    *@
+<div id="breadCrumb">
+    <breadcrumb asp-homepage-title="Главная страница"
+                asp-homepage-url="@Url.Action("Index", "Home", values: new {area = ""})"
+                asp-homepage-glyphicon="fa fa-angle-double-up">
+    </breadcrumb>
+</div>
 
 
     @RenderBody()
