@@ -3,17 +3,17 @@
      if (Model.Any())
      {
          <ul class="menu">
-             <li><a asp-controller="Product" asp-action="List">Без фильтров</a></li>
+             <li><a asp-controller="Admin" asp-action="ListAdmin">Без фильтров</a></li>
              @foreach (var category in Model)
              {
                  <li>
-                     <a asp-controller="Product" asp-action="List" asp-route-categoryID="@category.CategoryID">@category.CategoryName</a>
+                     <a asp-controller="Admin" asp-action="ListAdmin" asp-route-categoryID="@category.CategoryID">@category.CategoryName</a>
                      @if (category.SubCategories.Any())
                      {
                          <ul class="submenu">
                              @foreach (var subCategory in category.SubCategories)
                              {
-                                 <li><a asp-controller="Product" asp-action="List" asp-route-subCategoryID="@subCategory.SubCategoryID" class="btn btn-default">@category.CategoryName "@subCategory.SubCategoryName"</a></li>
+                                 <li><a asp-controller="Admin" asp-action="ListAdmin" asp-route-subCategoryID="@subCategory.SubCategoryID" class="btn btn-default">@category.CategoryName "@subCategory.SubCategoryName"</a></li>
                              }
                          </ul>
                      }
