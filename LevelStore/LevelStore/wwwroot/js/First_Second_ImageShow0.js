@@ -20,21 +20,22 @@ function First_Second_ImageShow(element) {
         var firstElem = false;
         var secondElem = false;
         var commonElem = false;
+        var i;
         if ($(element).attr('id').indexOf("First") >= 0) {
             index = GetIndexOfSelectedElement(first, element);
-            if (index != -1) {
+            if (index !== -1) {
                 firstElem = true;
             }
         }
         else if ($(element).attr('id').indexOf("Second") >= 0) {
             index = GetIndexOfSelectedElement(second, element);
-            if (index != -1) {
+            if (index !== -1) {
                 secondElem = true;
             }
         }
         else if ($(element).attr('id').indexOf("Third") >= 0) {
             index = GetIndexOfSelectedElement(third, element);
-            if (index != -1) {
+            if (index !== -1) {
                 commonElem = true;
             }
         }
@@ -43,10 +44,10 @@ function First_Second_ImageShow(element) {
             UnSetChecked(second[index]);
             UnSetChecked(third[index]);
             SetChecked(first[index]);
-            for (var i = 0; i < first.length; i++) {
-                if (index != i) {
+            for (i = 0; i < first.length; i++) {
+                if (index !== i) {
                     UnSetChecked(first[i]);
-                    if ($(second[i]).attr("checked") != 'checked') {
+                    if ($(second[i]).attr("checked") !== 'checked') {
                         SetChecked(third[i]);
                     }
                 }
@@ -56,10 +57,10 @@ function First_Second_ImageShow(element) {
             UnSetChecked(first[index]);
             UnSetChecked(third[index]);
             SetChecked(second[index]);
-            for (var i = 0; i < second.length; i++) {
-                if (index != i) {
+            for (i = 0; i < second.length; i++) {
+                if (index !== i) {
                     UnSetChecked(second[i]);
-                    if ($(first[i]).attr("checked") != 'checked') {
+                    if ($(first[i]).attr("checked") !== 'checked') {
                         SetChecked(third[i]);
                     }
                 }
@@ -72,17 +73,17 @@ function First_Second_ImageShow(element) {
             if (third.length > 1) {
                 var firstWas = false;
                 var secondWas = false;
-                for (var i = 0; i < third.length; i++) {
-                    if ($(second[i]).attr("checked") == 'checked') {
+                for (i = 0; i < third.length; i++) {
+                    if ($(second[i]).attr("checked") === 'checked') {
                         secondWas = true;
                     }
-                    if ($(first[i]).attr("checked") == 'checked') {
+                    if ($(first[i]).attr("checked") === 'checked') {
                         firstWas = true;
                     }
                 }
 
-                if (firstWas != true) {
-                    if ($(second[0]).attr("checked") != 'checked') {
+                if (firstWas !== true) {
+                    if ($(second[0]).attr("checked") !== 'checked') {
                         SetChecked(first[0]);
                         UnSetChecked(second[0]);
                         UnSetChecked(third[0]);
@@ -93,8 +94,8 @@ function First_Second_ImageShow(element) {
                     }
                 }
 
-                if (secondWas != true) {
-                    if ($(first[0]).attr("checked") != 'checked') {
+                if (secondWas !== true) {
+                    if ($(first[0]).attr("checked") !== 'checked') {
                         SetChecked(second[0]);
                         UnSetChecked(first[0]);
                         UnSetChecked(third[0]);
@@ -107,11 +108,11 @@ function First_Second_ImageShow(element) {
             }
         }
 
-        for (var i = 0; i < first.length; i++) {
-            if ($(second[i]).attr("checked") == 'checked') {
+        for (i = 0; i < first.length; i++) {
+            if ($(second[i]).attr("checked") === 'checked') {
                 $(SecondValueForAspNet).val($(second[i]).val());
             }
-            if ($(first[i]).attr("checked") == 'checked') {
+            if ($(first[i]).attr("checked") === 'checked') {
                 $(FirstValueForAspNet).val($(first[i]).val());
             }
         }

@@ -10,24 +10,24 @@
     <script src="/js/jQuery/jquery.min.js"></script>
     @RenderSection("scripts", false)
 </head>
-<body>
-<div>
-    <a style="width: 100%; background-color: yellow" asp-controller="Home" asp-action="Index">
-        <img src="~/images/img/global-content/logo.png" alt="level">
-    </a>
-</div>
-<div>
-    <a asp-controller="Product" asp-action="List" class="btn btn-default">К юзерскому списку</a>
-    <a asp-controller="Admin" asp-action="Create" class="btn btn-default">Добавить товар</a>
-    <a asp-controller="Admin" asp-action="AddColors" class="btn btn-default">Добавить/Цвет</a>
-    <a asp-controller="Order" asp-action="ListOrder" asp-route-page="1" class="btn btn-default">Заявки</a>
-    <a asp-controller="Shares" asp-action="Index" class="btn btn-default">Акции</a>
-</div>
-<div>
-    @await Component.InvokeAsync("Categories")
-</div>
-<div>
-    @RenderBody()
-</div>
+<body class="admin-body clearfix">
+    <div class="admin-header">
+        <a style="width: 100%; background-color: yellow" asp-controller="Home" asp-action="Index">
+            <img src="~/images/img/global-content/logo.png" alt="level">
+        </a>
+    </div>
+    <div>
+        <a asp-controller="Product" asp-action="List" class="btn btn-default">К юзерскому списку</a>
+        <a asp-controller="Admin" asp-action="Create" class="btn btn-default">Добавить товар</a>
+        <a asp-controller="Admin" asp-action="AddColors" class="btn btn-default">Добавить/Цвет</a>
+        <a asp-controller="Order" asp-action="ListOrder" asp-route-page="1" class="btn btn-default">Заявки</a>
+        <a asp-controller="Shares" asp-action="Index" class="btn btn-default">Акции</a>
+    </div>
+    <div class="admin-menu">
+        @await Component.InvokeAsync("Categories")
+    </div>
+    <div>
+        @RenderBody()
+    </div>
 </body>
 </html>

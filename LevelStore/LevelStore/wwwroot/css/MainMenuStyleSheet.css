@@ -1671,3 +1671,117 @@ footer {
         padding: 0 20px;
     }
 }
+
+
+
+/* ADMIN STYLES*/
+.clearfix::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.admin-body {
+    min-width: 1230px;
+    margin: 0 auto;
+}
+
+    .admin-body > div {
+        float: left;
+    }
+
+        .admin-body > div:last-child {
+            padding-top: 10px;
+            padding-left: 10px;
+        }
+
+.admin-header {
+    float: none;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.admin-main-panel a {
+    border: 1px solid #ccc;
+    margin-bottom: 5px;
+    color: #ccc;
+    font-size: 18px;
+}
+
+    .admin-main-panel a:hover {
+        background-color: #1e318f;
+        color: #ccc;
+        font-size: 18px;
+    }
+
+.admin-main-panel {
+    display: inline-block;
+    width: 260px;
+    height: 800px;
+    padding: 0 10px;
+    background-color: #171d5e;
+    vertical-align: top;
+}
+
+    .admin-main-panel a:first-child {
+        display: block;
+        margin: 50px 0;
+        text-align: left;
+    }
+
+    .admin-main-panel a {
+        display: block;
+        text-align: left;
+    }
+
+.admin-menu {
+    padding: 10px 0;
+    display: inline-block;
+    min-width: 960px;
+    width: calc(100% - 280px);
+    vertical-align: top;
+    background-color: #151768;
+}
+
+    .admin-menu a {
+        color: #ccc;
+        font-size: 18px;
+    }
+
+        .admin-menu a:hover {
+            background-color: #1e318f;
+            color: #ccc;
+            font-size: 18px;
+        }
+
+    .admin-menu ul {
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+    }
+
+    .admin-menu > ul > li {
+        display: inline-block;
+        vertical-align: top;
+        width: 13.9%;
+        text-align: center;
+    }
+
+    .admin-menu ul li a,
+    .admin-menu ul li .submenu {
+        display: block;
+    }
+
+    .admin-menu ul li .submenu {
+        padding: 0;
+        text-align: center;
+        display: inline-block;
+    }
+
+        .admin-menu ul li .submenu li {
+            display: block;
+            text-align: center;
+        }
+
+
+/* END OF ADMINKA STYLES*/
