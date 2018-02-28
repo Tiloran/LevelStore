@@ -12,37 +12,30 @@
 {
 
     <div class="div">
-        <span>@product.product.Name</span>
-        <span>@product.product.Price</span>
-        <div>@product.product.Description</div>
+        <span>@product.Product.Name</span>
+        <span>@product.Product.Price</span>
+        <div>@product.Product.Description</div>
 
-        @if (product.product.NewProduct)
+        @if (product.Product.NewProduct)
         {
             <div style="background-color: red; width: 100px;">NEW</div>
         }
         @{
-            try
+            if (product.Images.Count > 0 && product.Images.FirstOrDefault(f => f.FirstOnScreen)?.Name != null && product.Images.FirstOrDefault(f => f.SecondOnScreen)?.Name != null)
             {
-                if (product.Images.Count > 0 && product.Images.FirstOrDefault(f => f.FirstOnScreen).Name != null && product.Images.FirstOrDefault(f => f.SecondOnScreen).Name != null)
-                {
-                    <img src="/images/@product.Images.FirstOrDefault(f => f.FirstOnScreen).Name" id="@product.product.ProductID" name="FirstAndSecondImages" onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" style="width: 100px; height: 100px;" alt="@product.Images.FirstOrDefault(f => f.FirstOnScreen).Alternative">
-                    <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.FirstOrDefault(f => f.FirstOnScreen).Name" imageAlternative="@product.Images.FirstOrDefault(f => f.FirstOnScreen).Alternative" />
-                    <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.FirstOrDefault(f => f.SecondOnScreen).Name" imageAlternative="@product.Images.FirstOrDefault(f => f.SecondOnScreen).Alternative" />
-                }
-                else
-                {
-                    <img src="/images/none.png" style="width: 100px; height: 100px;" alt="None Image">
-                }
+                <img src="/images/@product.Images.First(f => f.FirstOnScreen).Name" id="@product.Product.ProductID" name="FirstAndSecondImages" onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" style="width: 100px; height: 100px;" alt="@product.Images.First(f => f.FirstOnScreen).Alternative"/>
+                <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.First(f => f.FirstOnScreen).Name" imageAlternative="@product.Images.First(f => f.FirstOnScreen).Alternative"/>
+                <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.First(f => f.SecondOnScreen).Name" imageAlternative="@product.Images.First(f => f.SecondOnScreen).Alternative"/>
             }
-            catch
+            else
             {
-                <img src="/images/none.png" style="width: 100px; height: 100px;" alt="None Image">
+                <img src="/images/None.jpg" style="width: 100px; height: 100px;" alt="None Image"/>
             }
         }
 
-        <input type="hidden" name="ProductID" value="@product.product.ProductID" />
-        <a asp-controller="Admin" asp-action="Edit" asp-route-productid="@product.product.ProductID">Изменить</a>
-        <a asp-controller="Admin" asp-action="Delete" asp-route-productId="@product.product.ProductID">Удалить</a>
+        <input type="hidden" name="ProductID" value="@product.Product.ProductID" />
+        <a asp-controller="Admin" asp-action="Edit" asp-route-productid="@product.Product.ProductID">Изменить</a>
+        <a asp-controller="Admin" asp-action="Delete" asp-route-productId="@product.Product.ProductID">Удалить</a>
     </div>
 
 }

@@ -2,9 +2,9 @@
 @{
     ViewData["Title"] = "Edit";
     Layout = "_LayoutAdmin";
-    List<TypeColor> colorList = TempData["Colors"] as List<TypeColor>;
-    List<Color> boundcolorList = TempData["BoundColors"] as List<Color>;
-    List<Category> Categories = TempData["Categories"] as List<Category>;
+    List<TypeColor> colorList = TempData["Colors"] as List<TypeColor> ?? new List<TypeColor>();
+    List<Color> boundcolorList = TempData["BoundColors"] as List<Color> ?? new List<Color>();
+    List<Category> categories = TempData["Categories"] as List<Category> ?? new List<Category>();
 }
 
 <h2>Edit</h2>
@@ -27,7 +27,7 @@
 
         <select asp-for="SubCategoryID">
             <option disabled>Выберите категорию</option>
-            @foreach (var category in Categories)
+            @foreach (var category in categories)
             {
                 foreach (var subCategory in category.SubCategories)
                 {

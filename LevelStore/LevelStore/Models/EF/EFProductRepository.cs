@@ -64,23 +64,23 @@ namespace LevelStore.Models.EF
             
             context.SaveChanges();
         }
-        public int? SaveProduct(Product product, List<int> colorsID = null)
+        public int? SaveProduct(Product product, List<int> colorsId = null)
         {
-            if (colorsID == null)
+            if (colorsId == null)
             {
-                colorsID = new List<int>();
+                colorsId = new List<int>();
             }
-            if (colorsID.Count == 0)
+            if (colorsId.Count == 0)
             {
                 if (context.TypeColors.FirstOrDefault() != null)
                 {
-                    colorsID.Add(context.TypeColors.FirstOrDefault().TypeColorID);
+                    colorsId.Add(context.TypeColors.First().TypeColorID);
                 }
             }
-            Product Product = new Product();
+            Product productToSave;
             if (product.ProductID == 0)
             {
-                Product = new Product
+                productToSave = new Product
                 {
                     Name = product.Name,
                     Price = product.Price,
@@ -91,106 +91,104 @@ namespace LevelStore.Models.EF
                     HideFromUsers = product.HideFromUsers
                 };
                 
-                context.Products.Add(Product);
+                context.Products.Add(productToSave);
             }
             else
             {
-                Product = context.Products.FirstOrDefault(p => p.ProductID == product.ProductID);
-                if (Product != null)
+                productToSave = context.Products.FirstOrDefault(p => p.ProductID == product.ProductID);
+                if (productToSave != null)
                 {
-                    Product.Name = product.Name;
-                    Product.Description = product.Description;
-                    Product.Price = product.Price;
-                    Product.SubCategoryID = product.SubCategoryID;
-                    Product.NewProduct = product.NewProduct;
-                    Product.Size = product.Size;
-                    Product.HideFromUsers = product.HideFromUsers;
-                    Product.ShareID = product.ShareID;
+                    productToSave.Name = product.Name;
+                    productToSave.Description = product.Description;
+                    productToSave.Price = product.Price;
+                    productToSave.SubCategoryID = product.SubCategoryID;
+                    productToSave.NewProduct = product.NewProduct;
+                    productToSave.Size = product.Size;
+                    productToSave.HideFromUsers = product.HideFromUsers;
+                    productToSave.ShareID = product.ShareID;
                 }
             }
             context.SaveChanges();
-            if (Product != null)
-            {
-                Product = context.Products.Where(i => i.ProductID == Product.ProductID).Include(c => c.Color).FirstOrDefault();
-                if (Product.Color == null)
+
+
+            var save = productToSave;
+            productToSave = context.Products.Where(i => i.ProductID == save.ProductID).Include(c => c.Color).First();
+                if (productToSave.Color == null)
                 {
-                    Product.Color = new List<Color>();
+                    productToSave.Color = new List<Color>();
                 }
-                List<int> ProductcolorsID = context.Colors.Where(i => i.ProductID == Product.ProductID).Select(id => id.TypeColorID).ToList();
-                foreach (var colorid in colorsID)
+                List<int> productcolorsId = context.Colors.Where(i => i.ProductID == productToSave.ProductID).Select(id => id.TypeColorID).ToList();
+                foreach (var colorid in colorsId)
                 {
-                    if (ProductcolorsID.Contains(colorid))
+                    if (productcolorsId.Contains(colorid))
                     {
                         continue;
                     }
-                    Product.Color.Add(new Color() { TypeColorID = colorid, ProductID = Product.ProductID });
+                    productToSave.Color.Add(new Color() { TypeColorID = colorid, ProductID = productToSave.ProductID });
                 }
-                foreach (var ProductcolorID in ProductcolorsID)
+                foreach (var productcolorId in productcolorsId)
                 {
-                    if (colorsID.Contains(ProductcolorID))
+                    if (colorsId.Contains(productcolorId))
                     {
                         continue;
                     }
-                    Product.Color.Remove(Product.Color.FirstOrDefault(i => i.ColorID == ProductcolorID));
+                    productToSave.Color.Remove(productToSave.Color.FirstOrDefault(i => i.ColorID == productcolorId));
                 }
                 context.SaveChanges();
-                return Product.ProductID;
-            }
-            return null;
-
+                return productToSave.ProductID;
         }
 
-        public void AddImages(List<string> Images, int? id)
+        public void AddImages(List<string> images, int? id)
         {
-            Product Product = context.Products.Where(p => p.ProductID == id).Include(i => i.Images).FirstOrDefault();
+            Product product = context.Products.Where(p => p.ProductID == id).Include(i => i.Images).FirstOrDefault();
             TypeColor firstColor = context.TypeColors.FirstOrDefault();
-            if (Product != null)
+            if (product != null)
             {
-                if (Product.Images == null)
+                if (product.Images == null)
                 {
-                    Product.Images = new List<Image>();
+                    product.Images = new List<Image>();
                 }
-                bool SetFirst = false;
-                bool SetSecond = false;
-                if (!Product.Images.Any())
+                bool setFirst = false;
+                bool setSecond = false;
+                if (!product.Images.Any())
                 {
-                    if (Images.Count >= 2)
+                    if (images.Count >= 2)
                     {
-                        SetFirst = true;
-                        SetSecond = true;
+                        setFirst = true;
+                        setSecond = true;
                     }
-                    else if (Images.Count == 1)
+                    else if (images.Count == 1)
                     {
-                        SetFirst = true;
+                        setFirst = true;
                     }
                 }
-                for (int i = 0; i < Images.Count; i++)
+                for (int i = 0; i < images.Count; i++)
                 {
                     if (firstColor != null)
                     {
-                        if (SetFirst && i == 0)
+                        if (setFirst && i == 0)
                         {
-                            Product.Images.Add(new Image
+                            product.Images.Add(new Image
                             {
-                                Name = Images[i],
+                                Name = images[i],
                                 FirstOnScreen = true,
                                 TypeColorID = firstColor.TypeColorID
                             });
                         }
-                        else if (SetSecond && i == 1)
+                        else if (setSecond && i == 1)
                         {
-                            Product.Images.Add(new Image
+                            product.Images.Add(new Image
                             {
-                                Name = Images[i],
+                                Name = images[i],
                                 SecondOnScreen = true,
                                 TypeColorID = firstColor.TypeColorID
                             });
                         }
                         else
                         {
-                            Product.Images.Add(new Image
+                            product.Images.Add(new Image
                             {
-                                Name = Images[i],
+                                Name = images[i],
                                 TypeColorID = firstColor.TypeColorID
                             });
                         }
@@ -198,17 +196,17 @@ namespace LevelStore.Models.EF
                     }
                     else
                     {
-                        if (SetFirst && i == 0)
+                        if (setFirst && i == 0)
                         {
-                            Product.Images.Add(new Image { Name = Images[i], FirstOnScreen = true});
+                            product.Images.Add(new Image { Name = images[i], FirstOnScreen = true});
                         }
-                        else if (SetSecond && i == 1)
+                        else if (setSecond && i == 1)
                         {
-                            Product.Images.Add(new Image { Name = Images[i], SecondOnScreen = true});
+                            product.Images.Add(new Image { Name = images[i], SecondOnScreen = true});
                         }
                         else
                         {
-                            Product.Images.Add(new Image { Name = Images[i] });
+                            product.Images.Add(new Image { Name = images[i] });
                         }
                     }
                 }
@@ -218,18 +216,16 @@ namespace LevelStore.Models.EF
 
         public List<TypeColor> GetColorThatBindedWithImages(List<Image> images)
         {
-            //List<TypeColor> bindedColors = context.TypeColors
-            //     .Include(c => c.Images.Where(i1 => images.Any(i2 => i2.TypeColorID == i1.TypeColorID))).ToList();
             List<TypeColor> bindedColors = context.TypeColors.Where(i1 => images.Any(i2 => i2.TypeColorID == i1.TypeColorID)).ToList();
             return bindedColors;
         }
 
 
-        public void DeleteProduct(int? ProductId)
+        public void DeleteProduct(int? productId)
         {
-            context.Colors.RemoveRange(context.Colors.Where(i => i.ProductID == ProductId).ToList());
-            context.Images.RemoveRange(context.Images.Where(i => i.ProductID == ProductId).ToList());
-            context.Products.Remove(context.Products.First(i => i.ProductID == ProductId));
+            context.Colors.RemoveRange(context.Colors.Where(i => i.ProductID == productId).ToList());
+            context.Images.RemoveRange(context.Images.Where(i => i.ProductID == productId).ToList());
+            context.Products.Remove(context.Products.First(i => i.ProductID == productId));
             context.SaveChanges();
         }
 

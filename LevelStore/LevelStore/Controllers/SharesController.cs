@@ -8,19 +8,19 @@ namespace LevelStore.Controllers
 {
     public class SharesController : Controller
     {
-        private readonly IShareRepository repository;
-        private readonly IProductRepository productRepository;
+        private readonly IShareRepository _repository;
+        private readonly IProductRepository _productRepository;
 
         public SharesController(IShareRepository repo, IProductRepository productRepo)
         {
-            repository = repo;
-            productRepository = productRepo;
+            _repository = repo;
+            _productRepository = productRepo;
         }
 
         // GET: Shares
         public IActionResult Index()
         {
-            return View(repository.Shares.ToList());
+            return View(_repository.Shares.ToList());
         }
 
         
@@ -32,12 +32,12 @@ namespace LevelStore.Controllers
                 return View(new Share());
             }
 
-            var share = repository.Shares.SingleOrDefault(m => m.ShareId == shareid);
+            var share = _repository.Shares.SingleOrDefault(m => m.ShareId == shareid);
             if (share == null)
             {
                 return NotFound();
             }
-            TempData["Categories"] = productRepository.GetCategoriesWithSubCategories();
+            TempData["Categories"] = _productRepository.GetCategoriesWithSubCategories();
             return View(share);
         }
 
@@ -45,7 +45,7 @@ namespace LevelStore.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public IActionResult Edit(int shareid, Share share, int[] Products)
+        public IActionResult Edit(int shareid, Share share, int[] products)
         {
             if (shareid != share.ShareId)
             {
@@ -54,17 +54,17 @@ namespace LevelStore.Controllers
 
             if (ModelState.IsValid)
             {
-                List<Product> products = productRepository.Products.Where(sId => sId.ShareID == shareid).ToList();
-                foreach (var product in products)
+                List<Product> productsWithShare = _productRepository.Products.Where(sId => sId.ShareID == shareid).ToList();
+                foreach (var product in productsWithShare)
                 {
                     product.ShareID = null;
-                    productRepository.SaveProduct(product);
+                    _productRepository.SaveProduct(product);
                 }
 
-                products = productRepository.Products.Where(i => Products.Any(id => id.Equals(i.ProductID))).ToList();
-                share.Products = new List<Product>(products);
+                productsWithShare = _productRepository.Products.Where(i => products.Any(id => id.Equals(i.ProductID))).ToList();
+                share.Products = new List<Product>(productsWithShare);
 
-                repository.SaveShare(share);
+                _repository.SaveShare(share);
                 return RedirectToAction(nameof(Index));
             }
             return View(share);
@@ -78,7 +78,7 @@ namespace LevelStore.Controllers
                 return NotFound();
             }
 
-            var share = repository.Shares
+            var share = _repository.Shares
                 .SingleOrDefault(m => m.ShareId == shareid);
             if (share == null)
             {
@@ -92,13 +92,8 @@ namespace LevelStore.Controllers
         [HttpPost, ActionName("Delete")]
         public IActionResult DeleteConfirmed(int shareid)
         {
-            repository.Delete(shareid);
+            _repository.Delete(shareid);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool ShareExists(int shareid)
-        {
-            return repository.Shares.Any(e => e.ShareId == shareid);
         }
 
         [HttpPost]
@@ -107,27 +102,27 @@ namespace LevelStore.Controllers
             if (searchShaves != null)
             {
                 List<Product> products;
-                if (searchShaves.subCategoryId != null && searchShaves.subCategoryId != 0)
+                if (searchShaves.SubCategoryId != null && searchShaves.SubCategoryId != 0)
                 {
-                    products = productRepository.Products.Where(i => i.SubCategoryID == searchShaves.subCategoryId)
+                    products = _productRepository.Products.Where(i => i.SubCategoryID == searchShaves.SubCategoryId)
                         .ToList();
                 }
-                else if (searchShaves.categoryId != null && searchShaves.categoryId != 0)
+                else if (searchShaves.CategoryId != null && searchShaves.CategoryId != 0)
                 {
-                    List<Category> categories = productRepository.GetCategoriesWithSubCategories();
-                    products = productRepository.Products.Where(p =>
+                    List<Category> categories = _productRepository.GetCategoriesWithSubCategories();
+                    products = _productRepository.Products.Where(p =>
                         categories.Any(c =>
-                            c.CategoryID == searchShaves.categoryId &&
+                            c.CategoryID == searchShaves.CategoryId &&
                             c.SubCategories.Any(sc => sc.SubCategoryID == p.SubCategoryID))).ToList();
                 }
                 else
                 {
-                    products = productRepository.Products.ToList();
+                    products = _productRepository.Products.ToList();
                 }
 
-                if (!string.IsNullOrEmpty(searchShaves.searchString) && !string.IsNullOrWhiteSpace(searchShaves.searchString))
+                if (!string.IsNullOrEmpty(searchShaves.SearchString) && !string.IsNullOrWhiteSpace(searchShaves.SearchString))
                 {
-                    products = products.Where(p => p.Name.Contains(searchShaves.searchString) || p.Description.Contains(searchShaves.searchString)).ToList();
+                    products = products.Where(p => p.Name.Contains(searchShaves.SearchString) || p.Description.Contains(searchShaves.SearchString)).ToList();
                 }
                 foreach (var product in products)
                 {

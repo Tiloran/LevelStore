@@ -10,41 +10,39 @@ namespace LevelStore.Controllers
     [BreadCrumb(Title = "Магазин", UseDefaultRouteUrl = true, Order = 0, GlyphIcon = "fa fa-angle-double-right")]
     public class ProductController : Controller
     {
-        private readonly IProductRepository repository;
-        private readonly IShareRepository shareRepository;
+        private readonly IProductRepository _repository;
+        private readonly IShareRepository _shareRepository;
 
         public ProductController(IProductRepository repo, IShareRepository shareRepo)
         {
-            repository = repo;
-            shareRepository = shareRepo;
+            _repository = repo;
+            _shareRepository = shareRepo;
         }
 
         [BreadCrumb(Order = 1)]
-        public ViewResult List(int? categoryID, int? subCategoryID, string searchString)
+        public ViewResult List(int? categoryId, int? subCategoryId, string searchString)
         {
             List<ProductWithImages> productAndImages = new List<ProductWithImages>();
-            List<Product> products = new List<Product>();
-            List<Image> images = new List<Image>();
-            if (subCategoryID != null)
+            List<Product> products;
+            if (subCategoryId != null)
             {
-                products = new List<Product>(repository.Products.Where(pSCId => pSCId.SubCategoryID == subCategoryID).Where(h => h.HideFromUsers == false).OrderBy(pId => pId.ProductID));
+                products = new List<Product>(_repository.Products.Where(pScId => pScId.SubCategoryID == subCategoryId).Where(h => h.HideFromUsers == false).OrderBy(pId => pId.ProductID));
             }
-            else if (categoryID != null)
+            else if (categoryId != null)
             {
                 List<SubCategory> subCategories =
-                    new List<SubCategory>(repository.SubCategories.Where(i => i.CategoryID == categoryID).ToList());
-                repository.SubCategories.Where(i => i.CategoryID == categoryID);
-                products = new List<Product>(repository.Products
-                    .Where(pSCId => subCategories.Any(sCId => pSCId.SubCategoryID == sCId.SubCategoryID))
+                    new List<SubCategory>(_repository.SubCategories.Where(i => i.CategoryID == categoryId).ToList());
+                products = new List<Product>(_repository.Products
+                    .Where(pScId => subCategories.Any(sCId => pScId.SubCategoryID == sCId.SubCategoryID))
                     .Where(h => h.HideFromUsers == false)
                     .OrderBy(pId => pId.ProductID));
             }
             else
             {
-                products = new List<Product>(repository.Products.Where(h => h.HideFromUsers == false).OrderBy(p => p.ProductID));
+                products = new List<Product>(_repository.Products.Where(h => h.HideFromUsers == false).OrderBy(p => p.ProductID));
             }
 
-            List<Category> categories = repository.GetCategoriesWithSubCategories();
+            List<Category> categories = _repository.GetCategoriesWithSubCategories();
 
             if (!string.IsNullOrEmpty(searchString))
             {
@@ -57,19 +55,19 @@ namespace LevelStore.Controllers
                 products = searchByNameList.Union(searchByDescriptionList).Union(searchBySubCategoryList).Union(searchByCategoryList).ToList();
             }
 
-            for (int i = 0; i < products.Count; i++)
+            foreach (var product in products)
             {
-                images = new List<Image>(repository.Images.Where(index => index.ProductID == products[i].ProductID));
+                var images = new List<Image>(_repository.Images.Where(index => index.ProductID == product.ProductID));
                 productAndImages.Add(new ProductWithImages
                 {
-                    product = products[i],
+                    Product = product,
                     Images = images
                 });
             }
 
             ProductsListViewModel productsListViewModel = new ProductsListViewModel { ProductAndImages = productAndImages.ToList(), Categories = categories};
-            TempData["Shares"] = shareRepository.Shares.Where(i =>
-                productsListViewModel.ProductAndImages.Any(id => i.ShareId == id.product.ShareID)).ToList();
+            TempData["Shares"] = _shareRepository.Shares.Where(i =>
+                productsListViewModel.ProductAndImages.Any(id => i.ShareId == id.Product.ShareID)).ToList();
             TempData["searchString"] = searchString;
             return View(productsListViewModel);
         }
@@ -77,7 +75,7 @@ namespace LevelStore.Controllers
         [BreadCrumb(Title = "Товар", Order = 2, GlyphIcon = "fa fa-angle-double-right")]
         public IActionResult ViewSingleProduct(int productId, bool wasError)
         {
-            if (!repository.Products.Select(i => i.ProductID).Contains(productId))
+            if (!_repository.Products.Select(i => i.ProductID).Contains(productId))
             {
                 return NotFound();
             }
@@ -85,28 +83,28 @@ namespace LevelStore.Controllers
             {
                 ModelState.AddModelError("", "Выберите цвет и фурнитуру");
             }
-            Product selectedProduct = repository.Products.Where(h => h.HideFromUsers == false).FirstOrDefault(p => p.ProductID == productId);
-            List<TypeColor> bindedColors = repository.TypeColors.Where(tci =>
-                (repository.BoundColors.Where(i => i.ProductID == selectedProduct.ProductID).ToList()).Any(bci =>
-                    bci.TypeColorID == tci.TypeColorID)).ToList();
+            Product selectedProduct = _repository.Products.Where(h => h.HideFromUsers == false).FirstOrDefault(p => p.ProductID == productId);
             if (selectedProduct == null)
             {
-                return View("List");
+                return NotFound();
             }
-            List<Product> relatedProducts = repository.ProductsWithImages
+            List<TypeColor> bindedColors = _repository.TypeColors.Where(tci =>
+                (_repository.BoundColors.Where(i => i.ProductID == selectedProduct.ProductID).ToList()).Any(bci =>
+                    bci.TypeColorID == tci.TypeColorID)).ToList();
+            List<Product> relatedProducts = _repository.ProductsWithImages
                 .Where(sc => sc.SubCategoryID == selectedProduct.SubCategoryID
                 && sc.ProductID != selectedProduct.ProductID).Take(5).ToList();
-            List<Image> productImages = repository.Images.Where(p => p.ProductID == productId).ToList();
+            List<Image> productImages = _repository.Images.Where(p => p.ProductID == productId).ToList();
             selectedProduct.Images = productImages;
             var subCategory = 
-                repository.SubCategories.First(sCId => sCId.SubCategoryID == selectedProduct.SubCategoryID);
-            TempData["Category"] = repository.Categories.First(cId => cId.CategoryID == subCategory.CategoryID).CategoryName;
+                _repository.SubCategories.First(sCId => sCId.SubCategoryID == selectedProduct.SubCategoryID);
+            TempData["Category"] = _repository.Categories.First(cId => cId.CategoryID == subCategory.CategoryID).CategoryName;
             TempData["SubCategory"] = subCategory.SubCategoryName;
             TempData["BindedColors"] = bindedColors;
             TempData["relatedProducts"] = relatedProducts;
             if (selectedProduct.ShareID != null)
             {
-                TempData["Share"] = shareRepository.Shares.FirstOrDefault(i => i.ShareId == selectedProduct.ShareID);
+                TempData["Share"] = _shareRepository.Shares.FirstOrDefault(i => i.ShareId == selectedProduct.ShareID);
             }
 
             HttpContext.SetCurrentBreadCrumbTitle(selectedProduct.Name);

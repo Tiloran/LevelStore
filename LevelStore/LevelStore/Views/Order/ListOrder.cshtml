@@ -3,8 +3,8 @@
 @{
     ViewData["Title"] = "ListOrder";
     Layout = "_LayoutAdmin";
-    List<TypeColor> bindedColors = TempData["BindedColors"] as List<TypeColor>;
-    List<Share> shares = TempData["Shares"] as List<Share>;
+    List<TypeColor> bindedColors = TempData["BindedColors"] as List<TypeColor> ?? new List<TypeColor>();
+    //List<Share> shares = TempData["Shares"] as List<Share> ?? new List<Share>();
 
 }
 
@@ -78,7 +78,7 @@
         </tr>
         @foreach (var o in Model.Orders)
         {
-            decimal TotalPrice = 0;
+            decimal totalPrice = 0;
             <tr>
                 <td><input type="checkbox" value="@o.OrderID" name="checkedOId" /></td>
                 @{
@@ -155,7 +155,7 @@
                         }
                         else
                         {
-                            <td class="text-right"><del>@price.ToString()</del>@line.PriceAfterCheckout.ToString(CultureInfo.InvariantCulture) грн.</td>
+                            <td class="text-right"><del>@price.ToString(CultureInfo.InvariantCulture)</del>@line.PriceAfterCheckout.ToString(CultureInfo.InvariantCulture) грн.</td>
                         }
 
                     }
@@ -166,11 +166,11 @@
                     }
                     if (line.PriceAfterCheckout > price)
                     {
-                        TotalPrice += line.Quantity * price;
+                        totalPrice += line.Quantity * price;
                     }
                     else
                     {
-                        TotalPrice += line.Quantity * line.PriceAfterCheckout;
+                        totalPrice += line.Quantity * line.PriceAfterCheckout;
                     }
                 }
             </tr>
@@ -198,7 +198,7 @@
             <tr>
                 <td colspan="4"></td>
                 <th>Общая цена</th>
-                <td colspan="2">@TotalPrice.ToString(CultureInfo.InvariantCulture) грн.</td>
+                <td colspan="2">@totalPrice.ToString(CultureInfo.InvariantCulture) грн.</td>
             </tr>
 
         }

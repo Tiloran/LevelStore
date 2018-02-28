@@ -3,9 +3,9 @@
 @{
     ViewData["Title"] = "Cart";
     Layout = "_Layout";
-    List<TypeColor> colors = TempData["colors"] as List<TypeColor>;
-    List<Share> shares = TempData["Shares"] as List<Share>;
-    decimal TotalPrice = 0;
+    List<TypeColor> colors = TempData["colors"] as List<TypeColor> ?? new List<TypeColor>();
+    List<Share> shares = TempData["Shares"] as List<Share> ?? new List<Share>();
+    decimal totalPrice = 0;
 }
 
 <div class="shop-cart__wrapper">
@@ -28,7 +28,7 @@
                 </div>
             </div>
             
-            @foreach (var line in Model.cart.Lines)
+            @foreach (var line in Model.Cart.Lines)
             {
             <div class="row shop-cart__item">
                 <div class="col-sm-2 shop-cart__item--img">
@@ -38,8 +38,8 @@
                 string alt;
                 if (line.Product.Images.FirstOrDefault(f => f.FirstOnScreen) != null)
                 {
-                    imgHref = "/images/" + line.Product.Images.FirstOrDefault(f => f.FirstOnScreen).Name;
-                    alt = line.Product.Images.FirstOrDefault(f => f.FirstOnScreen).Alternative;
+                    imgHref = "/images/" + line.Product.Images.First(f => f.FirstOnScreen).Name;
+                    alt = line.Product.Images.First(f => f.FirstOnScreen).Alternative;
                 }
                 else
                 {
@@ -62,7 +62,7 @@
 
                 @{
                     decimal price;
-                    bool WasShare = false;
+                    bool wasShare = false;
                     if (line.Product.ShareID != null)
                     {
                         Share share = shares.First(i => i.ShareId == line.Product.ShareID);
@@ -76,7 +76,7 @@
                             {
                                 price = line.Product.Price / 100 * (decimal) (100 - share.KoefPrice);
                             }
-                            WasShare = true;
+                            wasShare = true;
                         }
                         else
                         {
@@ -87,7 +87,7 @@
                     {
                         price = line.Product.Price;
                     }
-                    if (WasShare)
+                    if (wasShare)
                     {
                         <div class="col-sm-2 shop-cart__item--price">
                             <span class="desktop-invisible">Цена:&nbsp&nbsp</span>
@@ -118,11 +118,11 @@
                     }
                     if (line.Product.Price > price)
                     {
-                        TotalPrice += line.Quantity * price;
+                        totalPrice += line.Quantity * price;
                     }
                     else
                     {
-                        TotalPrice += line.Quantity * line.Product.Price;
+                        totalPrice += line.Quantity * line.Product.Price;
                     }
 
                 }
@@ -131,7 +131,7 @@
                     <span class="desktop-invisible">Количество: </span> <input type="number" size="5" min="0" step="1" value="@line.Quantity">
                 </div>
                 @{
-                    decimal priceWithQuantity = 0;
+                    decimal priceWithQuantity;
                     if (line.Product.Price > price)
                     {
                         priceWithQuantity = line.Quantity * price;
@@ -147,7 +147,7 @@
                     }
             <div class="row shop-cart__total-price">
                 <div class="col-9 col-sm-9 text-left">Общая стоимость заказа/покупки:</div>
-                <div class="col-3 col-sm-2">@TotalPrice.ToString(CultureInfo.InvariantCulture) грн</div>
+                <div class="col-3 col-sm-2">@totalPrice.ToString(CultureInfo.InvariantCulture) грн</div>
             </div>
         <form asp-controller="Cart" asp-action="Checkout" method="post">
             <div class="row text-left shop-cart__dostavka">
@@ -158,7 +158,7 @@
             <div class="shop-cart__dostavka-types">
                 <div class="row text-left shop-cart__dostavka-type">
                     <div class="col-8 col-sm-5">
-                        @if (Model.order.DeliveryWay == 0)
+                        @if (Model.Order.DeliveryWay == 0)
                         {
                             <input checked="checked" type="radio" id="delivery-method__nova-poshta" class="shop-cart__dostavka--radio" name="order.DeliveryWay" value="0">
                         }
@@ -173,7 +173,7 @@
                 </div>
                 <div class="row text-left shop-cart__dostavka-type">
                     <div class="col-8 col-sm-5">
-                        @if (Model.order.DeliveryWay == 1)
+                        @if (Model.Order.DeliveryWay == 1)
                         {
                             <input checked="checked" type="radio" id="delivery-method__kurjer" class="shop-cart__dostavka--radio" name="order.DeliveryWay" value="1">
                         }
@@ -187,7 +187,7 @@
                 </div>
                 <div class="row text-left shop-cart__dostavka-type">
                     <div class="col-8 col-sm-5">
-                        @if (Model.order.DeliveryWay == 2)
+                        @if (Model.Order.DeliveryWay == 2)
                         {
                             <input checked="checked" type="radio" id="delivery-method__samovivoz" class="shop-cart__dostavka--radio" name="order.DeliveryWay" value="2">
                         }
@@ -240,35 +240,35 @@
                     <div asp-validation-summary="All" class="text-danger"></div>
                 
                     <div class="form-group">
-                        <input type="phone" name="order.FirstName" value="@Model.order.FirstName"/>
+                        <input type="phone" name="order.FirstName" value="@Model.Order.FirstName"/>
                         <label for="order.FirstName">Имя:</label>
                     </div>
                     <div class="form-group">
-                        <input type="phone" name="order.LastName" value="@Model.order.LastName" />
+                        <input type="phone" name="order.LastName" value="@Model.Order.LastName" />
                         <label for="order.LastName">Фамилия:</label>
                     </div>
                     <div class="form-group">
-                        <input type="phone" name="order.Email" value="@Model.order.Email"/>
+                        <input type="phone" name="order.Email" value="@Model.Order.Email"/>
                         <label for="order.Email">Email:</label>
                     </div>
                     <div class="form-group">
-                        <input type="phone" name="order.Phone" value="@Model.order.Phone"/>
+                        <input type="phone" name="order.Phone" value="@Model.Order.Phone"/>
                         <label for="order.Phone">Телефон :</label>
                     </div>
                     <div class="form-group">
-                        <input type="phone" name="order.NovaPoshta" value="@Model.order.NovaPoshta"/>
+                        <input type="phone" name="order.NovaPoshta" value="@Model.Order.NovaPoshta"/>
                         <label for="order.NovaPoshta">№ отделения "Новой Почты":</label>
                     </div>
                     <div class="form-group">
-                        <input type="phone" name="order.City" value="@Model.order.City"/>
+                        <input type="phone" name="order.City" value="@Model.Order.City"/>
                         <label for="order.City">Город:</label>
                     </div>
                     <div class="form-group">
-                        <input type="phone" name="order.Address" value="@Model.order.Address"/>
+                        <input type="phone" name="order.Address" value="@Model.Order.Address"/>
                         <label for="order.Address">Адрес:</label>
                     </div>
                     <div class="form-group">
-                        <input type="phone" name="order.Comment" value="@Model.order.Comment"/>
+                        <input type="phone" name="order.Comment" value="@Model.Order.Comment"/>
                         <label for="order.Comment">Ваш комментарий:</label>
                     </div>
                     <div class="text-center">

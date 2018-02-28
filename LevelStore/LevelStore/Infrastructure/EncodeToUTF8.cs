@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace LevelStore.Infrastructure
 {
-    public static class EncodeToUTF8
+    public static class EncodeToUtf8
     {
         public static string Encode(string stringToEncode)
         {

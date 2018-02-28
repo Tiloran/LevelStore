@@ -1,5 +1,4 @@
-﻿@using Microsoft.CodeAnalysis
-@model Share
+﻿@model Share
 
 @{
     ViewData["Title"] = "Edit";
@@ -20,10 +19,10 @@
         function search() {
             var searchString = $("#search-input").val();
             var subCategoryId = $("#category-input").val();
-            var CategoryId = $("#category-input").find('option:selected').attr("CategoryId"); 
+            var categoryId = $("#category-input").find('option:selected').attr("CategoryId"); 
             var searchData = {
                 "searchString": searchString,
-                "categoryId": CategoryId,
+                "categoryId": categoryId,
                 "subCategoryId": subCategoryId
             }
             

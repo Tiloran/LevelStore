@@ -3,8 +3,8 @@
     ViewData["Title"] = "List";
     Layout = "_Layout";
     string searchString = TempData["searchString"] as string;
-    List<Share> shares = TempData["Shares"] as List<Share>;
-    searchString = EncodeToUTF8.Encode(searchString);
+    List<Share> shares = TempData["Shares"] as List<Share> ?? new List<Share>();
+    searchString = EncodeToUtf8.Encode(searchString);
 }
 
 @section scripts{
@@ -40,14 +40,14 @@
                     @foreach (var category in Model.Categories)
                     {
                         <li class="menu__item">
-                            <a class="menu__item-link" asp-controller="Product" asp-action="List" asp-route-categoryID="@category.CategoryID" asp-route-searchString="@searchString">@category.CategoryName</a>
+                            <a class="menu__item-link" asp-controller="Product" asp-action="List" asp-route-categoryId="@category.CategoryID" asp-route-searchString="@searchString">@category.CategoryName</a>
                             @if (category.SubCategories.Any())
                             {
                                 <ul class="submenu">
                                     @foreach (var subCategory in category.SubCategories)
                                     {
                                         <li class="submenu__item">
-                                            <a asp-controller="Product" asp-action="List" asp-route-subCategoryID="@subCategory.SubCategoryID" asp-route-searchString="@searchString">
+                                            <a asp-controller="Product" asp-action="List" asp-route-subCategoryId="@subCategory.SubCategoryID" asp-route-searchString="@searchString">
                                                 @category.CategoryName "@subCategory.SubCategoryName"
                                             </a>
                                         </li>
@@ -68,17 +68,17 @@
                 {
                     <div>
                         @{
-                            decimal price = product.product.Price;
+                            decimal price = product.Product.Price;
                             decimal newPrice = price;
                         }
 
-                        @if (product.product.NewProduct)
+                        @if (product.Product.NewProduct)
                         {
                             <div style="background-color: red; width: 100px;">NEW</div>
                         }
-                        @if (product.product.ShareID != null)
+                        @if (product.Product.ShareID != null)
                         {
-                            Share share = shares.First(i => i.ShareId == product.product.ShareID);
+                            Share share = shares.First(i => i.ShareId == product.Product.ShareID);
                             if (share.DateOfStart <= DateTime.Now && share.Enabled)
                             {
                                 <div>Акция</div>
@@ -94,7 +94,7 @@
 
                             }
                         }
-                        <span>@product.product.Name</span>
+                        <span>@product.Product.Name</span>
                         @if (newPrice != price)
                         {
                             <span><del>@price</del></span>
@@ -104,15 +104,15 @@
                         {
                             <span>@price</span>
                         }
-                        <div>@product.product.Description</div>
+                        <div>@product.Product.Description</div>
                         @{
                             try
                             {
-                                if (product.Images.Count > 0 && product.Images.FirstOrDefault(f => f.FirstOnScreen).Name != null && product.Images.FirstOrDefault(f => f.SecondOnScreen).Name != null)
+                                if (product.Images.Count > 0 && product.Images.FirstOrDefault(f => f.FirstOnScreen)?.Name != null && product.Images.FirstOrDefault(f => f.SecondOnScreen)?.Name != null)
                                 {
-                                    <img src="/images/@product.Images.FirstOrDefault(f => f.FirstOnScreen).Name" id="@product.product.ProductID" name="FirstAndSecondImages" onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" style="width: 100px; height: 100px;" alt="@product.Images.FirstOrDefault(f => f.FirstOnScreen).Alternative">
-                                    <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.FirstOrDefault(f => f.FirstOnScreen).Name" imageAlternative="@product.Images.FirstOrDefault(f => f.FirstOnScreen).Alternative"/>
-                                    <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.FirstOrDefault(f => f.SecondOnScreen).Name" imageAlternative="@product.Images.FirstOrDefault(f => f.SecondOnScreen).Alternative"/>
+                                    <img src="/images/@product.Images.First(f => f.FirstOnScreen).Name" id="@product.Product.ProductID" name="FirstAndSecondImages" onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" style="width: 100px; height: 100px;" alt="@product.Images.First(f => f.FirstOnScreen).Alternative">
+                                    <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.First(f => f.FirstOnScreen).Name" imageAlternative="@product.Images.First(f => f.FirstOnScreen).Alternative"/>
+                                    <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.First(f => f.SecondOnScreen).Name" imageAlternative="@product.Images.First(f => f.SecondOnScreen).Alternative"/>
                                 }
                                 else
                                 {
@@ -125,7 +125,7 @@
                             }
                         }
 
-                        <a asp-action="ViewSingleProduct" asp-route-productId="@product.product.ProductID" class="btn btn-primary">Выбрать</a>
+                        <a asp-action="ViewSingleProduct" asp-route-productId="@product.Product.ProductID" class="btn btn-primary">Выбрать</a>
                     </div>
                 }
             </div>

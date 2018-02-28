@@ -2,10 +2,10 @@
 @{
     ViewData["Title"] = "ViewSingleProduct";
     Layout = "_Layout";
-    string Category = TempData["Category"] as String;
-    string SubCategory = TempData["SubCategory"] as String;
-    List<Product> relatedProducts = TempData["relatedProducts"] as List<Product>;
-    List<TypeColor> bindedColors = TempData["BindedColors"] as List<TypeColor>;
+    string category = TempData["Category"] as String;
+    string subCategory = TempData["SubCategory"] as String;
+    List<Product> relatedProducts = TempData["relatedProducts"] as List<Product> ?? new List<Product>();
+    List<TypeColor> bindedColors = TempData["BindedColors"] as List<TypeColor> ?? new List<TypeColor>();
     Share share = TempData["Share"] as Share;
 }
 
@@ -92,7 +92,7 @@
 
             <p class="single-item__title">@Model.Name</p>
 
-            <p>@Category "@SubCategory"</p>
+            <p>@category "@subCategory"</p>
 
             <div></div>
             @if (newPrice != price)
@@ -136,7 +136,7 @@
             </form>
         </div>
         
-        @if (relatedProducts != null && relatedProducts.Any())
+        @if (relatedProducts.Any())
         {
             <div>
                 <p>Похожие товары:</p>

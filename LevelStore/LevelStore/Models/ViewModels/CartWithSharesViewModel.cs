@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace LevelStore.Models.ViewModels
 {
     public class CartWithSharesViewModel
     {
-        public Cart cart { get; set; }
-        public IEnumerable<Share> shares { get; set; }
+        public Cart Cart { get; set; }
+        public IEnumerable<Share> Shares { get; set; }
     }
 }

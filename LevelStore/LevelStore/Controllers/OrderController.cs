@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.DrawingCore;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using LevelStore.Models;
 using LevelStore.Models.Enums;
 using LevelStore.Models.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using NPOI.HSSF.Util;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 
@@ -19,26 +16,26 @@ namespace LevelStore.Controllers
 {
     public class OrderController : Controller
     {
-        private readonly IOrderRepository repository;
-        private readonly IProductRepository repositoryProduct;
-        private readonly IShareRepository repositoryShares;
-        private readonly Cart cart;
+        private readonly IOrderRepository _repository;
+        private readonly IProductRepository _repositoryProduct;
+        private readonly IShareRepository _repositoryShares;
+        private readonly Cart _cart;
         private readonly IHostingEnvironment _appEnvironment;
 
         public OrderController(IOrderRepository repoService, Cart cartService, IHostingEnvironment appEnvironment, IProductRepository repoProduct, IShareRepository repoShare)
         {
-            repositoryProduct = repoProduct;
-            repository = repoService;
-            cart = cartService;
+            _repositoryProduct = repoProduct;
+            _repository = repoService;
+            _cart = cartService;
             _appEnvironment = appEnvironment;
-            repositoryShares = repoShare;
+            _repositoryShares = repoShare;
         }
 
         
 
         public ViewResult Completed()
         {
-            cart.Clear();
+            _cart.Clear();
             return View();
         }
         
@@ -49,8 +46,8 @@ namespace LevelStore.Controllers
                 page = 1;
             }
             int pageSize = 3;
-            int count = repository.Orders.Count();
-            var items = repository.Orders.OrderByDescending(d => d.DateOfCreation).Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            int count = _repository.Orders.Count();
+            var items = _repository.Orders.OrderByDescending(d => d.DateOfCreation).Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
             PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
             OrderListViewModel orderListviewModel = new OrderListViewModel
@@ -59,8 +56,8 @@ namespace LevelStore.Controllers
                 Orders = items
             };
 
-            TempData["BindedColors"] = repositoryProduct.TypeColors.ToList();
-            TempData["Shares"] = repositoryShares.Shares.ToList();
+            TempData["BindedColors"] = _repositoryProduct.TypeColors.ToList();
+            //TempData["Shares"] = _repositoryShares.Shares.ToList();
             return View(orderListviewModel);
         }
 
@@ -69,20 +66,20 @@ namespace LevelStore.Controllers
         {
             if (Enum.IsDefined(typeof(OrderStatus), status))
             {
-                repository.ChangeStatus((OrderStatus)status, orderId);
+                _repository.ChangeStatus((OrderStatus)status, orderId);
             }
             return RedirectToAction(nameof(ListOrder));
         }
 
         public IActionResult ChangeOrder(int orderId)
         {
-            Order order = repository.Orders.FirstOrDefault(i => i.OrderID == orderId);
+            Order order = _repository.Orders.FirstOrDefault(i => i.OrderID == orderId);
             TempData["JsonOrder"] = JsonConvert.SerializeObject(order);
             if (order == null)
             {
                 return RedirectToAction("ListOrder");
             }
-            TempData["BindedColors"] = repositoryProduct.TypeColors.ToList();
+            TempData["BindedColors"] = _repositoryProduct.TypeColors.ToList();
             return View("ViewSingleOrder", order);
         }
         
@@ -92,7 +89,7 @@ namespace LevelStore.Controllers
         {
             if (order != null && Enum.IsDefined(typeof(OrderStatus), order.Status))
             {
-                repository.ChangeOrder(order);
+                _repository.ChangeOrder(order);
                 return Json("Succes");
             }
             return Json("Fail");
@@ -100,9 +97,9 @@ namespace LevelStore.Controllers
 
         public IActionResult DownloadExcel(int[] checkedOrderId)
         {
-            List<Order> orderList = repository.Orders.Where(oi => checkedOrderId.Any(coi => coi.Equals(oi.OrderID)))
+            List<Order> orderList = _repository.Orders.Where(oi => checkedOrderId.Any(coi => coi.Equals(oi.OrderID)))
                 .ToList();
-            List<TypeColor> colors = repositoryProduct.TypeColors.ToList();
+            List<TypeColor> colors = _repositoryProduct.TypeColors.ToList();
             string sWebRootFolder = _appEnvironment.WebRootPath + "/excelReports";
             string sFileName = DateTime.Now.ToString(CultureInfo.InvariantCulture)
                 .Replace("  ", "_").Trim()

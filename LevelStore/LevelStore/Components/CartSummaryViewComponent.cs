@@ -20,8 +20,8 @@ namespace LevelStore.Components
         {
             CartWithSharesViewModel cartWithShares = new CartWithSharesViewModel
             {
-                cart = cart,
-                shares = shareRepository.Shares
+                Cart = cart,
+                Shares = shareRepository.Shares
             };      
             
             return View(cartWithShares);

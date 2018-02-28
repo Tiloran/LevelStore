@@ -2,10 +2,11 @@
 @{
     ViewData["Title"] = "AddColors";
     Layout = "_LayoutAdmin";
-    var ColorList = TempData["ColorList"] as List<TypeColor>;
+    var colorList = TempData["ColorList"] as List<TypeColor> ?? new List<TypeColor>();
 }
 
-@foreach (var type in ColorList)
+
+@foreach (var type in colorList)
 {
     <label>@type.ColorType</label>
     <a asp-controller="Admin" asp-action="RemoveColor" asp-route-typeColorId="@type.TypeColorID">Удалить</a>

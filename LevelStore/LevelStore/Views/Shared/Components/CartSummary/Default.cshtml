@@ -4,12 +4,12 @@
 
 <div class="">
     <a class="btn btn-sm btn-default navbar-btn" asp-controller="Cart" asp-action="Index">
-        @if (Model.cart.Lines.Any())
+        @if (Model.Cart.Lines.Any())
         {
 
             <div class="navbar-text">
                 @{
-                    int quantity = Model.cart.Lines.Sum(x => x.Quantity);
+                    int quantity = Model.Cart.Lines.Sum(x => x.Quantity);
                     string quantityName;
                     if (quantity == 1)
                     {
@@ -23,48 +23,48 @@
                     <div><div style="background-color: red; color: aliceblue;">@quantity</div> @quantityName</div>
                
                 @{
-                    decimal TotalPrice = 0;
+                    decimal totalPrice = 0;
                     decimal originalPrice = 0;
-                    bool WasShare = false;
-                    foreach (var line in Model.cart.Lines)
+                    bool wasShare = false;
+                    foreach (var line in Model.Cart.Lines)
                     {
                         if (line.Product.ShareID != null)
                         {
-                            Share share = Model.shares.First(i => i.ShareId == line.Product.ShareID);
+                            Share share = Model.Shares.First(i => i.ShareId == line.Product.ShareID);
                             if (share.Enabled)
                             {
                                 if (share.Fake)
                                 {
                                     originalPrice += line.Quantity * line.Product.Price / 100 * (decimal) (share.KoefPrice + 100);
-                                    TotalPrice += line.Quantity * line.Product.Price;
+                                    totalPrice += line.Quantity * line.Product.Price;
                                 }
                                 else
                                 {
-                                    TotalPrice += line.Quantity * line.Product.Price / 100 * (decimal) (100 - share.KoefPrice);
+                                    totalPrice += line.Quantity * line.Product.Price / 100 * (decimal) (100 - share.KoefPrice);
                                     originalPrice += line.Quantity * line.Product.Price;
                                 }
-                                WasShare = true;
+                                wasShare = true;
                             }
                             else
                             {
-                                TotalPrice += line.Quantity * line.Product.Price;
+                                totalPrice += line.Quantity * line.Product.Price;
                                 originalPrice += line.Quantity * line.Product.Price;
                             }
                         }
                         else
                         {
-                            TotalPrice += line.Quantity * line.Product.Price;
+                            totalPrice += line.Quantity * line.Product.Price;
                             originalPrice += line.Quantity * line.Product.Price;
                         }
                     }
-                    if (WasShare)
+                    if (wasShare)
                     {
                         <del>@originalPrice.ToString(CultureInfo.InvariantCulture)</del>
-                        <span>@TotalPrice.ToString(CultureInfo.InvariantCulture) грн.</span>
+                        <span>@totalPrice.ToString(CultureInfo.InvariantCulture) грн.</span>
                     }
                     else
                     {
-                        <span>@TotalPrice.ToString(CultureInfo.InvariantCulture) грн.</span>
+                        <span>@totalPrice.ToString(CultureInfo.InvariantCulture) грн.</span>
                     }
 
                 }

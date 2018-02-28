@@ -5,9 +5,9 @@
     Layout = "_LayoutAdmin";
     string myJson = TempData["JsonOrder"].ToString();
 
-    myJson = EncodeToUTF8.Encode(myJson);
+    myJson = EncodeToUtf8.Encode(myJson);
     
-    List<TypeColor> colors = TempData["BindedColors"] as List<TypeColor>;
+    List<TypeColor> colors = TempData["BindedColors"] as List<TypeColor> ?? new List<TypeColor>();
 }
 
 @section scripts{
@@ -19,8 +19,8 @@
         MyVariable = MyVariable.replace(/&quot;/g, "\"");
         $(document).ready(function() {
             $("#ChangeOrder").click(function (e) {
-                var MyOrder = CollectInfo(JSON.parse(MyVariable));
-                if (MyOrder == null) {
+                var myOrder = CollectInfo(JSON.parse(MyVariable));
+                if (myOrder == null) {
                     return;
                 }
 
@@ -29,7 +29,7 @@
                     type: "POST",
                     dataType: "text json",
                     contentType: "application/json; charset=utf-8",
-                    data: JSON.stringify(MyOrder),
+                    data: JSON.stringify(myOrder),
                     success: function(message) {
                         alert(message);
                     }
@@ -131,7 +131,7 @@
                     }
                     else
                     {
-                        <label class="text-right" name="Lines[@i].Product.Price">@price.ToString() грн.</label>
+                        <label class="text-right" name="Lines[@i].Product.Price">@price.ToString(CultureInfo.InvariantCulture) грн.</label>
                     }
 
                 }
@@ -164,20 +164,20 @@
                             bool wasColor = false;
                             foreach (var bindedColor in @Model.Lines[i].Product.Color)
                             {
-                                int? colorID = colors.First(c => c.TypeColorID == bindedColor.TypeColorID)?.TypeColorID;
-                                if (colorID == Model.Lines[i].SelectedColor)
+                                int? colorId = colors.First(c => c.TypeColorID == bindedColor.TypeColorID)?.TypeColorID;
+                                if (colorId == Model.Lines[i].SelectedColor)
                                 {
                                     wasColor = true;
-                                    <option selected value="@colorID">@colors.First(c => c.TypeColorID == colorID).ColorType</option>
+                                    <option selected value="@colorId">@colors.First(c => c.TypeColorID == colorId).ColorType</option>
                                 }
-                                else if (colorID == null)
+                                else if (colorId == null)
                                 {
                                     wasColor = true;
                                     <option selected value="0">Неизвестный</option>
                                 }
                                 else
                                 {
-                                    <option value="@colorID">@colors.First(c => c.TypeColorID == colorID).ColorType</option>
+                                    <option value="@colorId">@colors.First(c => c.TypeColorID == colorId).ColorType</option>
                                 }
                             }
                             if (wasColor == false)

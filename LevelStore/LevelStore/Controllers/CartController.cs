@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using LevelStore.Infrastructure.ModelState;
 using LevelStore.Models;
 using LevelStore.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json;
 
@@ -12,25 +10,25 @@ namespace LevelStore.Controllers
 {
     public class CartController : Controller
     {
-        private readonly IProductRepository repository;
-        private readonly IShareRepository shareRepository;
-        private readonly IOrderRepository orderRepository;
-        private readonly Cart cart;
+        private readonly IProductRepository _repository;
+        private readonly IShareRepository _shareRepository;
+        private readonly IOrderRepository _orderRepository;
+        private readonly Cart _cart;
 
         public CartController(IProductRepository repo, Cart cartService, IShareRepository shareRepo, IOrderRepository orderRepo)
         {
-            repository = repo;
-            shareRepository = shareRepo;
-            cart = cartService;
-            orderRepository = orderRepo;
+            _repository = repo;
+            _shareRepository = shareRepo;
+            _cart = cartService;
+            _orderRepository = orderRepo;
         }
 
         [ImportModelState]
         public ViewResult Index()
         {
-            foreach (var line in cart.Lines)
+            foreach (var line in _cart.Lines)
             {
-                line.Product.Images = repository.Images.Where(i => i.ProductID == line.Product.ProductID).ToList();
+                line.Product.Images = _repository.Images.Where(i => i.ProductID == line.Product.ProductID).ToList();
             }
 
             Order order;
@@ -44,9 +42,9 @@ namespace LevelStore.Controllers
                 order = new Order();
             }
 
-            TempData["colors"] = repository.TypeColors.ToList();
-            TempData["Shares"] = shareRepository.Shares.ToList();
-            CartWithOrderViewModel cartWithOrder = new CartWithOrderViewModel {cart = cart, order = order };
+            TempData["colors"] = _repository.TypeColors.ToList();
+            TempData["Shares"] = _shareRepository.Shares.ToList();
+            CartWithOrderViewModel cartWithOrder = new CartWithOrderViewModel {Cart = _cart, Order = order };
             return View("ListCart", cartWithOrder);
         }
 
@@ -55,7 +53,7 @@ namespace LevelStore.Controllers
         [ExportModelState]
         public IActionResult Checkout(Order order)
         {
-            if (!cart.Lines.Any())
+            if (!_cart.Lines.Any())
             {
                 ModelState.AddModelError("", "Ваша корзина пуста!");
                 TempData["order"] = JsonConvert.SerializeObject(order);
@@ -63,12 +61,12 @@ namespace LevelStore.Controllers
             }
             if (ModelState.IsValid)
             {
-                order.Lines = cart.Lines.ToArray();
+                order.Lines = _cart.Lines.ToArray();
                 foreach (var line in order.Lines)
                 {
                     if (line.Product.ShareID != null)
                     {
-                        Share share = shareRepository.Shares.First(i => i.ShareId == line.Product.ShareID);
+                        Share share = _shareRepository.Shares.First(i => i.ShareId == line.Product.ShareID);
                         if (share.Enabled)
                         {
                             line.KoefPriceAfterCheckout = share.KoefPrice;
@@ -77,7 +75,7 @@ namespace LevelStore.Controllers
                     }
                     line.PriceAfterCheckout = line.Product.Price;
                 }
-                orderRepository.SaveOrder(order);
+                _orderRepository.SaveOrder(order);
                 return RedirectToAction("Completed", "Order");
             }
             TempData["order"] = JsonConvert.SerializeObject(order);
@@ -89,28 +87,34 @@ namespace LevelStore.Controllers
             if (furniture == null || selectedColor == null || selectedColor == 0)
             {
                 return RedirectToAction($"ViewSingleProduct", new RouteValueDictionary(
-                    new { controller = "Product", action = "ViewSingleProduct", productId = productId, wasError = true}));
+                    new
+                    {
+                        controller = "Product",
+                        action = "ViewSingleProduct",
+                        productId = productId,
+                        wasError = true
+                    }));
             }
             if (quantity == 0)
             {
                 quantity = 1;
             }
-            Product product = repository.Products.FirstOrDefault(p => p.ProductID == productId);
+            Product product = _repository.Products.FirstOrDefault(p => p.ProductID == productId);
 
             if (product != null)
             {
-                cart.AddItem(product, quantity, (int) furniture, (int) selectedColor);
+                _cart.AddItem(product, quantity, (int) furniture, (int) selectedColor);
             }
             return RedirectToAction("List", "Product");
         }
 
         public RedirectToActionResult RemoveFromCart(int productId)
         {
-            Product product = repository.Products.FirstOrDefault(p => p.ProductID == productId);
+            Product product = _repository.Products.FirstOrDefault(p => p.ProductID == productId);
 
             if (product != null)
             {
-                cart.RemoveLine(product);
+                _cart.RemoveLine(product);
             }
             return RedirectToAction("List", "Product");
         }

@@ -2,21 +2,21 @@
 @{
     ViewData["Title"] = "UploadFiles";
     Layout = "_LayoutAdmin";
-    List<Image> imageList = TempData["ImageList"] as List<Image>;
-    List<TypeColor> colorsList = TempData["Colors"] as List<TypeColor>;
-    List<TypeColor> bindedColors = TempData["BindedColors"] as List<TypeColor>;
+    List<Image> imageList = TempData["ImageList"] as List<Image> ?? new List<Image>();
+    List<TypeColor> colorsList = TempData["Colors"] as List<TypeColor> ?? new List<TypeColor>();
+    List<TypeColor> bindedColors = TempData["BindedColors"] as List<TypeColor> ?? new List<TypeColor>();
 }
 
 
 <script src="/js/First_Second_ImageShow0.js"></script>
 
 @{
-    int CounterForIdFirst = 0;
-    string StringfForIdFirst = "First" + CounterForIdFirst;
-    int CounterForIdSecond = 0;
-    string StringfForIdSecond = "Second" + CounterForIdSecond;
-    int CounterForIdThird = 0;
-    string StringfForIdThird = "Third" + CounterForIdThird;
+    int counterForIdFirst = 0;
+    string stringfForIdFirst = "First" + counterForIdFirst;
+    int counterForIdSecond = 0;
+    string stringfForIdSecond = "Second" + counterForIdSecond;
+    int counterForIdThird = 0;
+    string stringfForIdThird = "Third" + counterForIdThird;
 }
 @if (imageList.Count > 0)
 {
@@ -33,51 +33,51 @@
             if (image.FirstOnScreen)
             {
                 <div>
-                    <input type="checkbox" checked="checked" value="@image.ImageID" disabled="disabled" id="@StringfForIdFirst" name="@nameof(image.FirstOnScreen)" onchange="First_Second_ImageShow(this)">Первый показ
+                    <input type="checkbox" checked="checked" value="@image.ImageID" disabled="disabled" id="@stringfForIdFirst" name="@nameof(image.FirstOnScreen)" onchange="First_Second_ImageShow(this)">Первый показ
                 </div>
             }
             else
             {
                 <div>
-                    <input type="checkbox" value="@image.ImageID" id="@StringfForIdFirst" name="@nameof(image.FirstOnScreen)" onchange="First_Second_ImageShow(this)">Первый показ
+                    <input type="checkbox" value="@image.ImageID" id="@stringfForIdFirst" name="@nameof(image.FirstOnScreen)" onchange="First_Second_ImageShow(this)">Первый показ
                 </div>
             }
 
             if (image.SecondOnScreen)
             {
                 <div>
-                    <input type="checkbox" checked="checked" value="@image.ImageID" disabled="disabled" id="@StringfForIdSecond" name="@nameof(image.SecondOnScreen)" onchange="First_Second_ImageShow(this)">Второй показ
+                    <input type="checkbox" checked="checked" value="@image.ImageID" disabled="disabled" id="@stringfForIdSecond" name="@nameof(image.SecondOnScreen)" onchange="First_Second_ImageShow(this)">Второй показ
                 </div>
             }
             else
             {
                 <div>
-                    <input type="checkbox" value="@image.ImageID" id="@StringfForIdSecond" name="@nameof(image.SecondOnScreen)" onchange="First_Second_ImageShow(this)">Второй показ
+                    <input type="checkbox" value="@image.ImageID" id="@stringfForIdSecond" name="@nameof(image.SecondOnScreen)" onchange="First_Second_ImageShow(this)">Второй показ
                 </div>
             }
 
             if (image.FirstOnScreen == false && image.SecondOnScreen == false)
             {
                 <div>
-                    <input type="checkbox" checked="checked" value="@image.ImageID" disabled="disabled" id="@StringfForIdThird" name="NoneChecked" onchange="First_Second_ImageShow(this)">В общем списке
+                    <input type="checkbox" checked="checked" value="@image.ImageID" disabled="disabled" id="@stringfForIdThird" name="NoneChecked" onchange="First_Second_ImageShow(this)">В общем списке
                 </div>
             }
             else
             {
                 <div>
-                    <input type="checkbox" value="@image.ImageID" id="@StringfForIdThird" name="NoneChecked" onchange="First_Second_ImageShow(this)">В общем списке
+                    <input type="checkbox" value="@image.ImageID" id="@stringfForIdThird" name="NoneChecked" onchange="First_Second_ImageShow(this)">В общем списке
                 </div>
             }
 
 
 
 
-            CounterForIdFirst++;
-            StringfForIdFirst = "First" + CounterForIdFirst;
-            CounterForIdSecond++;
-            StringfForIdSecond = "Second" + CounterForIdSecond;
-            CounterForIdThird++;
-            StringfForIdThird = "Third" + CounterForIdThird;
+            counterForIdFirst++;
+            stringfForIdFirst = "First" + counterForIdFirst;
+            counterForIdSecond++;
+            stringfForIdSecond = "Second" + counterForIdSecond;
+            counterForIdThird++;
+            stringfForIdThird = "Third" + counterForIdThird;
 
             <label>Alt:</label>
             <input name="@nameof(image.Alternative)" value="@image.Alternative" />
@@ -104,22 +104,22 @@
         }
         
         @{
-            string First = "";
-            string Second = "";
+            string first = "";
+            string second = "";
             if (imageList.FirstOrDefault(i => i.FirstOnScreen) != null)
             {
-                First = imageList.FirstOrDefault(i => i.FirstOnScreen).ImageID.ToString();
+                first = imageList.First(i => i.FirstOnScreen).ImageID.ToString();
             }
             if (imageList.FirstOrDefault(i => i.SecondOnScreen) != null)
             {
-                Second = imageList.FirstOrDefault(i => i.SecondOnScreen).ImageID.ToString();
+                second = imageList.First(i => i.SecondOnScreen).ImageID.ToString();
             }
 
 
         }
 
-        <input type="hidden" value="@First" id="FirstOnScreen" name="ValFirstOnScreen">
-        <input type="hidden" value="@Second" id="SecondOnScreen" name="ValSecondOnScreen">
+        <input type="hidden" value="@first" id="FirstOnScreen" name="ValFirstOnScreen">
+        <input type="hidden" value="@second" id="SecondOnScreen" name="ValSecondOnScreen">
 
 
         <button type="submit" class="btn btn-sm btn-danger">Изменить</button>
