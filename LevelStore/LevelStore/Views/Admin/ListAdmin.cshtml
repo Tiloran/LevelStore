@@ -5,13 +5,19 @@
 }
 
 <script src="/js/ShowSecondOnMouseOver.js"></script>
+<link rel="stylesheet" type="text/css" href="/lib/dataTable/datatables.min.css" />
+<script type="text/javascript" src="/lib/dataTable/datatables.min.js"></script>
+<script>
+    $(document).ready( function () {
+        $('#AdminTable').DataTable();
+    } );
+</script>
 
 
 
-@foreach (var product in Model.ProductAndImages)
-{
 
-    <div class="div">
+
+    @*<div class="div">
         <span>@product.Product.Name</span>
         <span>@product.Product.Price</span>
         <div>@product.Product.Description</div>
@@ -23,22 +29,82 @@
         @{
             if (product.Images.Count > 0 && product.Images.FirstOrDefault(f => f.FirstOnScreen)?.Name != null && product.Images.FirstOrDefault(f => f.SecondOnScreen)?.Name != null)
             {
-                <img src="/images/@product.Images.First(f => f.FirstOnScreen).Name" id="@product.Product.ProductID" name="FirstAndSecondImages" onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" style="width: 100px; height: 100px;" alt="@product.Images.First(f => f.FirstOnScreen).Alternative"/>
-                <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.First(f => f.FirstOnScreen).Name" imageAlternative="@product.Images.First(f => f.FirstOnScreen).Alternative"/>
-                <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.First(f => f.SecondOnScreen).Name" imageAlternative="@product.Images.First(f => f.SecondOnScreen).Alternative"/>
+                <img src="/images/@product.Images.First(f => f.FirstOnScreen).Name" id="@product.Product.ProductID" name="FirstAndSecondImages" onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" style="width: 100px; height: 100px;" alt="@product.Images.First(f => f.FirstOnScreen).Alternative" />
+                <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.First(f => f.FirstOnScreen).Name" imageAlternative="@product.Images.First(f => f.FirstOnScreen).Alternative" />
+                <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.First(f => f.SecondOnScreen).Name" imageAlternative="@product.Images.First(f => f.SecondOnScreen).Alternative" />
             }
             else
             {
-                <img src="/images/None.jpg" style="width: 100px; height: 100px;" alt="None Image"/>
+                <img src="/images/None.jpg" style="width: 100px; height: 100px;" alt="None Image" />
             }
         }
 
         <input type="hidden" name="ProductID" value="@product.Product.ProductID" />
         <a asp-controller="Admin" asp-action="Edit" asp-route-productid="@product.Product.ProductID">Изменить</a>
         <a asp-controller="Admin" asp-action="Delete" asp-route-productId="@product.Product.ProductID">Удалить</a>
-    </div>
+    </div>*@
 
-}
+    <table id="AdminTable" class="display">
+        <thead>
+        <tr>
+            <td>Дата добавления</td>
+            <td>Название</td>
+            <td>Цена</td>
+            <td>Новый</td>
+            <td>Просмотров</td>
+            <td>Добавлений в корзину</td>
+            <td>Куплено</td>
+            <td>Картинка</td>
+            <td>Изменить</td>
+            <td>Удалить</td>
+        </tr>
+        </thead>
+    
+        <tbody>
+        @foreach (var product in Model.ProductAndImages)
+        {
+            <tr>
+                <td>@product.Product.DateOfCreation</td>
+                <td>@product.Product.Name</td>
+                <td>@product.Product.Price</td>
+                @if (product.Product.NewProduct)
+                {
+                    <td>Да</td>
+                }
+                else
+                {
+                    <td>Нет</td>
+                }
+                <td>@product.Product.ViewsCounter</td>
+                <td>@product.Product.AddToCartCounter</td>
+                <td>@product.Product.BuyingCounter</td>
+                @if (product.Images.Count > 0 && product.Images.FirstOrDefault(f => f.FirstOnScreen)?.Name != null && product.Images.FirstOrDefault(f => f.SecondOnScreen)?.Name != null)
+                {
+                    <td>
+                        <img src="/images/@product.Images.First(f => f.FirstOnScreen).Name" id="@product.Product.ProductID" name="FirstAndSecondImages" onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" style="width: 100px; height: 100px;" alt="@product.Images.First(f => f.FirstOnScreen).Alternative"/>
+                        <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.First(f => f.FirstOnScreen).Name" imageAlternative="@product.Images.First(f => f.FirstOnScreen).Alternative"/>
+                        <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.First(f => f.SecondOnScreen).Name" imageAlternative="@product.Images.First(f => f.SecondOnScreen).Alternative"/>
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <img src="/images/None.jpg" style="width: 100px; height: 100px;" alt="None Image"/>
+                    </td>
+                }
+                <td>
+                    <input type="hidden" name="ProductID" value="@product.Product.ProductID"/>
+                    <a asp-controller="Admin" asp-action="Edit" asp-route-productid="@product.Product.ProductID">Изменить</a>
+                </td>
+                <td>
+                    <a asp-controller="Admin" asp-action="Delete" asp-route-productId="@product.Product.ProductID">Удалить</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+
 
 
 

@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LevelStore.Models
 {
@@ -17,6 +19,11 @@ namespace LevelStore.Models
         public List<Color> Color { get; set; }
         public bool NewProduct { get; set; }
         public bool HideFromUsers { get; set; }
+        public int ViewsCounter { get; set; }
+        public int AddToCartCounter { get; set; }
+        public int BuyingCounter { get; set; }
+        [Column(TypeName = "datetime2")]
+        public DateTime? DateOfCreation { get; set; }
         public List<Image> Images { get; set; }
         public int? ShareID { get; set; }
     }

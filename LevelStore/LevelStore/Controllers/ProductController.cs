@@ -108,9 +108,8 @@ namespace LevelStore.Controllers
             }
 
             HttpContext.SetCurrentBreadCrumbTitle(selectedProduct.Name);
-            
-            
-            
+
+            _repository.AddViewCount(selectedProduct.ProductID);
             return View(selectedProduct);
         }
     }

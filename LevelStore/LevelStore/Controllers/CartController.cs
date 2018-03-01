@@ -66,6 +66,7 @@ namespace LevelStore.Controllers
                 {
                     if (line.Product.ShareID != null)
                     {
+                        _repository.AddBuyCount(line.Product.ProductID);
                         Share share = _shareRepository.Shares.First(i => i.ShareId == line.Product.ShareID);
                         if (share.Enabled)
                         {
@@ -104,6 +105,7 @@ namespace LevelStore.Controllers
             if (product != null)
             {
                 _cart.AddItem(product, quantity, (int) furniture, (int) selectedColor);
+                _repository.AddAnAddOnCountToTheCart(product.ProductID);
             }
             return RedirectToAction("List", "Product");
         }

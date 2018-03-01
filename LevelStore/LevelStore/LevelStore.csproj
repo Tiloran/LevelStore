@@ -16,7 +16,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\excelReports\" />
     <Folder Include="wwwroot\js\jQuery\" />
-    <Folder Include="wwwroot\lib\" />
+    <Folder Include="wwwroot\lib\dataTable\" />
   </ItemGroup>
 
 </Project>

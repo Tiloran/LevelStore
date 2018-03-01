@@ -115,6 +115,7 @@ namespace LevelStore.Models
                             "Кошелек, который, станет для Вас незаменимым и надежным другом, так как благодаря своей компактности, всегда будет с Вами. Имеет одно отделение для мелочи на кнопке, одно большое отделение для купюр, два для кредитных карт и визиток. Закрывается на кнопку.",
                         NewProduct = true,
                         Price = 400,
+                        DateOfCreation = DateTime.Now,
                         Size = "Размер: 11х10 см",
                         SubCategoryID = categories.First(c => c.CategoryName == "Кошельки").SubCategories
                             .First(sb => sb.SubCategoryName == "CrazyHouse").SubCategoryID
@@ -127,6 +128,7 @@ namespace LevelStore.Models
                             "Кошелек, который, станет для Вас незаменимым и надежным другом, так как благодаря своей компактности, всегда будет с Вами. Имеет одно отделение для мелочи на кнопке, одно большое отделение для купюр, два для кредитных карт и визиток. Закрывается на кнопку.",
                         NewProduct = true,
                         Price = 550,
+                        DateOfCreation = DateTime.Now,
                         Size = "Размер: 20х10 см",
                         SubCategoryID = categories.First(c => c.CategoryName == "Кошельки").SubCategories
                             .First(sb => sb.SubCategoryName == "CrazyHouse").SubCategoryID
@@ -139,6 +141,7 @@ namespace LevelStore.Models
                             "Кошелек, который поражает своей компактностью и оригинальностью дизайна. Имеет одно большое отделение для купюр, и три для кредитных карт и визиток. Закрывается на кнопку.",
                         NewProduct = true,
                         Price = 400,
+                        DateOfCreation = DateTime.Now,
                         Size = "Размер: 10х9,5 см",
                         SubCategoryID = categories.First(c => c.CategoryName == "Кошельки").SubCategories
                             .First(sb => sb.SubCategoryName == "CrazyHouse").SubCategoryID
@@ -151,6 +154,7 @@ namespace LevelStore.Models
                             "Компактная на вид, но весьма вместительная сумочка, которая позволит всегда носить с собой все необходимое. Имеет прочную тканевую подкладку, карман на молнии и одно большое отделение. Также у изделия присутствует длинная ручка на кобурной застежке. Закрывается на магниты.",
                         NewProduct = false,
                         Price = 1000,
+                        DateOfCreation = DateTime.Now,
                         Size = "Размер: 23х17х8 см",
                         SubCategoryID = categories.First(c => c.CategoryName == "Мини-сумки").SubCategories.First(sb => sb.SubCategoryName == "Kaiser").SubCategoryID,
                         ShareID = share.ShareId
@@ -162,6 +166,7 @@ namespace LevelStore.Models
                             "Хорошее путешествие начинается с правильно подобранной дорожной сумки. Ведь отправляясь отдыхать, хочется взять с собой все. А эта модель помещает в себя даже больше! Имеет одно большое отделение и два внутренних кармана.",
                         NewProduct = false,
                         Price = 4000,
+                        DateOfCreation = DateTime.Now,
                         Size = "Размер: 32х53х40 см",
                         SubCategoryID = categories.First(c => c.CategoryName == "Сумки").SubCategories.First(sb => sb.SubCategoryName == "Flatar").SubCategoryID
                     },
@@ -172,6 +177,7 @@ namespace LevelStore.Models
                             "Компактный в размерах, но весьма вместительный и стильный рюкзак, который станет отличным вариантом как для неожиданных поездок, так и для прогулок по городу. Имеет прочную тканевую подкладку, внутренний карман на молнии, одно большое отделение и внешний карман на магнитах (13х18 см). Закрывается на молнию.",
                         NewProduct = false,
                         Price = 2000,
+                        DateOfCreation = DateTime.Now,
                         Size = "Размер: 32х24х10 см",
                         SubCategoryID = categories.First(c => c.CategoryName == "Рюкзаки").SubCategories.First(sb => sb.SubCategoryName == "CrazyHouse").SubCategoryID
                     },
@@ -182,6 +188,7 @@ namespace LevelStore.Models
                             "Ключница - незаменимый, чрезвычайно полезный и удобный аксессуар, который также станет дополнением к Вашему повседневному образу. Вмешает в себя до 5-ти ключей.",
                         NewProduct = false,
                         Price = 150,
+                        DateOfCreation = DateTime.Now,
                         SubCategoryID = categories.First(c => c.CategoryName == "Аксессуары").SubCategories.First(sb => sb.SubCategoryName == "Flatar").SubCategoryID
                     },
                     new Product
@@ -191,6 +198,7 @@ namespace LevelStore.Models
                             "Любители шопинга и больших покупок не обойдут стороной данную модель! Выполнена из ткани \"Художественный брезент\", имеет прочную тканевую подкладку, одно огромное отделение, внутренний кармашек на молнии и внешний карман на кнопке.",
                         NewProduct = false,
                         Price = 3000,
+                        DateOfCreation = DateTime.Now,
                         Size = "Размер: 49х42х15 см",
                         SubCategoryID = categories.First(c => c.CategoryName == "Limited Edition").SubCategories.First(sb => sb.SubCategoryName == "Limited Edition").SubCategoryID
                     }

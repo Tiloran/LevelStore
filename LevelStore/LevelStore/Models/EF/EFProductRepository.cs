@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,7 +7,7 @@ namespace LevelStore.Models.EF
 {
     public class EFProductRepository : IProductRepository
     {
-        private ApplicationDbContext context;
+        private readonly ApplicationDbContext context;
 
         public EFProductRepository(ApplicationDbContext ctx)
         {
@@ -88,8 +89,15 @@ namespace LevelStore.Models.EF
                     NewProduct = product.NewProduct,
                     Size = product.Size,
                     Description = product.Description,
-                    HideFromUsers = product.HideFromUsers
+                    HideFromUsers = product.HideFromUsers,
+                    ViewsCounter = product.ViewsCounter,
+                    AddToCartCounter = product.AddToCartCounter,
+                    BuyingCounter = product.BuyingCounter
                 };
+                if (product.DateOfCreation == null)
+                {
+                    productToSave.DateOfCreation = DateTime.Now;
+                }
                 
                 context.Products.Add(productToSave);
             }
@@ -106,6 +114,10 @@ namespace LevelStore.Models.EF
                     productToSave.Size = product.Size;
                     productToSave.HideFromUsers = product.HideFromUsers;
                     productToSave.ShareID = product.ShareID;
+                    productToSave.AddToCartCounter = product.AddToCartCounter;
+                    productToSave.BuyingCounter = product.BuyingCounter;
+                    productToSave.ViewsCounter = product.ViewsCounter;
+                    productToSave.DateOfCreation = productToSave.DateOfCreation == null ? DateTime.Now : product.DateOfCreation;
                 }
             }
             context.SaveChanges();
@@ -227,6 +239,36 @@ namespace LevelStore.Models.EF
             context.Images.RemoveRange(context.Images.Where(i => i.ProductID == productId).ToList());
             context.Products.Remove(context.Products.First(i => i.ProductID == productId));
             context.SaveChanges();
+        }
+
+        public void AddAnAddOnCountToTheCart(int productId)
+        {
+            Product product = Products.FirstOrDefault(i => i.ProductID == productId);
+            if (product != null)
+            {
+                product.AddToCartCounter++;
+                context.SaveChanges();
+            }
+        }
+
+        public void AddViewCount(int productId)
+        {
+            Product product = Products.FirstOrDefault(i => i.ProductID == productId);
+            if (product != null)
+            {
+                product.ViewsCounter++;
+                context.SaveChanges();
+            }
+        }
+
+        public void AddBuyCount(int productId)
+        {
+            Product product = Products.FirstOrDefault(i => i.ProductID == productId);
+            if (product != null)
+            {
+                product.BuyingCounter++;
+                context.SaveChanges();
+            }
         }
 
 
