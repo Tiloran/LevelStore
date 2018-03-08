@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Promo>
+
+@{
+    ViewData["Title"] = "ListPromo";
+    Layout = "_LayoutAdmin";
+}
+
+<h2>View</h2>
+
+<p>
+    <a asp-action="EditPromo">Create New</a>
+</p>
+<p>
+    <a asp-action="ListAdmin">К админке</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.PromoCode)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Discount)
+                </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.PromoCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Discount)
+            </td>
+            <td>
+                <a asp-action="EditPromo" asp-route-promoId="@item.PromoId">Edit</a>
+                <a asp-action="DeletePromo" asp-route-promoId="@item.PromoId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

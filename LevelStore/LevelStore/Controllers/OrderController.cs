@@ -57,7 +57,6 @@ namespace LevelStore.Controllers
             };
 
             TempData["BindedColors"] = _repositoryProduct.TypeColors.ToList();
-            //TempData["Shares"] = _repositoryShares.Shares.ToList();
             return View(orderListviewModel);
         }
 

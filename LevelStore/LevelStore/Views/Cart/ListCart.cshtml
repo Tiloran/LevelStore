@@ -6,6 +6,7 @@
     List<TypeColor> colors = TempData["colors"] as List<TypeColor> ?? new List<TypeColor>();
     List<Share> shares = TempData["Shares"] as List<Share> ?? new List<Share>();
     decimal totalPrice = 0;
+    int promoCodeDiscount = Model.Cart.PromoCodeDiscount;
 }
 
 <div class="shop-cart__wrapper">
@@ -27,7 +28,6 @@
                     <p>Сумма</p>
                 </div>
             </div>
-            
             @foreach (var line in Model.Cart.Lines)
             {
             <div class="row shop-cart__item">
@@ -63,7 +63,8 @@
                 @{
                     decimal price;
                     bool wasShare = false;
-                    if (line.Product.ShareID != null)
+
+                    if (line.Product.ShareID != null && promoCodeDiscount == 0)
                     {
                         Share share = shares.First(i => i.ShareId == line.Product.ShareID);
                         if (share.Enabled)
@@ -85,7 +86,16 @@
                     }
                     else
                     {
-                        price = line.Product.Price;
+                        if (promoCodeDiscount > 0)
+                        {
+                            price = line.Product.Price / 100 * (decimal)(100 - promoCodeDiscount);
+                            wasShare = true;
+                        }
+                        else
+                        {
+                            price = line.Product.Price;
+                        }
+
                     }
                     if (wasShare)
                     {
@@ -145,10 +155,22 @@
                 <div class="col-sm-1 shop-cart__item--delete"><a asp-action="RemoveFromCart" asp-route-productId="@line.Product.ProductID">Удалить из корзины</a></div>
             </div>
                     }
-            <div class="row shop-cart__total-price">
-                <div class="col-9 col-sm-9 text-left">Общая стоимость заказа/покупки:</div>
-                <div class="col-3 col-sm-2">@totalPrice.ToString(CultureInfo.InvariantCulture) грн</div>
-            </div>
+        <div class="row shop-cart__total-price">
+            <div class="col-9 col-sm-9 text-left">Общая стоимость заказа/покупки:</div>
+            <div class="col-3 col-sm-2">@totalPrice.ToString(CultureInfo.InvariantCulture) грн</div>
+        </div>
+        <form asp-action="SetPromoCode">
+            @if (promoCodeDiscount != 0)
+            {
+                <input type="text" value="@Model.Cart.PromoCodeName" name="prmCode" placeholder="Введите промо-код">
+            }
+            else
+            {
+                <input type="text" name="prmCode" placeholder="Введите промо-код">
+            }
+            <button type="submit" class="btn btn-dark">Применить</button>
+        </form>
+        <a asp-controller="Cart" asp-action="DeletePromoCode" asp-route-check="0" class="btn btn-dark">Удалить код</a>
         <form asp-controller="Cart" asp-action="Checkout" method="post">
             <div class="row text-left shop-cart__dostavka">
                 <div class="col-sm-12"><p class="shop-cart__subtitle">Выберите способ доставки</p></div>
@@ -203,8 +225,8 @@
             <div class="shop-cart__promo">
                 <div class="row">
                     <div class="col-sm-7">
-                        <input type="text" placeholder="Введите промо-код">
-                        <a href="#">ПРИМЕНИТЬ</a>
+                        
+                        
                     </div>
                     <div class="col-sm-5">
                         <p class="row shop-cart__promo--total">Итоговая сумма к оплате: <span>4 000 грн.</span></p>

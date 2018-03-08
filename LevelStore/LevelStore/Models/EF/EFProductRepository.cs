@@ -21,7 +21,34 @@ namespace LevelStore.Models.EF
         public IEnumerable<SubCategory> SubCategories => context.SubCategories;
         public IEnumerable<Category> Categories => context.Categories;
         public IEnumerable<Product> ProductsWithImages => context.Products.Include(i => i.Images);
-        
+        public IEnumerable<Promo> PromoCodes => context.PromoCodes;
+
+        public int UpdatePromo(Promo promo)
+        {
+            Promo updatePromo = context.PromoCodes.FirstOrDefault(i => i.PromoId == promo.PromoId);
+            if (updatePromo != null)
+            {
+                context.Entry(updatePromo).State = EntityState.Detached;
+                context.PromoCodes.Update(promo);
+            }
+            else
+            {
+                context.PromoCodes.Add(promo);
+            }
+            context.SaveChanges();
+
+            return promo.PromoId;
+        }
+
+        public void Delet3Promo(int promoId)
+        {
+            Promo deletePromo = context.PromoCodes.FirstOrDefault(i => i.PromoId == promoId);
+            if (deletePromo != null)
+            {
+                context.PromoCodes.Remove(deletePromo);
+                context.SaveChanges();
+            }
+        }
 
         public void DeleteTypeColor(int typeColorId)
         {

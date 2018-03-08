@@ -9,6 +9,8 @@ namespace LevelStore.Models
     public class Cart
     {
         private readonly List<CartLine> lineCollection = new List<CartLine>();
+        public int PromoCodeDiscount;
+        public string PromoCodeName;
 
         public virtual void AddItem(Product product, int quantity, int furniture, int selectedColor)
         {
@@ -30,6 +32,18 @@ namespace LevelStore.Models
             }
         }
 
+        public virtual void DeletePromoCode()
+        {
+            PromoCodeDiscount = 0;
+            PromoCodeName = null;
+        }
+
+        public virtual void SetPromoCode(int prmCodeDisc, string prmCodeName)
+        {
+            PromoCodeDiscount = prmCodeDisc;
+            PromoCodeName = prmCodeName;
+        }
+
         public virtual void RemoveLine(Product product)
         {
             lineCollection.RemoveAll(l => l.Product.ProductID == product.ProductID);
@@ -49,6 +63,7 @@ namespace LevelStore.Models
         {
             get { return lineCollection; }
         }
+
 
     }
 

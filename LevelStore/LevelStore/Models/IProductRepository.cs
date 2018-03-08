@@ -11,6 +11,7 @@ namespace LevelStore.Models
         IEnumerable<SubCategory> SubCategories { get; }
         IEnumerable<Category> Categories { get; }
         IEnumerable<Product> ProductsWithImages { get; }
+        IEnumerable<Promo> PromoCodes { get; }
         void SaveTypeColor(TypeColor typeColor);
         List<Category> GetCategoriesWithSubCategories();
         void DeleteTypeColor(int typeColorId);
@@ -21,5 +22,7 @@ namespace LevelStore.Models
         void AddAnAddOnCountToTheCart(int productId);
         void AddViewCount(int productId);
         void AddBuyCount(int productId);
+        int UpdatePromo(Promo promo);
+        void Delet3Promo(int promoId);
     }
 }

@@ -46,12 +46,12 @@ namespace LevelStore.Controllers
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                List<Product> searchByNameList = new List<Product>(products.Where(n => n.Name.Contains(searchString)));
-                List<Product> searchByDescriptionList = new List<Product>(products.Where(d => d.Description.Contains(searchString)));
+                List<Product> searchByNameList = new List<Product>(products.Where(n => n.Name.ToLower().Contains(searchString.ToLower())));
+                List<Product> searchByDescriptionList = new List<Product>(products.Where(d => d.Description.ToLower().Contains(searchString.ToLower())));
                 List<Product> searchBySubCategoryList = new List<Product>(products.Where(p =>
-                    categories.Any(c => c.SubCategories.Any(sc => sc.SubCategoryID == p.SubCategoryID && sc.SubCategoryName.Contains(searchString))))).ToList();
+                    categories.Any(c => c.SubCategories.Any(sc => sc.SubCategoryID == p.SubCategoryID && sc.SubCategoryName.ToLower().Contains(searchString.ToLower()))))).ToList();
                 List<Product> searchByCategoryList = new List<Product>(products.Where(p =>
-                    categories.Any(c => c.SubCategories.Any(sc => sc.SubCategoryID == p.SubCategoryID && c.CategoryName.Contains(searchString))))).ToList();
+                    categories.Any(c => c.SubCategories.Any(sc => sc.SubCategoryID == p.SubCategoryID && c.CategoryName.ToLower().Contains(searchString.ToLower()))))).ToList();
                 products = searchByNameList.Union(searchByDescriptionList).Union(searchBySubCategoryList).Union(searchByCategoryList).ToList();
             }
 

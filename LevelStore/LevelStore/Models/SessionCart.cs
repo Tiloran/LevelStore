@@ -19,9 +19,21 @@ namespace LevelStore.Models
         [JsonIgnore]
         public ISession Session { get; set; }
 
+        public override void SetPromoCode(int prmCodeDiscount, string prmCodeName)
+        {
+            base.SetPromoCode(prmCodeDiscount, prmCodeName);
+            Session.SetJson("Cart", this);
+        }
+
+        public override void DeletePromoCode()
+        {
+            base.DeletePromoCode();
+            Session.SetJson("Cart", this);
+        }
+
         public override void AddItem(Product product, int quantity, int furniture, int selectedColor)
         {
-            base.AddItem(product, quantity, furniture, selectedColor);
+            base.AddItem(product, quantity, furniture, selectedColor);            
             Session.SetJson("Cart", this);
         }
 

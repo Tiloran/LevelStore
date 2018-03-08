@@ -5,6 +5,7 @@ using LevelStore.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json;
+using NPOI.SS.Formula.PTG;
 
 namespace LevelStore.Controllers
 {
@@ -48,6 +49,24 @@ namespace LevelStore.Controllers
             return View("ListCart", cartWithOrder);
         }
 
+        public IActionResult SetPromoCode(string prmCode)
+        {
+            Promo promo = _repository.PromoCodes.FirstOrDefault(c => c.PromoCode == prmCode);
+            if (promo != null)
+            {
+                _cart.SetPromoCode(promo.Discount, promo.PromoCode);
+                return RedirectToActionPermanent("Index");
+            }
+
+            return RedirectToActionPermanent("DeletePromoCode");
+        }
+
+        public IActionResult DeletePromoCode(string check)
+        {
+            _cart.DeletePromoCode();
+            return RedirectToActionPermanent("Index");
+        }
+
         
         [HttpPost]
         [ExportModelState]
@@ -62,16 +81,25 @@ namespace LevelStore.Controllers
             if (ModelState.IsValid)
             {
                 order.Lines = _cart.Lines.ToArray();
+                int CodeDiscount = _cart.PromoCodeDiscount;
                 foreach (var line in order.Lines)
                 {
-                    if (line.Product.ShareID != null)
+                    if (line.Product.ShareID != null || CodeDiscount > 0)
                     {
                         _repository.AddBuyCount(line.Product.ProductID);
-                        Share share = _shareRepository.Shares.First(i => i.ShareId == line.Product.ShareID);
-                        if (share.Enabled)
+                        if (CodeDiscount == 0)
                         {
-                            line.KoefPriceAfterCheckout = share.KoefPrice;
-                            line.FakeShare = share.Fake;
+                            Share share = _shareRepository.Shares.First(i => i.ShareId == line.Product.ShareID);
+                            if (share.Enabled)
+                            {
+                                line.KoefPriceAfterCheckout = share.KoefPrice;
+                                line.FakeShare = share.Fake;
+                            }
+                        }
+                        else
+                        {
+                            line.KoefPriceAfterCheckout = CodeDiscount;
+                            line.FakeShare = false;
                         }
                     }
                     line.PriceAfterCheckout = line.Product.Price;

@@ -14,5 +14,6 @@ namespace LevelStore.Models.EF
         public DbSet<Order> Orders { get; set; }
         public DbSet<CartLine> CartLines { get; set; }
         public DbSet<Share> Shares { get; set; }
+        public DbSet<Promo> PromoCodes { get; set; }
     }
 }

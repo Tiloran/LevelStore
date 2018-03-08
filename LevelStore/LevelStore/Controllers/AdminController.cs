@@ -42,7 +42,6 @@ namespace LevelStore.Controllers
         public IActionResult Edit(int productid)
         {
             Product product = _repository.Products.FirstOrDefault(i => i.ProductID == productid);
-            //TempData["OtherStuffForProduct"] = new OtherStuffForProduct();
             TempData["Categories"] = _repository.GetCategoriesWithSubCategories().ToList();
             TempData["Colors"] = _repository.TypeColors.ToList();
             TempData["BoundColors"] = _repository.BoundColors.Where(i=> i.ProductID == productid).ToList();
@@ -61,7 +60,6 @@ namespace LevelStore.Controllers
                 }
                 return RedirectToActionPermanent("Edit", new {productid = id});
             }
-            //Some error
             TempData["Categories"] = _repository.GetCategoriesWithSubCategories().ToList();
             TempData["Colors"] = _repository.TypeColors.ToList();
             if (product.ProductID != 0)
@@ -181,7 +179,7 @@ namespace LevelStore.Controllers
             }
             else
             {
-                return RedirectToActionPermanent(actionName : "ListAdmin", controllerName: "Admin");
+                return RedirectToActionPermanent("ListAdmin", "Admin");
             }
             
         }
@@ -199,7 +197,6 @@ namespace LevelStore.Controllers
         {
             int id = productId;
             TempData["id"] = id;
-            //TempData["ImageList"] = repository.Images.ToList();
             List<Color> bindedColors = _repository.BoundColors.Where(i => i.ProductID == id).ToList();
             List<TypeColor> ourTypeColors = _repository.TypeColors
                 .Where(i1 => bindedColors.Any(i2 => i2.TypeColorID == i1.TypeColorID)).ToList();
@@ -299,6 +296,54 @@ namespace LevelStore.Controllers
             }
             string message = $"{files.Count} file(s) / {size} bytes uploaded successfully!";
             return Json(message);
+        }
+
+        public IActionResult ListPromo() => View(_repository.PromoCodes);
+        
+        public IActionResult DeletePromo(int? promoId)
+        {
+            if (promoId >= 1)
+            {
+                _repository.Delet3Promo((int) promoId);
+            }
+            else
+            {
+                return NotFound();
+            }
+
+            return RedirectToActionPermanent("ListPromo");
+        }
+
+        public IActionResult EditPromo(int? promoId)
+        {
+            if (promoId == null || promoId == 0)
+            {
+                return View(new Promo());
+            }
+            else
+            {
+                Promo newPromo = _repository.PromoCodes.FirstOrDefault(i => i.PromoId == promoId);
+                if (newPromo != null)
+                {
+                    return View(newPromo);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+        }
+
+        [HttpPost]
+        public IActionResult EditPromo(Promo promo)
+        {
+            if (ModelState.IsValid)
+            {
+                _repository.UpdatePromo(promo);
+                return RedirectToActionPermanent("ListPromo");
+            }
+
+            return View(promo);
         }
     }
 }

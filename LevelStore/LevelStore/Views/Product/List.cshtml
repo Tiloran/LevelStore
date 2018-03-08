@@ -2,9 +2,9 @@
 @{
     ViewData["Title"] = "List";
     Layout = "_Layout";
-    string searchString = TempData["searchString"] as string;
+    string oldSearchString = TempData["searchString"] as string;
     List<Share> shares = TempData["Shares"] as List<Share> ?? new List<Share>();
-    searchString = EncodeToUtf8.Encode(searchString);
+    string searchString = EncodeToUtf8.Encode(oldSearchString);
 }
 
 @section scripts{
@@ -33,6 +33,7 @@
     <div class="row">
         <div class="col-md-12 main-navigation shop__navigation text-center">
             <a asp-controller="Admin" asp-action="ListAdmin" class="btn btn-default">Админка</a>
+            
             @if (Model.Categories.Any())
             {
                 <ul class="menu shop__menu">
@@ -40,14 +41,14 @@
                     @foreach (var category in Model.Categories)
                     {
                         <li class="menu__item">
-                            <a class="menu__item-link" asp-controller="Product" asp-action="List" asp-route-categoryId="@category.CategoryID" asp-route-searchString="@searchString">@category.CategoryName</a>
+                            <a class="menu__item-link" asp-controller="Product" asp-action="List" asp-route-categoryId="@category.CategoryID" asp-route-searchString="@oldSearchString">@category.CategoryName</a>
                             @if (category.SubCategories.Any())
                             {
                                 <ul class="submenu">
                                     @foreach (var subCategory in category.SubCategories)
                                     {
                                         <li class="submenu__item">
-                                            <a asp-controller="Product" asp-action="List" asp-route-subCategoryId="@subCategory.SubCategoryID" asp-route-searchString="@searchString">
+                                            <a asp-controller="Product" asp-action="List" asp-route-subCategoryId="@subCategory.SubCategoryID" asp-route-searchString="@oldSearchString">
                                                 @category.CategoryName "@subCategory.SubCategoryName"
                                             </a>
                                         </li>
