@@ -8,52 +8,7 @@
 
 @section scripts{
     <script src="/js/RemoveThisElem.js"></script>
-    <script type="text/javascript">
-        
-        function RunAjaxSearch(e, mustClick) {
-            if (e.keyCode === 13 || mustClick === true) {
-                $("#AjaxSearchProductForShares").click();
-            }
-        }
-
-        function search() {
-            var searchString = $("#search-input").val();
-            var subCategoryId = $("#category-input").val();
-            var categoryId = $("#category-input").find('option:selected').attr("CategoryId"); 
-            var searchData = {
-                "searchString": searchString,
-                "categoryId": categoryId,
-                "subCategoryId": subCategoryId
-            }
-            
-            $.ajax({
-                url: "/Shares/SharesAjaxSearch/",
-                type: "POST",
-                dataType: "text json",
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify(searchData),
-                success: function(products) {
-                    ShowProductList(products);
-                }
-            });
-        };
-
-        function ShowProductList(products) {
-            var productBlock = $("#SelectedProductBlock");
-            productBlock.empty();
-            if (products.length > 0) {
-                for (var i = 0; i < products.length; i++) {
-                    productBlock.append(
-                        "<div>" +
-                        "<input checked=\"checked\" type=\"checkbox\" value=\"" + products[i].productID + "\" name=\"Products[" + i +"]\" /> " +
-                        products[i].name +
-                        " <button type=\"button\" onclick=\"DeleteElem((this).parentElement)\">Удалить</button>" +
-                        "</div>"
-                    );
-                }
-            }
-        }
-    </script>
+    <script src="/js/GettignProductForShares.js"></script>
 }
 
 <h2>Edit</h2>
@@ -62,7 +17,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ShareId" />
             <div class="form-group">
@@ -100,13 +55,13 @@
             Список товаров для акции
             <div id="SelectedProductBlock">
                 @for (int i = 0; i < Model.Products?.Count; i++)
-        {
-            <div>
-                <input checked="checked" type="checkbox" value="@Model.Products[i].ProductID" name="Products[@i]" />
-                @Model.Products[i].Name
-                <button type="button" onclick="DeleteElem((this).parentElement)">Удалить</button>
-            </div>
-}
+                {
+                    <div>
+                        <input checked="checked" type="checkbox" value="@Model.Products[i].ProductID" name="Products[@i]"/>
+                        @Model.Products[i].Name
+                        <button type="button" onclick="RecalcIndexOfProducts(this)">Удалить</button>
+                    </div>
+                }
             </div>
         </form>
         <div>

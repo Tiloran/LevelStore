@@ -2,6 +2,7 @@
 using System.Linq;
 using DNTBreadCrumb.Core;
 using LevelStore.Models;
+using LevelStore.Models.AjaxModels;
 using LevelStore.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -55,6 +56,8 @@ namespace LevelStore.Controllers
                 products = searchByNameList.Union(searchByDescriptionList).Union(searchBySubCategoryList).Union(searchByCategoryList).ToList();
             }
 
+            products = products.OrderBy(i => i.ProductID).Take(10).ToList();
+
             foreach (var product in products)
             {
                 var images = new List<Image>(_repository.Images.Where(index => index.ProductID == product.ProductID));
@@ -69,7 +72,64 @@ namespace LevelStore.Controllers
             TempData["Shares"] = _shareRepository.Shares.Where(i =>
                 productsListViewModel.ProductAndImages.Any(id => i.ShareId == id.Product.ShareID)).ToList();
             TempData["searchString"] = searchString;
+            TempData["CategoryId"] = categoryId;
+            TempData["SubCategoryId"] = subCategoryId;
             return View(productsListViewModel);
+        }
+
+        [HttpPost]
+        public IActionResult ListAjax([FromBody] AjaxSearch ajaxData)
+        {
+            List<ProductWithImages> productAndImages = new List<ProductWithImages>();
+            List<Product> products;
+            if (ajaxData.SubCategoryId != null)
+            {
+                products = new List<Product>(_repository.Products.Where(pScId => pScId.SubCategoryID == ajaxData.SubCategoryId).Where(h => h.HideFromUsers == false).OrderBy(pId => pId.ProductID));
+            }
+            else if (ajaxData.CategoryId != null)
+            {
+                List<SubCategory> subCategories =
+                    new List<SubCategory>(_repository.SubCategories.Where(i => i.CategoryID == ajaxData.CategoryId).ToList());
+                products = new List<Product>(_repository.Products
+                    .Where(pScId => subCategories.Any(sCId => pScId.SubCategoryID == sCId.SubCategoryID))
+                    .Where(h => h.HideFromUsers == false)
+                    .OrderBy(pId => pId.ProductID));
+            }
+            else
+            {
+                products = new List<Product>(_repository.Products.Where(h => h.HideFromUsers == false).OrderBy(p => p.ProductID));
+            }
+
+            List<Category> categories = _repository.GetCategoriesWithSubCategories();
+
+            if (!string.IsNullOrEmpty(ajaxData.SearchString))
+            {
+                List<Product> searchByNameList = new List<Product>(products.Where(n => n.Name.ToLower().Contains(ajaxData.SearchString.ToLower())));
+                List<Product> searchByDescriptionList = new List<Product>(products.Where(d => d.Description.ToLower().Contains(ajaxData.SearchString.ToLower())));
+                List<Product> searchBySubCategoryList = new List<Product>(products.Where(p =>
+                    categories.Any(c => c.SubCategories.Any(sc => sc.SubCategoryID == p.SubCategoryID && sc.SubCategoryName.ToLower().Contains(ajaxData.SearchString.ToLower()))))).ToList();
+                List<Product> searchByCategoryList = new List<Product>(products.Where(p =>
+                    categories.Any(c => c.SubCategories.Any(sc => sc.SubCategoryID == p.SubCategoryID && c.CategoryName.ToLower().Contains(ajaxData.SearchString.ToLower()))))).ToList();
+                products = searchByNameList.Union(searchByDescriptionList).Union(searchBySubCategoryList).Union(searchByCategoryList).ToList();
+            }
+
+            products = products.OrderBy(i => i.ProductID).Skip(ajaxData.FirstInOrder).Take(10).ToList();
+
+            foreach (var product in products)
+            {
+                var images = new List<Image>(_repository.Images.Where(index => index.ProductID == product.ProductID));
+                productAndImages.Add(new ProductWithImages
+                {
+                    Product = product,
+                    Images = images
+                });
+            }
+
+            List<Share> shares = _shareRepository.Shares.Where(i =>
+                productAndImages.Any(id => i.ShareId == id.Product.ShareID)).ToList();
+            AjaxProductList ajaxProductList = new AjaxProductList { Categories = categories, ProductAndImages = productAndImages.ToList(), CategoryId = ajaxData.CategoryId, SearchString = ajaxData.SearchString, SubCategoryId = ajaxData.SubCategoryId, Shares = shares };
+
+            return Json(ajaxProductList);
         }
 
         [BreadCrumb(Title = "Товар", Order = 2, GlyphIcon = "fa fa-angle-double-right")]

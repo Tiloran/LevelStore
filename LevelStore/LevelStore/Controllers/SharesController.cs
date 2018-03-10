@@ -97,7 +97,7 @@ namespace LevelStore.Controllers
         }
 
         [HttpPost]
-        public IActionResult SharesAjaxSearch([FromBody] AjaxSearchShares searchShaves)
+        public IActionResult SharesAjaxSearch([FromBody] AjaxSearch searchShaves)
         {
             if (searchShaves != null)
             {

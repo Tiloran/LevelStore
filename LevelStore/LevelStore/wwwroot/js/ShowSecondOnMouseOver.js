@@ -25,6 +25,10 @@ function mouseOut(element) {
 }
 
 $(document).ready(function() {
-    BlockImage = $("[name='FirstAndSecondImages']");
+    GetBlockImage();
 });
+
+function GetBlockImage() {
+    BlockImage = $("[name='FirstAndSecondImages']");
+}
 
