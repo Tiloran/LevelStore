@@ -2,8 +2,8 @@
 @model CartWithSharesViewModel
 
 
-<div class="">
-    <a class="btn btn-sm btn-default navbar-btn" asp-controller="Cart" asp-action="Index">
+
+    <a asp-controller="Cart" asp-action="Index">
         @if (Model.Cart.Lines.Any())
         {
 
@@ -20,8 +20,8 @@
                         quantityName = "товаров";
                     }
                 }
-                    <div><div style="background-color: red; color: aliceblue;">@quantity</div> @quantityName</div>
-               
+                <div><div style="background-color: red; color: aliceblue;">@quantity</div> @quantityName</div>
+
                 @{
                     decimal totalPrice = 0;
                     decimal originalPrice = 0;
@@ -35,12 +35,12 @@
                             {
                                 if (share.Fake)
                                 {
-                                    originalPrice += line.Quantity * line.Product.Price / 100 * (decimal) (share.KoefPrice + 100);
+                                    originalPrice += line.Quantity * line.Product.Price / 100 * (decimal)(share.KoefPrice + 100);
                                     totalPrice += line.Quantity * line.Product.Price;
                                 }
                                 else
                                 {
-                                    totalPrice += line.Quantity * line.Product.Price / 100 * (decimal) (100 - share.KoefPrice);
+                                    totalPrice += line.Quantity * line.Product.Price / 100 * (decimal)(100 - share.KoefPrice);
                                     originalPrice += line.Quantity * line.Product.Price;
                                 }
                                 wasShare = true;
@@ -70,13 +70,11 @@
                 }
 
             </div>
-                    }
+        }
         else
         {
-            <i class="fa fa-shopping-bag" aria-hidden="true"></i>
+            <i class="fa fa-shopping-bag"></i> 
         }
 
-        
-    </a>
 
-</div>
+    </a>

@@ -22,6 +22,8 @@
             });
         });
     </script>
+    <script src="~/js/slick/slick.min.js"></script>
+    <script src="~/js/main.js"></script>
 }
 @{
     decimal price = Model.Price;
@@ -29,135 +31,183 @@
 }
 
 <div class="container-fluid single-item__wrapper">
+
+
+    <p>@category "@subCategory"</p>
     <div class="row">
-
-
-
-        <div class="col-md-6">
-            <div class="slider slider-for">
-                @if (Model.Images.Count > 0)
-                {
-                    foreach (var image in Model.Images)
-                    {
-                        int colorId = bindedColors.FirstOrDefault(cn => cn.TypeColorID == image.TypeColorID)?.TypeColorID ?? 0;
-                        <div>
-                            <img class="img-fluid" color="@colorId" src="/images/@image.Name" style="width: 100px; height: 100px;" alt="@image.Alternative">
-                        </div>
-                    }
-                }
-                else
-                {
-                    <div>
-                        <img class="img-fluid" src="/images/None.jpg" style="width: 100px; height: 100px;" alt="none image">
-                    </div>
-                }
-            </div>
-            <div class="slider slider-nav">
-                @if (Model.Images.Count > 0)
-                {
-                    foreach (var image in Model.Images)
-                    {
-                        int colorId = bindedColors.FirstOrDefault(cn => cn.TypeColorID == image.TypeColorID)?.TypeColorID ?? 0;
-                        <div>
-                            <img class="img-fluid" color="@colorId" src="/images/@image.Name" style="width: 100px; height: 100px;" alt="@image.Alternative">
-                        </div>
-                    }
-                }
-                else
-                {
-                    <div>
-                        <img class="img-fluid" src="/images/None.jpg" style="width: 100px; height: 100px;" alt="none image">
-                    </div>
-                }
-            </div>
-        </div>
-        <div class="col-md-6 ">
-            @if (share != null)
-            {
-                if (share.DateOfStart <= DateTime.Now && share.Enabled)
-                {
-                    <div>Акция</div>
-                    <div data-countdown="@share.DateOfEnd.ToString("yyyy/MM/dd HH:mm:ss").Replace('.', '/')"></div>
-                    if (share.Fake)
-                    {
-                        price = price / 100 * (decimal) (share.KoefPrice + 100);
-                    }
-                    else
-                    {
-                        newPrice = price / 100 * (decimal)(100 - share.KoefPrice);
-                    }
-                    
-                }
-            }
-
-            <p class="single-item__title">@Model.Name</p>
-
-            <p>@category "@subCategory"</p>
-
-            <div></div>
-            @if (newPrice != price)
-            {
-                <p class="single-item__price"><del>@price</del></p>
-                <p class="single-item__price">@newPrice</p>
-            }
-            else
-            {
-                <p class="single-item__price">@price</p>
-            }
-
-            <p class="single-item__description">
-                @Model.Description
-            </p>
-
-            <p class="single-item__size">@Model.Size</p>
-
-            <form asp-controller="Cart" asp-action="AddToCart">
-                <input type="hidden" name="productId" value="@Model.ProductID" />
-                <input type="number" name="quantity" value="1" min="0" max="1000" />
-                <div asp-validation-summary="All" class="text-danger"></div>
-                <select name="selectedColor" class="single-item__select" onchange="HideAndShowImages(this)">
-                    <option value="0" selected>Выберите цвет</option>
-                    @foreach (var color in bindedColors)
-                    {
-                        <option value="@color.TypeColorID">@color.ColorType</option>
-                    }
-                </select>
-                @{
-                    int Antik = (int) Furniture.Antik;
-                    int Nikel = (int) Furniture.Nikel;
-                }
-                <select name="furniture">
-                    <option selected disabled>Выберите фурнитуру</option>
-                    <option value="@Antik">Антик</option>
-                    <option value="@Nikel">Никель</option>
-                </select>
-                <button type="submit" class="single-item__add-btn">Добавить в корзину</button>
-                <a href='javascript:history.go(-1)' class="btn btn-primary">Другие товары</a>
-            </form>
-        </div>
-        
-        @if (relatedProducts.Any())
+        @if (share != null)
         {
-            <div>
-                <p>Похожие товары:</p>
-                @foreach (var rProduct in relatedProducts)
+            if (share.DateOfStart <= DateTime.Now && share.Enabled)
+            {
+                <div>Акция</div>
+                <div data-countdown="@share.DateOfEnd.ToString("yyyy/MM/dd HH:mm:ss").Replace('.', '/')"></div>
+                if (share.Fake)
                 {
-                    <div><a asp-controller="Product" asp-action="ViewSingleProduct" asp-route-productId="@rProduct.ProductID">@rProduct.Name</a></div>
-                    <div>@rProduct.Price</div>
-                    if (rProduct.Images.Count > 0)
-                    {
-                        foreach (var image in rProduct.Images)
-                        {
-                            <img src="/images/@image.Name" style="width: 100px; height: 100px;" alt="@image.Alternative">
-                        }
-                    }
-                    else
-                    {
-                        <img src="/images/None.jpg" style="width: 100px; height: 100px;" alt="none image">
-                    }
+                    price = price / 100 * (decimal)(share.KoefPrice + 100);
                 }
-            </div>
+                else
+                {
+                    newPrice = price / 100 * (decimal)(100 - share.KoefPrice);
+                }
 
+            }
         }
     </div>
+
+
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-3 col-md-3">
+                    <div class="slider slider-nav">
+                        @if (Model.Images.Count > 0)
+                        {
+                            foreach (var image in Model.Images)
+                            {
+                                int colorId = bindedColors.FirstOrDefault(cn => cn.TypeColorID == image.TypeColorID)?.TypeColorID ?? 0;
+                                <div>
+                                    <img class="img-fluid" color="@colorId" src="/images/@image.Name" alt="@image.Alternative">
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div>
+                                <img class="img-fluid" src="/images/None.jpg" alt="none image">
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="col-9 col-md-9">
+                    <div class="slider slider-for">
+                        @if (Model.Images.Count > 0)
+                        {
+                            foreach (var image in Model.Images)
+                            {
+                                int colorId = bindedColors.FirstOrDefault(cn => cn.TypeColorID == image.TypeColorID)?.TypeColorID ?? 0;
+                                <div>
+                                    <img class="img-fluid" color="@colorId" src="/images/@image.Name" alt="@image.Alternative">
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div>
+                                <img class="img-fluid" src="/images/None.jpg" alt="none image">
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12 col-lg-4">
+                    <div class="sin__settings">
+                        <div class="row">
+                            <p class="col-6 col-md-12">@Model.Name</p>
+
+                            @if (newPrice != price)
+                            {
+                                <p class="col-6 col-md-12"><del>@price</del></p>
+                                <p class="col-6 col-md-12">@newPrice</p>
+                            }
+                            else
+                            {
+                                <p class="col-6 col-md-12">@price</p>
+                            }
+                            <p class="col-6 col-md-12">@Model.Size</p>
+
+
+                            <form class="col-6 col-md-12" asp-controller="Cart" asp-action="AddToCart">
+                                <input type="hidden" name="productId" value="@Model.ProductID" />
+                                <input type="number" name="quantity" value="1" min="0" max="1000" />
+                                <div asp-validation-summary="All" class="text-danger"></div>
+                                <select name="selectedColor" class="col-6 col-md-12 single-item__select" onchange="HideAndShowImages(this)">
+                                    <option value="0" selected>Выберите цвет</option>
+                                    @foreach (var color in bindedColors)
+                                    {
+                                        <option value="@color.TypeColorID">@color.ColorType</option>
+                                    }
+                                </select>
+                                @{
+                                    int Antik = (int)Furniture.Antik;
+                                    int Nikel = (int)Furniture.Nikel;
+                                }
+                                <select name="furniture" class="col-6 col-md-12 single-item__select">
+                                    <option selected disabled>Выберите фурнитуру</option>
+                                    <option value="@Antik">Антик</option>
+                                    <option value="@Nikel">Никель</option>
+                                </select>
+                                <button type="submit" class="btn btn-primary col-6 col-md-12">Добавить в корзину</button>
+                                <a href='javascript:history.go(-1)' class="btn btn-primary col-6 col-md-12">Другие товары</a>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-8">
+                    <div class="sin__info-tabs">
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="product-description-tab" data-toggle="tab" href="#product-description" role="tab" aria-controls="home" aria-selected="true">Описание товара</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="delivery-tab" data-toggle="tab" href="#delivery" role="tab" aria-controls="delivery" aria-selected="false">Доставка и возврат</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="product-description" role="tabpanel" aria-labelledby="product-description-tab">
+                                <h1>Описание товара</h1>
+                                @Model.Description
+                            </div>
+                            <div class="tab-pane fade" id="delivery" role="tabpanel" aria-labelledby="delivery-tab">
+                                <h1>Доставка и возврат</h1>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @if (relatedProducts.Any())
+    {
+        <div>
+            <p>Похожие товары:</p>
+            @foreach (var rProduct in relatedProducts)
+            {
+                <div><a asp-controller="Product" asp-action="ViewSingleProduct" asp-route-productId="@rProduct.ProductID">@rProduct.Name</a></div>
+                <div>@rProduct.Price</div>
+                if (rProduct.Images.Count > 0)
+                {
+                    foreach (var image in rProduct.Images)
+                    {
+                        <img src="/images/@image.Name" style="width: 100px; height: 100px;" alt="@image.Alternative">
+                    }
+                }
+                else
+                {
+                    <img src="/images/None.jpg" style="width: 100px; height: 100px;" alt="none image">
+                }
+            }
+        </div>
+
+    }
 </div>

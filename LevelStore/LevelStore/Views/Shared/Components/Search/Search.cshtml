@@ -5,10 +5,10 @@
         }
     }
 </script>
-<i class="fa fa-search" aria-hidden="true"></i>
-<div>
+
+<div class="search-wrap">
     <form asp-controller="Product" asp-action="List" method="get">
-        <input placeholder="Поиск" id="SearchField" name="searchString" onkeydown="" onkeypress="RunSearch(event, 'SearchButton')" />
-        <button type="submit" id="SearchButton" style="display: none">Поиск</button>
+        <input class="search-input" placeholder="Поиск..." id="SearchField" name="searchString" onkeydown="" onkeypress="RunSearch(event, 'SearchButton')" />
+        <button id="SearchButton" class="search-btn" type="submit"><i class="fa fa-search"></i></button>
     </form>
 </div>
