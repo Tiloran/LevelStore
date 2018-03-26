@@ -34,7 +34,7 @@ namespace LevelStore
             services.AddTransient<IShareRepository, EFShareRepository>();
             services.AddScoped(SessionCart.GetCart);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddTask<WorkWihShares>();
+            services.AddTask<WorkWithShares>();
             services.AddMemoryCache();
             services.AddSession();
             services.AddMvc();
@@ -47,7 +47,7 @@ namespace LevelStore
             app.UseStatusCodePages();
             app.UseStaticFiles();
             app.UseSession();
-            app.StartTask<WorkWihShares>(TimeSpan.FromMinutes(1));
+            app.StartTask<WorkWithShares>(TimeSpan.FromMinutes(1));
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

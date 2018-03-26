@@ -2,24 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using LevelStore.Models;
 using Microsoft.Extensions.Logging;
 using RecurrentTasks;
 
 namespace LevelStore.Infrastructure.Tasks
 {
-    public class WorkWihShares : IRunnable
+    public class WorkWithShares : IRunnable
     {
         private ILogger _logger;
         private readonly IShareRepository _repository;
 
-        public WorkWihShares(ILogger<WorkWihShares> logger, IShareRepository repo)
+        public WorkWithShares(ILogger<WorkWithShares> logger, IShareRepository repo)
         {
             _logger = logger;
             _repository = repo;
         }
 
-        public void Run(ITask currentTask, CancellationToken cancellationToken)
+       
+        public Task RunAsync(ITask currentTask, IServiceProvider scopeServiceProvider, CancellationToken cancellationToken)
         {
             List<Share> shares = _repository.Shares.Where(e => e.Enabled).ToList();
             if (shares.Count > 0)
@@ -33,7 +35,7 @@ namespace LevelStore.Infrastructure.Tasks
                     }
                 }
             }
-            
+            return Task.CompletedTask;
         }
     }
 }
