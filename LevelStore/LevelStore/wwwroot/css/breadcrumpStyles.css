@@ -1,0 +1,48 @@
+.breadcrumpBlockRight{
+    display: inline-block;
+    height: 25px;
+    width: 25px;
+    background:url("/images/img/main-page/right-arrow.svg") 100% 100% no-repeat;        
+}
+
+.breadcrumpBlockUp{
+    display: inline-block;
+    height: 25px;
+    width: 25px;
+    background:url("/images/img/main-page/up-arrow.svg") 100% 100% no-repeat;      
+}
+
+@media screen and (max-width: 700px) {
+    .breadcrumpTextBlock{
+        float: none;
+        width: 100%;    
+        
+    }
+    
+    .breadcrumpTextBlockActive{
+        float: none;
+        width: 100%;  
+        
+    }
+  }
+
+.breadcrumpTextBlock{
+    font-size: 30px;
+    color: darkmagenta;    
+    
+}
+
+.breadcrumpTextBlockActive{
+    font-size: 30px;
+    color: blue;
+    
+}
+.breadcrumpTextBlockActive a{
+    text-decoration: none;
+    color: inherit;
+}
+
+.breadcrumpTextBlock a{
+    text-decoration: none;
+    color: inherit;
+}

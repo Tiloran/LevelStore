@@ -1,12 +1,11 @@
 ﻿@using System.Globalization
 @model CartWithSharesViewModel
 
-
-<div class="">
-    <a class="btn btn-sm btn-default navbar-btn" asp-controller="Cart" asp-action="Index">
+<div class="row outer cart">
+    <a class="row bg-dark btn btn-sm btn-default inner" asp-controller="Cart" asp-action="Index">
+        <img class="" src="/images/img/main-page/shopping-cart.svg" alt="cart" />
         @if (Model.Cart.Lines.Any())
         {
-
             <div class="navbar-text">
                 @{
                     int quantity = Model.Cart.Lines.Sum(x => x.Quantity);
@@ -20,8 +19,8 @@
                         quantityName = "товаров";
                     }
                 }
-                    <div><div style="background-color: red; color: aliceblue;">@quantity</div> @quantityName</div>
-               
+                <div>@quantity @quantityName</div>
+
                 @{
                     decimal totalPrice = 0;
                     decimal originalPrice = 0;
@@ -59,24 +58,19 @@
                     }
                     if (wasShare)
                     {
-                        <del>@originalPrice.ToString(CultureInfo.InvariantCulture)</del>
-                        <span>@totalPrice.ToString(CultureInfo.InvariantCulture) грн.</span>
+                        <div>@totalPrice.ToString(CultureInfo.InvariantCulture) грн.</div>
                     }
                     else
                     {
-                        <span>@totalPrice.ToString(CultureInfo.InvariantCulture) грн.</span>
+                        <div>@totalPrice.ToString(CultureInfo.InvariantCulture) грн.</div>
                     }
 
                 }
 
             </div>
-                    }
-        else
-        {
-            <i class="fa fa-shopping-bag" aria-hidden="true"></i>
         }
-
-        
     </a>
-
 </div>
+
+
+

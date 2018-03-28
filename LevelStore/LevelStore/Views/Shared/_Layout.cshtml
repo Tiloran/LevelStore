@@ -8,74 +8,90 @@
 
     <link rel="stylesheet" asp-href-include="/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" asp-href-include="/lib/font-awesome/css/font-awesome.min.css" />
-    <link rel="stylesheet" asp-href-include="/css/MainMenuStyleSheet.css" />
+    <link rel="stylesheet" href="/css/mainStyles.css" />
+    <link rel="stylesheet" href="/css/menuStyles.css" />
+    <link rel="stylesheet" href="/css/breadcrumpStyles.css" />
     <script src="/js/jQuery/jquery.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="/js/jsrender.min.js"></script>
-    <script src="/js/test.js"></script>
-
+    <script>var exports = {};</script>
+    <script src="/js/DropDownMenu.js"></script>
+    <script src="/js/BreadCrumpCleaning.js"></script>
+    
     @RenderSection("scripts", false)
 </head>
 <body>
     <header class="container-fluid">
-        <div class="row">
-            <div class="col-md-3 main-logo">
-                <a style="width: 100%; background-color: yellow" asp-controller="Home" asp-action="Index">
-                    <img src="~/images/img/global-content/logo.png" alt="level">
+        <div class="row bg-light">
+            <div class=" col-md-3"></div>
+            <div class="text-center col-md-6">
+                <a>
+                    <img src="/images/img/global-content/logo.png" alt="level">
                 </a>
             </div>
-            <div class="col-md-7">
-                <div>
-
-
-                </div>
-            </div>
-            <div class="col-md-2 search">
+            <div class="col-md-3" style="margin-top: 5px;">
                 @await Component.InvokeAsync("Search")
                 @await Component.InvokeAsync("CartSummary")
             </div>
         </div>
+
+
         <div class="row">
-            <div class="col-md-12 main-navigation text-center">
-                <ul class="menu">
-                    <li class="menu__item"><a class="menu__item-link" asp-controller="Product" asp-action="List">Магазин</a></li>
-                    <li class="menu__line">/</li>
-                    <li class="menu__item">
-                        <a class="menu__item-link nolink">Доставка и оплата</a>
-                        <ul class="submenu">
-                            <li class="submenu__item"><a class="submenu__item-link" asp-controller="DeliveryAndPayment" asp-action="Delivery">Доставка</a></li>
-                            <li class="submenu__item"><a class="submenu__item-link" asp-controller="DeliveryAndPayment" asp-action="Payment">Оплата</a></li>
-                            <li class="submenu__item"><a class="submenu__item-link" asp-controller="DeliveryAndPayment" asp-action="Guarantees">Гарантии</a></li>
-                        </ul>
-                    </li>
-                    <li class="menu__line">/</li>
-                    <li class="menu__item"><a class="menu__item-link" asp-controller="Brand" asp-action="AboutTheBrand">О бренде</a></li>
-                    <li class="menu__line">/</li>
-                    <li class="menu__item">
-                        <a href="#" class="menu__item-link nolink">Контакты</a>
-                        <ul class="submenu">
-                            <li class="submenu__item"><a class="submenu__item-link" asp-controller="Contact" asp-action="OurShowRoom">Наш Showroom</a></li>
-                            <li class="submenu__item"><a class="submenu__item-link" asp-controller="Contact" asp-action="DeliveryDepartment">Отдел доставки</a></li>
-                            <li class="submenu__item"><a class="submenu__item-link" asp-controller="Contact" asp-action="Bayer">Bayer</a></li>
-                            <li class="submenu__item"><a class="submenu__item-link" asp-controller="Contact" asp-action="Partnership">Партнерство</a></li>
-                            <li class="submenu__item"><a class="submenu__item-link" asp-controller="Contact" asp-action="Vacancy">Вакансии</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="width: 100%;">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+                    <a class="navbar-brand" href="#">Level store</a>
+                    <ul class="navbar-nav mr-auto mt-2 mt-lg-0" style="margin: 0 auto;">
+                        <li class="nav-item active">
+                            <a class="nav-link" asp-controller="Product" asp-action="List">Магазин <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Доставка и оплата</a>
+                            <ul class=" dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <li><a class="dropdown-item" asp-controller="DeliveryAndPayment" asp-action="Delivery">Доставка</a></li>
+                                <li><a class="dropdown-item " asp-controller="DeliveryAndPayment" asp-action="Payment">Оплата</a></li>
+                                <li><a class="dropdown-item " asp-controller="DeliveryAndPayment" asp-action="Guarantees">Гарантии</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">О бренде</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Контакты
+                            </a>
+                            <ul class=" dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <li><a class="dropdown-item" asp-controller="Contact" asp-action="OurShowRoom">Наш Showroom</a></li>
+                                <li><a class="dropdown-item " asp-controller="Contact" asp-action="DeliveryDepartment">Отдел доставки</a></li>
+                                <li><a class="dropdown-item" asp-controller="Contact" asp-action="Bayer">Bayer</a></li>
+                                <li><a class="dropdown-item " asp-controller="Contact" asp-action="Partnership">Партнерство</a></li>
+                                <li><a class="dropdown-item " asp-controller="Contact" asp-action="Vacancy">Вакансии</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
         </div>
+
+
     </header>
-<div id="breadCrumb">
-    <breadcrumb asp-homepage-title="Главная страница"
-                asp-homepage-url="@Url.Action("Index", "Home", values: new {area = ""})"
-                asp-homepage-glyphicon="fa fa-angle-double-up">
-    </breadcrumb>
-</div>
 
 
-    @RenderBody()
+    <div id="breadCrumb" class="bg-danger breadcrumpSelector" style="display: none;">
+        <breadcrumb asp-homepage-title="Главная страница"
+                    asp-homepage-url="@Url.Action("Index", "Home", values: new {area = ""})"
+                    asp-homepage-glyphicon="fa fa-angle-double-up">
+        </breadcrumb>
+    </div>
+
+    <div class="bg-light">
+        @RenderBody()
+    </div>
 
 
-    <footer>
+    <footer class="bg-info" style="margin-top: 10px; color:white;">
         <div class="container-fluid">
             <div class="row text-center">
                 <div class="col-md-6">
@@ -86,8 +102,11 @@
                         </div>
                         <div class="col-sm-6 social">
                             <p class="footer-subheader">соц. сети:</p>
-                            <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-                            <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                            <a href="#"><img src="/images/img/main-page/media/facebook.svg" style="width: 30px; height: 30px;" alt="facebook" /></a>
+                            <a href="#"><img src="/images/img/main-page/media/googleplus.svg" style="width: 30px; height: 30px;" alt="googleplus" /></a>
+                            <a href="#"><img src="/images/img/main-page/media/instagram.svg" style="width: 30px; height: 30px;" alt="instagram" /></a>
+                            <a href="#"><img src="/images/img/main-page/media/twitter.svg" style="width: 30px; height: 30px;" alt="twitter" /></a>
+                            <a href="#"><img src="/images/img/main-page/media/vk.svg" style="width: 30px; height: 30px;" alt="vk" /></a>
                         </div>
                     </div>
                 </div>

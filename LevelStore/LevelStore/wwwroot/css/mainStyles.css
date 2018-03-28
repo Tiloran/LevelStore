@@ -1,0 +1,124 @@
+.vcenter {
+  display: inline-block;
+  float: none;
+  vertical-align: middle;
+}
+
+.outer {    
+  }
+
+.inner {   
+   margin: auto;
+}
+
+.mainPageContent img{
+  border-radius: 10px;
+  border-style: solid;
+  border-color: black !important;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+    .oouter {
+      height: 100px;
+      position: relative;
+  }
+  .oouter img {
+      position: absolute;
+      margin: auto;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      right: 0;
+    }
+
+    .container-1{      
+      vertical-align: middle;
+      white-space: nowrap;
+      position: relative;      
+    }
+
+    .container-1 input#SearchField{
+      border: 3px solid Black !important;   
+      height: 40px;
+      background: #343a40;
+      border: none;
+      font-size: 10pt;
+      float: left;
+      color: #63717f;
+      padding-left: 45px;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      border-radius: 5px;
+      -webkit-transition: background .55s ease;
+      -moz-transition: background .55s ease;
+      -ms-transition: background .55s ease;
+      -o-transition: background .55s ease;
+      transition: background .55s ease;
+    }
+
+    .container-1 input#SearchField::-webkit-input-placeholder {
+      color: #65737e;
+   }
+    
+   .container-1 input#SearchField:-moz-placeholder { /* Firefox 18- */
+      color: #65737e;  
+   }
+    
+   .container-1 input#SearchField::-moz-placeholder {  /* Firefox 19+ */
+      color: #65737e;  
+   }
+    
+   .container-1 input#SearchField:-ms-input-placeholder {  
+      color: #65737e;  
+   }
+
+   .container-1 .icon{
+    float: left;
+    width:25px !important;
+    height:25px !important;    
+    position: absolute;
+    top: 50%;
+    margin-left: 10px;
+    margin-top: 5px;
+    z-index: 1;  
+  }
+
+  .container-1 input#SearchField:hover, .container-1 input#SearchField:focus, .container-1 input#SearchField:active{
+    outline:none;
+    background: #ffffff;
+  }
+
+  .searchBoxForm{
+    border-radius: 10px;
+    height: 35px;
+  }
+
+  .justSpace{
+    width: 10px;
+    height:35px;
+    float:right;
+  }
+  .cart{
+    margin-top:10px;
+    margin-bottom:5px;    
+  }
+
+  .cart a{
+    border-radius: 10px;
+    cursor: pointer;
+    border: 3px solid Black !important;   
+  }
+  
+  .cart a img{
+    float:left;
+    width:58px;
+    height:58px;
+    cursor: pointer;
+  }
+
+  .cart a div{
+    color:white;
+    font-weight:bold;
+  }
+    

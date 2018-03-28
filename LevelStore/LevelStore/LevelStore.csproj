@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\js\HideShowSearch.ts" />
     <Content Remove="wwwroot\js\test.ts" />
   </ItemGroup>
 
@@ -26,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="wwwroot\js\HideShowSearch.ts" />
     <TypeScriptCompile Include="wwwroot\js\test.ts" />
   </ItemGroup>
 
