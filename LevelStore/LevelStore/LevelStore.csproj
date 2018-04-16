@@ -15,14 +15,13 @@
     <PackageReference Include="DotNetCore.NPOI" Version="1.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.2" />
-    <PackageReference Include="Microsoft.TypeScript.Compiler" Version="2.7.2" />
+    <PackageReference Include="Microsoft.TypeScript.Compiler" Version="2.8.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.3" />
     <PackageReference Include="RecurrentTasks" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="wwwroot\excelReports\" />
-    <Folder Include="wwwroot\js\jQuery\" />
     <Folder Include="wwwroot\lib\dataTable\" />
   </ItemGroup>
 

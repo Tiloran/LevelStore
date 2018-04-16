@@ -6,9 +6,8 @@
     transform: rotate(-90deg);
     position: absolute;
     right: 6px;
-    top: .8em;
-    
-  }
+    top: .8em;    
+  } 
   
   .dropdown-submenu .dropdown-menu {
     top: 0;
@@ -28,6 +27,7 @@
   .dropdown-item{
     color: white !important;
     background-color: #343a40 !important; 
+    text-align: center !important;
   }
 
   .dropdown-item:hover{

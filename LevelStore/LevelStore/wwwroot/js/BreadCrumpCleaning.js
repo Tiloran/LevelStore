@@ -1,26 +1,22 @@
-window.onload = function(){
-    var deletes = $(".breadcrumpSelector span");
-    for(let i = 0; i < deletes.length; i++){
+  function BreadCrumpCleaning(){
+    var Deletes = $(".breadcrumpSelector span");
+    for(var i = 0; i < Deletes.length; i++){
         if(i!== 0){
-        $(deletes[i]).replaceWith( "<div class=\"breadcrumpBlockRight\"></div>" );
+        $(Deletes[i]).replaceWith( "<div class=\"breadcrumpBlockRight\"></div>" );
         }
         else{
-            $(deletes[i]).replaceWith( "<div class=\"breadcrumpBlockUp\"></div>" );
+            $(Deletes[i]).replaceWith( "<div class=\"breadcrumpBlockUp\"></div>" );
         }
     }
-    var textBlocks = $(".breadcrumpSelector li");
-    var lastWithContent = -1;
-    for (let i = 0; i < textBlocks.length; i++) {
-        
-        $(textBlocks[i]).addClass("breadcrumpTextBlock");
-        if (!($(textBlocks[i]).is(':empty'))) {
-            lastWithContent = i;
+    var TextBlocks = $(".breadcrumpSelector li");
+    for(var i = 0; i < TextBlocks.length; i++){        
+        if(i === (TextBlocks.length - 1)){
+            $(TextBlocks[i]).addClass("breadcrumpTextBlockActive");
         }
-        
-    }
-    if (lastWithContent !== -1) {
-        $(textBlocks[lastWithContent]).addClass("breadcrumpTextBlockActive");
-    }
-    $(".breadcrumpSelector").show();
-}
+        else{
+            $(TextBlocks[i]).addClass("breadcrumpTextBlock");
+        }
+      }
+      $("#breadCrumb").show();
+  }
  

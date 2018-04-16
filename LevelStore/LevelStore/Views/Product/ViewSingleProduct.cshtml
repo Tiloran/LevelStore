@@ -9,7 +9,13 @@
     Share share = TempData["Share"] as Share;
 }
 
+<link rel="stylesheet" href="/lib/slick-1.8.0/slick/slick.css"/>
+<link rel="stylesheet" href="/lib/slick-1.8.0/slick/slick-theme.css"/>
+<link rel="stylesheet" href="/lib/lightbox2-master/dist/css/lightbox.min.css">
+<link rel="stylesheet" href="/lib/select-boxes/css/style.css">
+
 @section scripts{
+
     <script src="/js/ShowAndHideColorImages.js"></script>
     <script src="/js/jquery.countdown.min.js"></script>
     <script type="text/javascript">
@@ -22,142 +28,184 @@
             });
         });
     </script>
+
+    
+    <script src="/lib/slick-1.8.0/slick/slick.min.js"></script>
+    <script src="/js/slider.js"></script>
+    <script src="/lib/lightbox2-master/dist/js/lightbox.min.js"></script>
+    <script src="/lib/select-boxes/js/index.js"></script>
+    <script>
+        window.onload = function () {
+            InitSlider();
+            BreadCrumpCleaning();
+            InitSelect();
+        }
+    </script>
 }
 @{
     decimal price = Model.Price;
     decimal newPrice = price;
 }
 
-<div class="container-fluid single-item__wrapper">
+@if (share != null)
+{
+    if (share.DateOfStart <= DateTime.Now && share.Enabled)
+    {
+        @*<div>Акция</div>
+            <div data-countdown="@share.DateOfEnd.ToString("yyyy/MM/dd HH:mm:ss").Replace('.', '/')"></div>*@
+        if (share.Fake)
+        {
+            price = price / 100 * (decimal)(share.KoefPrice + 100);
+        }
+        else
+        {
+            newPrice = price / 100 * (decimal)(100 - share.KoefPrice);
+        }
+
+    }
+}
+
+
+<div class="container-fluid">
     <div class="row">
-
-
-
-        <div class="col-md-6">
-            <div class="slider slider-for">
+        <div class="col-md-3">
+            <div class="ManySlideSlider">
                 @if (Model.Images.Count > 0)
                 {
                     foreach (var image in Model.Images)
                     {
                         int colorId = bindedColors.FirstOrDefault(cn => cn.TypeColorID == image.TypeColorID)?.TypeColorID ?? 0;
                         <div>
-                            <img class="img-fluid" color="@colorId" src="/images/@image.Name" style="width: 100px; height: 100px;" alt="@image.Alternative">
+                            <img class="MultiplePictureOfProduct" color="@colorId" src="/images/@image.Name" alt="@image.Alternative">
                         </div>
                     }
                 }
                 else
                 {
                     <div>
-                        <img class="img-fluid" src="/images/None.jpg" style="width: 100px; height: 100px;" alt="none image">
-                    </div>
-                }
-            </div>
-            <div class="slider slider-nav">
-                @if (Model.Images.Count > 0)
-                {
-                    foreach (var image in Model.Images)
-                    {
-                        int colorId = bindedColors.FirstOrDefault(cn => cn.TypeColorID == image.TypeColorID)?.TypeColorID ?? 0;
-                        <div>
-                            <img class="img-fluid" color="@colorId" src="/images/@image.Name" style="width: 100px; height: 100px;" alt="@image.Alternative">
-                        </div>
-                    }
-                }
-                else
-                {
-                    <div>
-                        <img class="img-fluid" src="/images/None.jpg" style="width: 100px; height: 100px;" alt="none image">
+                        <img class="MultiplePictureOfProduct" src="/images/None.jpg" alt="">
                     </div>
                 }
             </div>
         </div>
-        <div class="col-md-6 ">
-            @if (share != null)
-            {
-                if (share.DateOfStart <= DateTime.Now && share.Enabled)
+        <div class="col-md-4">
+            <div class="OneSlideSlider">
+                @if (Model.Images.Count > 0)
                 {
-                    <div>Акция</div>
-                    <div data-countdown="@share.DateOfEnd.ToString("yyyy/MM/dd HH:mm:ss").Replace('.', '/')"></div>
-                    if (share.Fake)
+                    foreach (var image in Model.Images)
                     {
-                        price = price / 100 * (decimal) (share.KoefPrice + 100);
+                        int colorId = bindedColors.FirstOrDefault(cn => cn.TypeColorID == image.TypeColorID)?.TypeColorID ?? 0;
+                        <div>
+                            <a href="/images/@image.Name" data-lightbox="group1">
+                                <img color="@colorId" src="/images/@image.Name" alt="@image.Alternative" class="SinglePictureOfProduct">
+                            </a>
+                        </div>
                     }
-                    else
-                    {
-                        newPrice = price / 100 * (decimal)(100 - share.KoefPrice);
-                    }
-                    
                 }
-            }
+                else
+                {
+                    <div>
+                        <a href="/images/None.jpg" data-lightbox="group1">
+                            <img src="/images/None.jpg" alt="" class="SinglePictureOfProduct">
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
 
-            <p class="single-item__title">@Model.Name</p>
-
-            <p>@category "@subCategory"</p>
-
-            <div></div>
-            @if (newPrice != price)
+        <div class="col-md-5 CharacteristicPanel">
+            <div><span class="CharacteristicTitle">Название:</span> @Model.Name</div>
+            <div><span class="CharacteristicTitle">Категория:</span> @category "@subCategory"</div>
+            @if (price != newPrice)
             {
-                <p class="single-item__price"><del>@price</del></p>
-                <p class="single-item__price">@newPrice</p>
+                <div><span class="CharacteristicTitle">Цена:</span> <del>@price</del> <span class="CharacteristicTitle" style="color: red;">@newPrice грн.</span></div>
             }
             else
             {
-                <p class="single-item__price">@price</p>
+                <div><span class="CharacteristicTitle">Цена:</span> <span class="CharacteristicTitle" style="color: red;">@price грн.</span></div>
             }
+            <div><span class="CharacteristicTitle">Описание:</span> @Model.Description</div>
+            <div><span class="CharacteristicTitle">Размер:</span> @Model.Size</div>
 
-            <p class="single-item__description">
-                @Model.Description
-            </p>
-
-            <p class="single-item__size">@Model.Size</p>
 
             <form asp-controller="Cart" asp-action="AddToCart">
                 <input type="hidden" name="productId" value="@Model.ProductID" />
-                <input type="number" name="quantity" value="1" min="0" max="1000" />
+                <div><span class="CharacteristicTitle">Количество:</span> <input type="number" name="quantity" value="1" min="0" max="1000"></div>
                 <div asp-validation-summary="All" class="text-danger"></div>
-                <select name="selectedColor" class="single-item__select" onchange="HideAndShowImages(this)">
-                    <option value="0" selected>Выберите цвет</option>
-                    @foreach (var color in bindedColors)
+                <div class="row">
+
+                    <div class="col-4 CharacteristicTitle text-left" style="margin: auto; text-align: center">Цвет:</div>
+                    <div class="col-8">
+                        <div class="sel" style="z-index: 3;">
+                            <select name="selectedColor" id="select-superpower" onchange="HideAndShowImages(this)">
+                                <option value="0" selected="">Выберите цвет</option>
+                                <option value="-1">Выберите цвет</option>
+                                @foreach (var color in bindedColors)
                     {
                         <option value="@color.TypeColorID">@color.ColorType</option>
-                    }
-                </select>
-                @{
-                    int Antik = (int) Furniture.Antik;
-                    int Nikel = (int) Furniture.Nikel;
-                }
-                <select name="furniture">
-                    <option selected disabled>Выберите фурнитуру</option>
-                    <option value="@Antik">Антик</option>
-                    <option value="@Nikel">Никель</option>
-                </select>
-                <button type="submit" class="single-item__add-btn">Добавить в корзину</button>
-                <a href='javascript:history.go(-1)' class="btn btn-primary">Другие товары</a>
+        }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4 CharacteristicTitle text-left" style="margin: auto; text-align: center">Фурнитура:</div>
+                    <div class="col-8">
+                        @{
+                int Antik = (int)Furniture.Antik;
+                int Nikel = (int)Furniture.Nikel;
+                        }
+                        <div class="sel" style="z-index: 2;">
+                            <select name="furniture" id="select-superpower">
+                                <option selected="" disabled="">Выберите фурнитуру</option>
+                                <option value="@Antik">Антик</option>
+                                <option value="@Nikel">Никель</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+
+                <button class="AddToCartBytton btn" style="display: block; margin: auto; margin-top: 10px; width: 200px;" type="submit">Добавить в корзину</button>
+                <a href="javascript:history.go(-1)" style="display: block; margin: auto; margin-top: 10px; width: 200px;" class="btn btn-danger">Другие товары</a>
             </form>
         </div>
-        
-        @if (relatedProducts.Any())
-        {
-            <div>
-                <p>Похожие товары:</p>
-                @foreach (var rProduct in relatedProducts)
-                {
-                    <div><a asp-controller="Product" asp-action="ViewSingleProduct" asp-route-productId="@rProduct.ProductID">@rProduct.Name</a></div>
-                    <div>@rProduct.Price</div>
-                    if (rProduct.Images.Count > 0)
-                    {
-                        foreach (var image in rProduct.Images)
-                        {
-                            <img src="/images/@image.Name" style="width: 100px; height: 100px;" alt="@image.Alternative">
-                        }
-                    }
-                    else
-                    {
-                        <img src="/images/None.jpg" style="width: 100px; height: 100px;" alt="none image">
-                    }
-                }
-            </div>
-
-        }
     </div>
+    @if (relatedProducts.Any())
+    {
+        <div class="row text-center" style="margin-top: 5px;"><div class="col">Похожие товары</div></div>
+        <div class="row text-center" style="margin-top: 5px;">
+            @{
+                int counter = 0;
+            }
+            @foreach (var rProduct in relatedProducts)
+            {
+                <div class="RelatedProductWrapperOfHref">
+                    <a asp-controller="Product" asp-action="ViewSingleProduct" asp-route-productId="@rProduct.ProductID">
+                        <div class="RelatedProductWrapper" style="">
+                            @if (rProduct.Images.Count > 0)
+                            {
+                                var image = (rProduct.Images.First());
+                                <img class="SinglePictureOfRelatedProduct" src="/images/@image.Name" alt="@image.Alternative">
+                            }
+                            else
+                            {
+                                <img class="SinglePictureOfRelatedProduct" src="/images/None.jpg" alt="">
+                            }
+                            <div>@rProduct.Name</div>
+                            <div>@rProduct.Price грн.</div>
+                        </div>
+                    </a>
+                </div>
+                counter++;
+                if (counter >= 5)
+                {
+                    break;
+                }
+            }
+        </div>
+    }
 </div>
+
+

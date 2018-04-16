@@ -1,4 +1,4 @@
-window.onload = function(){
+function DropDownMenuActivate(){
     $('.dropdown-menu a.dropdown-toggle').on('click', function(e) {
         if (!$(this).next().hasClass('show')) {
             $(this).parents('.dropdown-menu').first().find('.show').removeClass("show");

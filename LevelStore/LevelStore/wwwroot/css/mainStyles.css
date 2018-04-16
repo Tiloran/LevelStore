@@ -4,8 +4,8 @@
   vertical-align: middle;
 }
 
-.outer {    
-  }
+
+
 
 .inner {   
    margin: auto;
@@ -121,4 +121,151 @@
     color:white;
     font-weight:bold;
   }
-    
+
+  .Products {
+    list-style: none;
+    margin: 0 -20px 0 0;
+    padding: 0;
+    width: 100%;
+  }
+  
+  .Product {
+    display: block;
+    border: 1px solid #b5e9a7;
+    border-radius: 3px;
+    position: relative;
+    background: #fff;
+    margin: 0 20px 20px 20px;
+    text-decoration: none;
+    color: #474747;
+    z-index: 0;
+    height: 300px;
+  }
+
+  .Product-wrapper {
+    display: block;
+    width: 100%;
+    float: left;
+    transition: width .2s;
+  }
+
+  @media only screen and (min-width: 450px) {
+    .Product-wrapper {
+        width: 50%;
+    }
+  }
+  
+  @media only screen and (min-width: 768px) {
+    .Product-wrapper {
+        width: 33.333%;
+    }
+  }
+  
+  @media only screen and (min-width: 1000px) {
+    .Product-wrapper {
+        width: 25%;
+    }
+  }
+  
+  .Product img{
+    width: 155px;
+    height: 155px;    
+  }
+
+  .Product div{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden; 
+  }
+
+  .slick-prev:before, .slick-next:before {
+    color: black;
+  }
+  .slick-slide{
+    height: unset;
+  }
+
+  .SinglePictureOfProduct{
+    max-width: 100%;
+    max-height: 100%;
+    margin: auto;
+  }
+
+.SinglePictureOfRelatedProduct {
+    width: 180px;
+    height: 180px;
+    margin: auto;
+}
+
+.RelatedProductWrapper {
+    width: 230px;
+    height: 230px;
+    border-style: solid;
+    border-width: 3px;
+    border-color: grey;
+}
+
+.RelatedProductWrapperOfHref{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+@media only screen and (max-width: 768px) {
+    .RelatedProductWrapperOfHref {
+        position: relative;
+        margin: auto;
+    }
+}
+  
+  .MultiplePictureOfProduct{
+    max-width: 50%;
+    max-height: 50%;
+    margin: auto;
+  }
+
+  @media only screen and (max-width: 768px) {
+    .qwerty {
+      margin-top: 10px;
+    }
+  }
+  @media only screen and (min-width: 769px) {
+    .qwerty {
+      position: relative;
+      margin-top: 5%;
+    }
+  }
+
+  .CharacteristicPanel{
+    background-color: cornsilk;
+    border-radius: 10px;
+  }
+
+  .CharacteristicTitle{
+    font-weight: bold;
+    font-size: large;
+  }
+
+  .AddToCartBytton{
+    background-color: #24f436;
+  border: none;
+  color: white;  
+  text-align: center;
+  font-size: 16px;
+  margin: 4px 2px;
+  opacity: 0.6;
+  transition: 0.3s;
+  display: inline-block;
+  text-decoration: none;
+  cursor: pointer;
+  }
+
+  .AddToCartBytton:hover {opacity: 1}
+
+  .sel::before{
+    color: transparent !important;
+  }
+
+  .vertical-align{
+    display: flex;
+    align-items: center;
+  }

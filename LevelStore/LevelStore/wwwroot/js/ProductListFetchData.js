@@ -1,15 +1,24 @@
-﻿$(function () {
+﻿var lastTimeOrder = '0';
+$(function () {
     
     $(window).scroll(function () {
-        if ($(window).scrollTop() ==
-            $(document).height() - $(window).height()) {
-                FetchDataFromServer();
+        if (($(window).scrollTop() >=
+                ($(document).height() - $(window).height()) - 150) &&
+            lastTimeOrder !== $("#LastItem").text()) {
+
+            FetchDataFromServer();
         }
     });
 });
 
+function AllowDownloadData()
+{
+    lastTimeOrder = '0';
+}
+
 function FetchDataFromServer() {
-    
+
+    lastTimeOrder = $("#LastItem").text();
     var Data = {
         "SearchString": $("#SearchField").val(),
         "CategoryId": $("#CategoryId").text(),
@@ -32,7 +41,7 @@ function FetchDataFromServer() {
 
 function searchShare(shares, shareID) {
     for (var i = 0; i < shares.length; i++) {
-        if (shares[i].shareId == shareID) {
+        if (shares[i].shareId === shareID) {
             return i;
         }
     }
@@ -41,7 +50,7 @@ function searchShare(shares, shareID) {
 
 function searchImageFirst(images) {
     for (var i = 0; i < images.length; i++) {
-        if (images[i].firstOnScreen == true) {
+        if (images[i].firstOnScreen === true) {
             return i;
         }
     }
@@ -50,7 +59,7 @@ function searchImageFirst(images) {
 
 function searchImageSecond(images) {
     for (var i = 0; i < images.length; i++) {
-        if (images[i].secondOnScreen == true) {
+        if (images[i].secondOnScreen === true) {
             return i;
         }
     }
@@ -67,14 +76,14 @@ function ShowNewData(data) {
     for (var i = 0; i < data.productAndImages.length; i++) {
 
         var product = data.productAndImages[i];
-        var startString = "<div>";
+        var startString = "<li class=\"Product-wrapper\">";
 
         var price = product.product.price;
         var newPrice = price;
 
-
+        startString += "<a class=\"Product\" href=\"/Product/ViewSingleProduct?productId=" + product.product.productID + "\">";
         if (product.product.newProduct === true) {
-            startString += "<div style=\"background-color: red; width: 100px;\">NEW</div>";
+            //startString += "<div style=\"background-color: red; width: 100px;\">NEW</div>";
         }
         if (product.product.shareID != null) {
             
@@ -84,23 +93,23 @@ function ShowNewData(data) {
             if (share >= 0) {
                 share = data.shares[share];
                 if (new Date(share.dateOfStart) <= $.now() && share.enabled) {
-                    startString += "<div> Акция </div>";
-                    var timeOfEnd = new Date(share.dateOfEnd);
-                    var seconds = '' + timeOfEnd.getSeconds();
-                    var minutes = '' + timeOfEnd.getMinutes();
-                    var hours = '' + timeOfEnd.getHours();
-                    var month = '' + (timeOfEnd.getMonth() + 1);
-                    var day = '' + timeOfEnd.getDate();
-                    var year = timeOfEnd.getFullYear();
+                    //startString += "<div> Акция </div>";
+                    //var timeOfEnd = new Date(share.dateOfEnd);
+                    //var seconds = '' + timeOfEnd.getSeconds();
+                    //var minutes = '' + timeOfEnd.getMinutes();
+                    //var hours = '' + timeOfEnd.getHours();
+                    //var month = '' + (timeOfEnd.getMonth() + 1);
+                    //var day = '' + timeOfEnd.getDate();
+                    //var year = timeOfEnd.getFullYear();
 
-                    if (seconds.length < 2) seconds = '0' + seconds;
-                    if (minutes.length < 2) minutes = '0' + minutes;
-                    if (hours.length < 2) hours = '0' + hours;
-                    if (month.length < 2) month = '0' + month;
-                    if (day.length < 2) day = '0' + day;
+                    //if (seconds.length < 2) seconds = '0' + seconds;
+                    //if (minutes.length < 2) minutes = '0' + minutes;
+                    //if (hours.length < 2) hours = '0' + hours;
+                    //if (month.length < 2) month = '0' + month;
+                    //if (day.length < 2) day = '0' + day;
 
-                    var timeOfEndString = year + "/" + month + "/" + day + " " + hours + ":" + minutes + ":" + seconds;
-                    startString += "<div data-countdown=\"" + timeOfEndString + "\"></div>";
+                    //var timeOfEndString = year + "/" + month + "/" + day + " " + hours + ":" + minutes + ":" + seconds;
+                    //startString += "<div data-countdown=\"" + timeOfEndString + "\"></div>";
                     if (share.fake) {
                         price = price / 100 * (share.koefPrice + 100);
                     } else {
@@ -109,16 +118,7 @@ function ShowNewData(data) {
                 }
             }
         }
-        startString += "<span>" + product.product.name + " " + "</span>";
-        if (newPrice != price) {
-            startString += "<span><del>" + price.toFixed(2).replace(".", ",") + "</del> </span>";
-            startString += "<span>" + newPrice.toFixed(2).replace(".", ",") + " </span>";
-        }
-        else {
-            startString += "<span>" + price.toFixed(2).replace(".", ",") + " </span>";
-        }
-
-        startString += "<div>" + product.product.description + "</div>";
+        
 
         if (product.images.length > 0 && searchImageFirst(product.images) >= 0 && searchImageSecond(product.images) >= 0) {
             var firstImageName = product.images[searchImageFirst(product.images)].name;
@@ -129,26 +129,36 @@ function ShowNewData(data) {
                 firstImageName +
                 "\" id=\"" +
                 product.product.productID +
-                "\" name=\"FirstAndSecondImages\" onmouseover=\"mouseOver(this)\" onmouseout=\"mouseOut(this)\" style=\"width: 100px; height: 100px;\" alt=\"" +
-                firstImageAlt +
-                "\">";
+                "\" name=\"FirstAndSecondImages\" onmouseover=\"mouseOver(this)\" onmouseout=\"mouseOut(this)\" alt=\"" + firstImageAlt + "\">";
             startString += "<input type=\"hidden\" name=\"FirstAndSecondImages\" imageName=\"/images/" + firstImageName +  "\"imageAlternative=\"" + firstImageAlt + "\"/>";
             startString += "<input type=\"hidden\" name=\"FirstAndSecondImages\" imageName=\"/images/" + secondImageName + "\"imageAlternative=\"" + secondImageAlternative + "\"/>";
         }
         else
         {
-            startString += "<img src=\"/images/None.jpg\" style=\"width: 100px; height: 100px;\" alt=\"\">";
+            startString += "<img src=\"/images/None.jpg\" alt=\"\">";
         }
 
-        startString += "<a href=\"/Product/ViewSingleProduct?productId=" +
-            product.product.productID +
-            "\" class=\"btn btn-primary\">Выбрать</a>";
-        startString += "</div>";
+        startString += "<div>" + product.product.name + " " + "</div>";
+        //if (newPrice != price) {
+        //    startString += "<span><del>" + price.toFixed(2).replace(".", ",") + "</del> </span>";
+        //    startString += "<span>" + newPrice.toFixed(2).replace(".", ",") + " </span>";
+        //}
+        //else {
+            startString += "<div>" + price.toFixed(2).replace(".", ",") + "грн. </div>";
+        //}
+
+        //startString += "<div>" + product.product.description + "</div>";
+        startString += "<div type=\"button\" class=\"btn btn-success\">Посмотреть</div>";
+        //startString += "<a href=\"/Product/ViewSingleProduct?productId=" +
+        //    product.product.productID +
+        //    "\" class=\"btn btn-primary\">Выбрать</a>";
+        startString += "</li>";
         ololo = startString;
         $(holder).append(startString);
     }
     GetBlockImage();
     UpdateShareCounter();
+    AllowDownloadData();
 }
 
 

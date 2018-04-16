@@ -8,7 +8,9 @@
     string searchString = EncodeToUtf8.Encode(oldSearchString);
     int? categoryId = TempData["CategoryId"] as int?;
     int? subCategoryId = TempData["SubCategoryId"] as int?;
+
 }
+<link rel="stylesheet" href="/css/navBarStyles.css" />
 
 @section scripts{
     <script src="/js/UnicodeToChar.js"></script>
@@ -33,10 +35,124 @@
             });
         }
     </script>
+    <script src="/js/navBarDropDown.js"></script>
+    <script>
+        window.onload = function() {
+            DropDownMenuActivate();
+            window.NavBarMenuActivate();
+            BreadCrumpCleaning();
+        }
+    </script>
     <script src="/js/ProductListFetchData.js"></script>
 }
 
-<div class="shop__wrap">
+
+<div class="container-fluid">
+    <div style="display: none" id="CategoryId">@categoryId</div>
+    <div style="display: none" id="SubCategoryId">@subCategoryId</div>
+    <div class="row">
+        <div class="col col-md-2 bg-light">
+            <div class="bg-dark" style="border-radius: 10px; color: white;">
+                <div class="sidenav">
+                    <a asp-controller="Admin" asp-action="ListAdmin">Админка</a>
+                    <a>Фильтры</a>
+                    <a asp-controller="Product" asp-action="List" asp-route-searchString="">Без фильтров</a>
+                    @if (Model.Categories.Any())
+                    {
+                        foreach (var category in Model.Categories)
+                        {
+                            if (category.SubCategories.Any() && category.SubCategories.Count > 1)
+                            {
+                                <button class="dropdown-btn">
+                                    @category.CategoryName
+                                    <i class="fa fa-caret-down"></i>
+                                </button>
+                                <div class="dropdown-container">
+                                    <a asp-controller="Product" asp-action="List" asp-route-categoryId="@category.CategoryID" asp-route-searchString="@oldSearchString">@category.CategoryName</a>
+                                    @foreach (var subCategory in category.SubCategories)
+                                    {
+                                        <a asp-controller="Product" asp-action="List" asp-route-subCategoryId="@subCategory.SubCategoryID" asp-route-searchString="@oldSearchString">
+                                            @category.CategoryName "@subCategory.SubCategoryName"
+                                        </a>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <a asp-controller="Product" asp-action="List" asp-route-subCategoryId="@category.SubCategories.FirstOrDefault().SubCategoryID" asp-route-searchString="@oldSearchString">@category.CategoryName</a>
+                            }
+                        }
+                    }
+                </div>
+            </div>
+
+        </div>
+        <div class=" row col-md-10 bg-light text-center">
+            <div id="LastItem" style="display: none">@(productList.Count)</div>
+
+            <ul id="itemHolder" class="Products clearfix">
+                @foreach (var product in productList)
+                {
+                    decimal price = product.Product.Price;
+                    decimal newPrice = price;
+                    <li class="Product-wrapper">
+                        <a asp-action="ViewSingleProduct" asp-route-productId="@product.Product.ProductID" class="Product">
+                            @*@if (product.Product.NewProduct)
+                                {
+                                    <div style="background-color: red; width: 100px;">NEW</div>
+                                }*@
+
+                            @if (product.Product.ShareID != null)
+                            {
+                                Share share = shares.First(id => id.ShareId == product.Product.ShareID);
+                                if (share.DateOfStart <= DateTime.Now && share.Enabled)
+                                {
+                                    @*<div>Акция</div>*@
+                                    @*<div data-countdown="@share.DateOfEnd.ToString("yyyy/MM/dd HH:mm:ss").Replace('.', '/')"></div>*@
+                                    if (share.Fake)
+                                    {
+                                        price = price / 100 * (decimal)(share.KoefPrice + 100);
+                                    }
+                                    else
+                                    {
+                                        newPrice = price / 100 * (decimal)(100 - share.KoefPrice);
+                                    }
+
+                                }
+                            }
+
+                            @if (product.Images.Count > 0 && product.Images.FirstOrDefault(f => f.FirstOnScreen)?.Name != null && product.Images.FirstOrDefault(f => f.SecondOnScreen)?.Name != null)
+                            {
+                                <img src="/images/@product.Images.First(f => f.FirstOnScreen).Name" id="@product.Product.ProductID" name="FirstAndSecondImages" onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" alt="@product.Images.First(f => f.FirstOnScreen).Alternative">
+                                <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.First(f => f.FirstOnScreen).Name" imageAlternative="@product.Images.First(f => f.FirstOnScreen).Alternative" />
+                                <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.First(f => f.SecondOnScreen).Name" imageAlternative="@product.Images.First(f => f.SecondOnScreen).Alternative" />
+                            }
+                            else
+                            {
+                                <img src="/images/None.jpg" alt="">
+                            }
+                            <div>@product.Product.Name</div>
+                            <div>@newPrice грн.</div>
+                            <div type="button" class="btn btn-success">Посмотреть</div>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+@*<div class="shop__wrap">
     <div class="row">
         <div class="col-md-12 main-navigation shop__navigation text-center">
             <div style="display: none" id="CategoryId">@categoryId</div>
@@ -116,8 +232,8 @@
                             <span>@price</span>
                         }
                         <div>@product.Product.Description</div>
-                        
-                        
+
+
                             @if (product.Images.Count > 0 && product.Images.FirstOrDefault(f => f.FirstOnScreen)?.Name != null && product.Images.FirstOrDefault(f => f.SecondOnScreen)?.Name != null)
                             {
                                 <img src="/images/@product.Images.First(f => f.FirstOnScreen).Name" id="@product.Product.ProductID" name="FirstAndSecondImages" onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" style="width: 100px; height: 100px;" alt="@product.Images.First(f => f.FirstOnScreen).Alternative">
@@ -128,8 +244,8 @@
                             {
                                 <img src="/images/None.jpg" style="width: 100px; height: 100px;" alt="">
                             }
-                        
-    
+
+
 
                         <a asp-action="ViewSingleProduct" asp-route-productId="@product.Product.ProductID" class="btn btn-primary">Выбрать</a>
                     </div>
@@ -137,5 +253,5 @@
             </div>
             </div>
         </div>
-    </div>
+    </div>*@
 

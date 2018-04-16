@@ -15,8 +15,10 @@
 @media screen and (max-width: 700px) {
     .breadcrumpTextBlock{
         float: none;
-        width: 100%;    
-        
+        width: 100%;      
+    }
+    .breadcrumb{
+        display: block;
     }
     
     .breadcrumpTextBlockActive{
