@@ -37,6 +37,18 @@ namespace LevelStore.Models
             Session.SetJson("Cart", this);
         }
 
+        public override void IncreaseQuantity(int productId, int size = 1)
+        {
+            base.IncreaseQuantity(productId, size);
+            Session.SetJson("Cart", this);
+        }
+
+        public override void DecreaseQuantity(int productId, int size = 1)
+        {
+            base.DecreaseQuantity(productId, size);
+            Session.SetJson("Cart", this);
+        }
+
         public override void RemoveLine(Product product)
         {
             base.RemoveLine(product);

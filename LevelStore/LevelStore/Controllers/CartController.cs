@@ -138,6 +138,26 @@ namespace LevelStore.Controllers
             return RedirectToAction("List", "Product");
         }
 
+        public IActionResult IncreaseQuantity(int productId)
+        {
+            Product product = _repository.Products.FirstOrDefault(p => p.ProductID == productId);
+            if (product != null)
+            {
+                _cart.IncreaseQuantity(productId);
+            }
+            return RedirectToAction("Index", "Cart");
+        }
+
+        public IActionResult DecreaseQuantity(int productId)
+        {
+            Product product = _repository.Products.FirstOrDefault(p => p.ProductID == productId);
+            if (product != null)
+            {
+                _cart.DecreaseQuantity(productId);
+            }
+            return RedirectToAction("Index", "Cart");
+        }
+
         public RedirectToActionResult RemoveFromCart(int productId)
         {
             Product product = _repository.Products.FirstOrDefault(p => p.ProductID == productId);

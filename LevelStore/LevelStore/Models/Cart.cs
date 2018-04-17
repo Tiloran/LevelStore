@@ -49,6 +49,39 @@ namespace LevelStore.Models
             lineCollection.RemoveAll(l => l.Product.ProductID == product.ProductID);
         }
 
+        public virtual void IncreaseQuantity(int productId, int size = 1)
+        {
+            if (size <= 0)
+            {
+                size = 1;
+            }
+            CartLine line = lineCollection.FirstOrDefault(p => p.Product.ProductID == productId);
+            if (line != null)
+            {
+                line.Quantity += size;
+            }
+        }
+
+        public virtual void DecreaseQuantity(int productId, int size = 1)
+        {
+            if (size <= 0)
+            {
+                size = 1;
+            }
+            CartLine line = lineCollection.FirstOrDefault(p => p.Product.ProductID == productId);
+            if (line != null)
+            {
+                if (line.Quantity >= (1 + size))
+                {
+                    line.Quantity -= size;
+                }
+                else
+                {
+                    lineCollection.RemoveAll(l => l.Product.ProductID == productId);
+                }
+            }
+        }
+
         public virtual decimal ComputeTotalValue()
         {            
             return lineCollection.Sum(e => e.Quantity * e.Product.Price);

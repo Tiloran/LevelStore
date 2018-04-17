@@ -9,7 +9,329 @@
     int promoCodeDiscount = Model.Cart.PromoCodeDiscount;
 }
 
-<div class="shop-cart__wrapper">
+
+<div class="container-fluid">
+<div class="row text-center vertical-align">
+    <div class="col-md">
+        <span>Корзина</span>
+    </div>
+</div>
+@foreach (var line in Model.Cart.Lines)
+{
+
+    
+
+    <div class="row text-center vertical-align">
+        <div class="col-md">
+            <a  asp-controller="Product" asp-action="ViewSingleProduct" asp-route-productId="@line.Product.ProductID">
+                @{
+                    string imgHref;
+                    string alt;
+                    if (line.Product.Images.FirstOrDefault(f => f.FirstOnScreen) != null)
+                    {
+                        imgHref = "/images/" + line.Product.Images.First(f => f.FirstOnScreen).Name;
+                        alt = line.Product.Images.First(f => f.FirstOnScreen).Alternative;
+                    }
+                    else
+                    {
+                        imgHref = "/images/None.jpg";
+                        alt = "";
+                    }
+                }
+                <img style="max-height: 300px; max-width: 300px;" src="@imgHref" alt="@alt">
+            </a>
+        </div>
+        <div class="col-md">
+            <div>
+                <a asp-controller="Product" asp-action="ViewSingleProduct" asp-route-productId="@line.Product.ProductID">
+                    @{
+                        string furniture = line.Furniture == (int)Furniture.Nikel ? "Никель" : "Антик";
+                        string colorName = colors.FirstOrDefault(cn => cn.TypeColorID == line.SelectedColor)?.ColorType ?? "Неизвестный";
+                    }
+
+                    <span>Название: @line.Product.Name</span><br>
+                    <span>Цвет: @colorName</span><br>
+                    <span>Фурнитура: @furniture</span>
+                </a>
+            </div>
+        </div>
+        <div class="col-md">
+            
+            @{
+                        decimal price;
+                        bool wasShare = false;
+
+                        if (line.Product.ShareID != null && promoCodeDiscount == 0)
+                        {
+                            Share share = shares.First(i => i.ShareId == line.Product.ShareID);
+                            if (share.Enabled)
+                            {
+                                if (share.Fake)
+                                {
+                                    price = line.Product.Price / 100 * (decimal)(share.KoefPrice + 100);
+                                }
+                                else
+                                {
+                                    price = line.Product.Price / 100 * (decimal)(100 - share.KoefPrice);
+                                }
+                                wasShare = true;
+                            }
+                            else
+                            {
+                                price = line.Product.Price;
+                            }
+                        }
+                        else
+                        {
+                            if (promoCodeDiscount > 0)
+                            {
+                                price = line.Product.Price / 100 * (decimal)(100 - promoCodeDiscount);
+                                wasShare = true;
+                            }
+                            else
+                            {
+                                price = line.Product.Price;
+                            }
+
+                        }
+                        if (wasShare)
+                        {
+                            <div>
+                                @if (line.Product.Price > price)
+                                {
+                                    @*<span class="shop-cart__item--text">
+
+                                        <del>@line.Product.Price.ToString(CultureInfo.InvariantCulture)</del>@price.ToString(CultureInfo.InvariantCulture) грн.
+
+                                    </span>*@
+                                    <span>@price.ToString(CultureInfo.InvariantCulture) грн.</span>
+                                }
+                                else
+                                {
+                                    @*<span class="shop-cart__item--text">
+
+                                        <del>@price.ToString(CultureInfo.InvariantCulture)</del>@line.Product.Price.ToString(CultureInfo.InvariantCulture) грн.
+
+                                    </span>*@
+                                    <span>@line.Product.Price.ToString(CultureInfo.InvariantCulture) грн.</span>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            @*<div class="col-sm-2 shop-cart__item--price">
+                                <span class="desktop-invisible">Цена:&nbsp&nbsp</span>
+                                <span class="shop-cart__item--text">@price.ToString(CultureInfo.InvariantCulture) грн.</span>
+                            </div>*@
+                            <div>
+                                <span>@line.Product.Price.ToString(CultureInfo.InvariantCulture) грн.</span>
+                            </div>
+                        }
+                        if (line.Product.Price > price)
+                        {
+                            totalPrice += line.Quantity * price;
+                        }
+                        else
+                        {
+                            totalPrice += line.Quantity * line.Product.Price;
+                        }
+
+                    }
+        </div>
+        <div class="col-md">
+            <div class="row vertical-align">
+                @{
+                    string quantity;
+                    if (line.Quantity > 1)
+                    {
+                        quantity = $"{line.Quantity} товаров";
+                    }
+                    else
+                    {
+                        quantity = $"{line.Quantity} товар";
+                    }
+                }
+                <div class="col-md"><span style="white-space: nowrap;">@quantity</span></div>
+                <div class="col-md">
+                    <div><a asp-controller="Cart" asp-action="IncreaseQuantity" asp-route-productId="@line.Product.ProductID"><img style="max-height: 30px; max-width: 30px; margin-bottom: 5px;" src="/images/img/cart/plus.svg" alt="plus"></a></div>
+                    <div><a asp-controller="Cart" asp-action="DecreaseQuantity" asp-route-productId="@line.Product.ProductID"><img style="max-height: 30px; max-width: 30px; margin-top: 5px;" src="/images/img/cart/minus.svg" alt="minus"></a></div>
+                </div>
+            </div>
+        </div>
+        @{
+            decimal priceWithQuantity;
+            if (line.Product.Price > price)
+            {
+                priceWithQuantity = line.Quantity * price;
+            }
+            else
+            {
+                priceWithQuantity = line.Quantity * line.Product.Price;
+            }
+        }
+        <div class="col-md">
+            <div>
+                <span>Сумма: @priceWithQuantity.ToString(CultureInfo.InvariantCulture) грн.</span>
+            </div>
+        </div>
+        <div class="col-md">
+            <div>
+                <a asp-action="RemoveFromCart" asp-route-productId="@line.Product.ProductID"><img style="max-height: 30px; max-width: 30px;" src="/images/img/cart/rubbish-bin.svg" alt="delete"></a>
+            </div>
+        </div>
+    </div>
+    }
+    <div class="row text-center vertical-align">
+        <div class="col-md-9"></div>
+        <div class="col-md-3">
+            <span>Общая сумма: @totalPrice.ToString(CultureInfo.InvariantCulture) грн.</span>
+        </div>
+    </div>
+
+    <div class="row text-center vertical-align">
+        <div class="col-md">
+            
+            <form asp-action="SetPromoCode">
+                @if (promoCodeDiscount != 0)
+                {
+                    <span style="color:green;">Код введен!</span>
+                    <input type="text" value="@Model.Cart.PromoCodeName" name="prmCode" placeholder="Введите промо-код">
+                }
+                else
+                {
+                    <input type="text" name="prmCode" placeholder="Введите промо-код">
+                }
+                <button type="submit" class="btn btn-dark" style="margin-top: 5px;">Применить</button>
+                <a asp-controller="Cart" asp-action="DeletePromoCode" asp-route-check="0" class="btn btn-danger" style="margin-top: 5px;">Удалить код</a>
+            </form>
+        </div>
+    </div>
+
+    <form asp-controller="Cart" asp-action="Checkout" method="post">
+        <div class="row text-justify">
+            <div class="col-md">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="input-group">
+                    <span class="input-group-addon"></span>
+                    <input type="text" class="form-control" name="order.FirstName" placeholder="Имя">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon"></span>
+                    <input type="text" class="form-control" name="order.LastName" placeholder="Фамилия">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon"></span>
+                    <input type="text" class="form-control" name="order.Email" placeholder="Email">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon"></span>
+                    <input type="text" class="form-control" name="order.Phone" placeholder="Телефон">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon"></span>
+                    <input type="text" class="form-control" name="order.NovaPoshta" placeholder="№ отделения 'Новой Почты'">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon"></span>
+                    <input type="text" class="form-control" name="order.City" placeholder="Город">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon"></span>
+                    <input type="text" class="form-control" name="order.Address" placeholder="Адрес">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon"></span>
+                    <input type="text" class="form-control" name="order.Comment" placeholder="Ваш комментарий">
+                </div>
+            </div>
+            <div class="col-md">
+                <div class="row text-left">
+                    <div class="col-md">
+                        @if (Model.Order.DeliveryWay == 0)
+                        {
+                            <input checked="checked" type="radio" name="order.DeliveryWay" value="0"/>
+                        }
+                        else
+                        {
+                            <input type="radio" name="order.DeliveryWay" value="0"/>
+                        }
+                        <label>Новая почта</label>
+                    </div>
+                </div>
+                <div class="row text-left">
+                    <div class="col-md">
+                        @if (Model.Order.DeliveryWay == 1)
+                        {
+                            <input checked="checked" type="radio" name="order.DeliveryWay" value="1">
+                        }
+                        else
+                        {
+                            <input type="radio" name="order.DeliveryWay" value="1">
+                        }
+                        <label>Курьером к дверям</label>
+                    </div>
+                </div>
+                <div class="row text-left">
+                    <div class="col-md">
+                        @if (Model.Order.DeliveryWay == 2)
+                        {
+                            <input checked="checked" type="radio" name="order.DeliveryWay" value="2">
+                        }
+                        else
+                        {
+                            <input type="radio" name="order.DeliveryWay" value="2">
+                        }
+                        <label>Самовывоз с Showroom ул.Ивана Кудри 5 оф.223</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <button type="submit" class="btn btn-primary" style="margin-left: 5px;">Оставить заявку</button>
+                </div>
+            </div>
+            <div class="row" id="informartion" style="">
+                <div class="col-md">
+                    ВАЖНАЯ ИНФОРМАЦИЯ!<br/>
+
+                    После осуществления заказа в интернет-магазине Level, наш менеджер обязательно свяжется с Вами по телефону для подтверждения заказа.
+
+                    Level предоставляет бесплатную доставку при покупке на сумму от 400 грн. Доставка осуществляется только по Украине. В случае наличия изделия на складе, в течении 2-3-х рабочих дней, в зависимости от времени совершения заказа и предоплаты, изделие уже будет у Вас.
+
+                    СПОСОБЫ ОПЛАТЫ И ДОСТАВКИ:
+
+                    <ul>
+                        <li>Оплата на карту ПриватБанка на банковский счет Level (реквизиты Вам отправят после подтверждения заказа).</li>
+                        <li>Оплата наложенным платежом (Новая Почта).</li>
+                        <li>Расчет наличными с курьером. Курьерская доставка осуществляется в городе Киев и только в будние дни.</li>
+                        <li>Оплата покупки в шоу-руме.</li>
+                        <li>В случае наложенного платежа и расчета с курьером необходимо внести предоплату на карту ПриватБанка в размере 100 грн*, остальную сумму при получении. На осуществление предоплаты предоставляется 3 рабочих дня. Если оплата не была произведена в эти сроки, заказ будет аннулирован.</li>
+                    </ul>
+
+                    *в случае несвоевременного отказа от покупки, данная сумма не возвращается, так как она оплачивает услуги курьера и Новой Почты.
+
+                    <ul>
+                        <li>В дни скидок, если сумма заказа составляет менее 1000 грн или скидка превышает 10%, доставка за счет покупателя.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </form>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*<div class="shop-cart__wrapper">
     <div class="container-fluid">
         <div class="shop-cart text-center">
             <p class="shop-cart__subtitle">Корзина</p>
@@ -30,277 +352,276 @@
             </div>
             @foreach (var line in Model.Cart.Lines)
             {
-            <div class="row shop-cart__item">
-                <div class="col-sm-2 shop-cart__item--img">
-                    <a target="_blank" asp-controller="Product" asp-action="ViewSingleProduct" asp-route-productId="@line.Product.ProductID" class="shop-cart__img">
-                        @{
-                string imgHref;
-                string alt;
-                if (line.Product.Images.FirstOrDefault(f => f.FirstOnScreen) != null)
+                <div class="row shop-cart__item">
+                    <div class="col-sm-2 shop-cart__item--img">
+                        <a target="_blank" asp-controller="Product" asp-action="ViewSingleProduct" asp-route-productId="@line.Product.ProductID" class="shop-cart__img">
+                            @{
+                                string imgHref;
+                                string alt;
+                                if (line.Product.Images.FirstOrDefault(f => f.FirstOnScreen) != null)
+                                {
+                                    imgHref = "/images/" + line.Product.Images.First(f => f.FirstOnScreen).Name;
+                                    alt = line.Product.Images.First(f => f.FirstOnScreen).Alternative;
+                                }
+                                else
+                                {
+                                    imgHref = "/images/None.jpg";
+                                    alt = "";
+                                }
+                            }
+                            <img src="@imgHref" alt="@alt" class="copy-protect" height="72">
+                        </a>
+                    </div>
+                    <div class="col-sm-3 shop-cart__item--info">
+                        <a class="shop-cart-tbl-product" target="_blank" asp-controller="Product" asp-action="ViewSingleProduct" asp-route-productId="@line.Product.ProductID">
+                            @{
+                                string furniture = line.Furniture == (int)Furniture.Nikel ? "Никель" : "Антик";
+                                string colorName = colors.FirstOrDefault(cn => cn.TypeColorID == line.SelectedColor)?.ColorType ?? "Неизвестный";
+                            }
+                            <span class="shop-cart__item--name">@line.Product.Name</span><br><span>(Цвет: @colorName, Фурнитура: @furniture)</span>
+                        </a>
+                    </div>
+
+                    @{
+                        decimal price;
+                        bool wasShare = false;
+
+                        if (line.Product.ShareID != null && promoCodeDiscount == 0)
+                        {
+                            Share share = shares.First(i => i.ShareId == line.Product.ShareID);
+                            if (share.Enabled)
+                            {
+                                if (share.Fake)
+                                {
+                                    price = line.Product.Price / 100 * (decimal)(share.KoefPrice + 100);
+                                }
+                                else
+                                {
+                                    price = line.Product.Price / 100 * (decimal)(100 - share.KoefPrice);
+                                }
+                                wasShare = true;
+                            }
+                            else
+                            {
+                                price = line.Product.Price;
+                            }
+                        }
+                        else
+                        {
+                            if (promoCodeDiscount > 0)
+                            {
+                                price = line.Product.Price / 100 * (decimal)(100 - promoCodeDiscount);
+                                wasShare = true;
+                            }
+                            else
+                            {
+                                price = line.Product.Price;
+                            }
+
+                        }
+                        if (wasShare)
+                        {
+                            <div class="col-sm-2 shop-cart__item--price">
+                                <span class="desktop-invisible">Цена:&nbsp&nbsp</span>
+                                @if (line.Product.Price > price)
+                                {
+                                    <span class="shop-cart__item--text">
+
+                                        <del>@line.Product.Price.ToString(CultureInfo.InvariantCulture)</del>@price.ToString(CultureInfo.InvariantCulture) грн.
+
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="shop-cart__item--text">
+
+                                        <del>@price.ToString(CultureInfo.InvariantCulture)</del>@line.Product.Price.ToString(CultureInfo.InvariantCulture) грн.
+                                    </span>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-sm-2 shop-cart__item--price">
+                                <span class="desktop-invisible">Цена:&nbsp&nbsp</span>
+                                <span class="shop-cart__item--text">@price.ToString(CultureInfo.InvariantCulture) грн.</span>
+                            </div>
+                        }
+                        if (line.Product.Price > price)
+                        {
+                            totalPrice += line.Quantity * price;
+                        }
+                        else
+                        {
+                            totalPrice += line.Quantity * line.Product.Price;
+                        }
+
+                    }
+
+                    <div class="col-sm-2 shop-cart__item--count">
+                        <span class="desktop-invisible">Количество: </span> <input type="number" size="5" min="0" step="1" value="@line.Quantity">
+                    </div>
+                    @{
+                        decimal priceWithQuantity;
+                        if (line.Product.Price > price)
+                        {
+                            priceWithQuantity = line.Quantity * price;
+                        }
+                        else
+                        {
+                            priceWithQuantity = line.Quantity * line.Product.Price;
+                        }
+                    }
+                    <div class="col-sm-2 shop-cart__item--sum-price"><span class="desktop-invisible">Сумма:&nbsp&nbsp</span><span class="shop-cart__item--text"> @priceWithQuantity.ToString(CultureInfo.InvariantCulture) грн.</span></div>
+                    <div class="col-sm-1 shop-cart__item--delete"><a asp-action="RemoveFromCart" asp-route-productId="@line.Product.ProductID">Удалить из корзины</a></div>
+                </div>
+            }
+            <div class="row shop-cart__total-price">
+                <div class="col-9 col-sm-9 text-left">Общая стоимость заказа/покупки:</div>
+                <div class="col-3 col-sm-2">@totalPrice.ToString(CultureInfo.InvariantCulture) грн</div>
+            </div>
+            <form asp-action="SetPromoCode">
+                @if (promoCodeDiscount != 0)
                 {
-                    imgHref = "/images/" + line.Product.Images.First(f => f.FirstOnScreen).Name;
-                    alt = line.Product.Images.First(f => f.FirstOnScreen).Alternative;
+                    <input type="text" value="@Model.Cart.PromoCodeName" name="prmCode" placeholder="Введите промо-код">
                 }
                 else
                 {
-                    imgHref = "/images/None.jpg";
-                    alt = "";
+                    <input type="text" name="prmCode" placeholder="Введите промо-код">
                 }
-                        }
-                        <img src="@imgHref" alt="@alt" class="copy-protect" height="72">
-                    </a>
+                <button type="submit" class="btn btn-dark">Применить</button>
+            </form>
+            <a asp-controller="Cart" asp-action="DeletePromoCode" asp-route-check="0" class="btn btn-dark">Удалить код</a>
+            <form asp-controller="Cart" asp-action="Checkout" method="post">
+                <div class="row text-left shop-cart__dostavka">
+                    <div class="col-sm-12"><p class="shop-cart__subtitle">Выберите способ доставки</p></div>
+                    <div class="col-8 col-sm-5">Возможные варианты доставки</div>
+                    <div class="col-4 col-sm-5">Стоимость</div>
                 </div>
-                <div class="col-sm-3 shop-cart__item--info">
-                    <a class="shop-cart-tbl-product" target="_blank" asp-controller="Product" asp-action="ViewSingleProduct" asp-route-productId="@line.Product.ProductID">
-                        @{
-                string furniture = line.Furniture == (int)Furniture.Nikel ? "Никель" : "Антик";
-                string colorName = colors.FirstOrDefault(cn => cn.TypeColorID == line.SelectedColor)?.ColorType ?? "Неизвестный";
-                        }
-                        <span class="shop-cart__item--name">@line.Product.Name</span><br><span>(Цвет: @colorName, Фурнитура: @furniture)</span>
-                    </a>
-                </div>
-
-                @{
-                    decimal price;
-                    bool wasShare = false;
-
-                    if (line.Product.ShareID != null && promoCodeDiscount == 0)
-                    {
-                        Share share = shares.First(i => i.ShareId == line.Product.ShareID);
-                        if (share.Enabled)
-                        {
-                            if (share.Fake)
+                <div class="shop-cart__dostavka-types">
+                    <div class="row text-left shop-cart__dostavka-type">
+                        <div class="col-8 col-sm-5">
+                            @if (Model.Order.DeliveryWay == 0)
                             {
-                                price = line.Product.Price / 100 * (decimal) (share.KoefPrice + 100);
+                                <input checked="checked" type="radio" id="delivery-method__nova-poshta" class="shop-cart__dostavka--radio" name="order.DeliveryWay" value="0">
                             }
                             else
                             {
-                                price = line.Product.Price / 100 * (decimal) (100 - share.KoefPrice);
+                                <input type="radio" id="delivery-method__nova-poshta" class="shop-cart__dostavka--radio" name="order.DeliveryWay" value="0">
                             }
-                            wasShare = true;
-                        }
-                        else
-                        {
-                            price = line.Product.Price;
-                        }
-                    }
-                    else
-                    {
-                        if (promoCodeDiscount > 0)
-                        {
-                            price = line.Product.Price / 100 * (decimal)(100 - promoCodeDiscount);
-                            wasShare = true;
-                        }
-                        else
-                        {
-                            price = line.Product.Price;
-                        }
 
-                    }
-                    if (wasShare)
-                    {
-                        <div class="col-sm-2 shop-cart__item--price">
-                            <span class="desktop-invisible">Цена:&nbsp&nbsp</span>
-                            @if (line.Product.Price > price)
+                            <label for="delivery-method__nova-poshta">Новая почта</label>
+                        </div>
+                        <div class="col-4 col-sm-5"><span>0 грн.</span></div>
+                    </div>
+                    <div class="row text-left shop-cart__dostavka-type">
+                        <div class="col-8 col-sm-5">
+                            @if (Model.Order.DeliveryWay == 1)
                             {
-                                <span class="shop-cart__item--text">
-
-                                    <del>@line.Product.Price.ToString(CultureInfo.InvariantCulture)</del>@price.ToString(CultureInfo.InvariantCulture) грн.
-
-                                </span>
+                                <input checked="checked" type="radio" id="delivery-method__kurjer" class="shop-cart__dostavka--radio" name="order.DeliveryWay" value="1">
                             }
                             else
                             {
-                                <span class="shop-cart__item--text">
-
-                                    <del>@price.ToString(CultureInfo.InvariantCulture)</del>@line.Product.Price.ToString(CultureInfo.InvariantCulture) грн.
-
-                                </span>
+                                <input type="radio" id="delivery-method__kurjer" class="shop-cart__dostavka--radio" name="order.DeliveryWay" value="1">
                             }
+                            <label for="delivery-method__kurjer">Курьером к дверям</label>
                         </div>
-                    }
-                    else
-                    {
-                        <div class="col-sm-2 shop-cart__item--price">
-                            <span class="desktop-invisible">Цена:&nbsp&nbsp</span>
-                            <span class="shop-cart__item--text">@price.ToString(CultureInfo.InvariantCulture) грн.</span>
+                        <div class="col-4 col-sm-5"><span>0 грн.</span></div>
+                    </div>
+                    <div class="row text-left shop-cart__dostavka-type">
+                        <div class="col-8 col-sm-5">
+                            @if (Model.Order.DeliveryWay == 2)
+                            {
+                                <input checked="checked" type="radio" id="delivery-method__samovivoz" class="shop-cart__dostavka--radio" name="order.DeliveryWay" value="2">
+                            }
+                            else
+                            {
+                                <input type="radio" id="delivery-method__samovivoz" class="shop-cart__dostavka--radio" name="order.DeliveryWay" value="2">
+                            }
+                            <label for="delivery-method__samovivoz">Самовывоз с Showroom ул.Ивана Кудри 5 оф.223</label>
                         </div>
-                    }
-                    if (line.Product.Price > price)
-                    {
-                        totalPrice += line.Quantity * price;
-                    }
-                    else
-                    {
-                        totalPrice += line.Quantity * line.Product.Price;
-                    }
-
-                }
-
-                <div class="col-sm-2 shop-cart__item--count">
-                    <span class="desktop-invisible">Количество: </span> <input type="number" size="5" min="0" step="1" value="@line.Quantity">
-                </div>
-                @{
-                    decimal priceWithQuantity;
-                    if (line.Product.Price > price)
-                    {
-                        priceWithQuantity = line.Quantity * price;
-                    }
-                    else
-                    {
-                        priceWithQuantity = line.Quantity * line.Product.Price;
-                    }
-                }
-                <div class="col-sm-2 shop-cart__item--sum-price"><span class="desktop-invisible">Сумма:&nbsp&nbsp</span><span class="shop-cart__item--text"> @priceWithQuantity.ToString(CultureInfo.InvariantCulture) грн.</span></div>
-                <div class="col-sm-1 shop-cart__item--delete"><a asp-action="RemoveFromCart" asp-route-productId="@line.Product.ProductID">Удалить из корзины</a></div>
-            </div>
-                    }
-        <div class="row shop-cart__total-price">
-            <div class="col-9 col-sm-9 text-left">Общая стоимость заказа/покупки:</div>
-            <div class="col-3 col-sm-2">@totalPrice.ToString(CultureInfo.InvariantCulture) грн</div>
-        </div>
-        <form asp-action="SetPromoCode">
-            @if (promoCodeDiscount != 0)
-            {
-                <input type="text" value="@Model.Cart.PromoCodeName" name="prmCode" placeholder="Введите промо-код">
-            }
-            else
-            {
-                <input type="text" name="prmCode" placeholder="Введите промо-код">
-            }
-            <button type="submit" class="btn btn-dark">Применить</button>
-        </form>
-        <a asp-controller="Cart" asp-action="DeletePromoCode" asp-route-check="0" class="btn btn-dark">Удалить код</a>
-        <form asp-controller="Cart" asp-action="Checkout" method="post">
-            <div class="row text-left shop-cart__dostavka">
-                <div class="col-sm-12"><p class="shop-cart__subtitle">Выберите способ доставки</p></div>
-                <div class="col-8 col-sm-5">Возможные варианты доставки</div>
-                <div class="col-4 col-sm-5">Стоимость</div>
-            </div>
-            <div class="shop-cart__dostavka-types">
-                <div class="row text-left shop-cart__dostavka-type">
-                    <div class="col-8 col-sm-5">
-                        @if (Model.Order.DeliveryWay == 0)
-                        {
-                            <input checked="checked" type="radio" id="delivery-method__nova-poshta" class="shop-cart__dostavka--radio" name="order.DeliveryWay" value="0">
-                        }
-                        else
-                        {
-                            <input type="radio" id="delivery-method__nova-poshta" class="shop-cart__dostavka--radio" name="order.DeliveryWay" value="0">
-                        }
-
-                        <label for="delivery-method__nova-poshta">Новая почта</label>
+                        <div class="col-4 col-sm-5"><span>0 грн.</span></div>
                     </div>
-                    <div class="col-4 col-sm-5"><span>0 грн.</span></div>
                 </div>
-                <div class="row text-left shop-cart__dostavka-type">
-                    <div class="col-8 col-sm-5">
-                        @if (Model.Order.DeliveryWay == 1)
-                        {
-                            <input checked="checked" type="radio" id="delivery-method__kurjer" class="shop-cart__dostavka--radio" name="order.DeliveryWay" value="1">
-                        }
-                        else
-                        {
-                            <input type="radio" id="delivery-method__kurjer" class="shop-cart__dostavka--radio" name="order.DeliveryWay" value="1">
-                        }
-                        <label for="delivery-method__kurjer">Курьером к дверям</label>
+                <div class="shop-cart__promo">
+                    <div class="row">
+                        <div class="col-sm-7">
+
+
+                        </div>
+                        <div class="col-sm-5">
+                            <p class="row shop-cart__promo--total">Итоговая сумма к оплате: <span>4 000 грн.</span></p>
+                        </div>
                     </div>
-                    <div class="col-4 col-sm-5"><span>0 грн.</span></div>
                 </div>
-                <div class="row text-left shop-cart__dostavka-type">
-                    <div class="col-8 col-sm-5">
-                        @if (Model.Order.DeliveryWay == 2)
-                        {
-                            <input checked="checked" type="radio" id="delivery-method__samovivoz" class="shop-cart__dostavka--radio" name="order.DeliveryWay" value="2">
-                        }
-                        else
-                        {
-                            <input type="radio" id="delivery-method__samovivoz" class="shop-cart__dostavka--radio" name="order.DeliveryWay" value="2">
-                        }
-                        <label for="delivery-method__samovivoz">Самовывоз с Showroom ул.Ивана Кудри 5 оф.223</label>
-                    </div>
-                    <div class="col-4 col-sm-5"><span>0 грн.</span></div>
-                </div>
-            </div>
-            <div class="shop-cart__promo">
                 <div class="row">
-                    <div class="col-sm-7">
-                        
-                        
+                    <div class="col-sm-7 text-left shop-cart__information">
+                        <p class="shop-cart__subtitle">Важная информация:</p>
+                        <p>После осуществления заказа в интернет-магазине Level, наш менеджер обязательно свяжется с Вами по телефону для подтверждения заказа.</p>
+                        <p>
+                            Level предоставляет бесплатную доставку при покупке на сумму от 400 грн. Доставка осуществляется только по Украине. В случае наличия изделия на складе, в течении 2-3-х рабочих дней, в зависимости от времени совершения заказа и предоплаты,
+                            изделие уже будет у Вас.
+                        </p>
+                        <ul>
+                            СПОСОБЫ ОПЛАТЫ И ДОСТАВКИ:
+                            <li>Оплата на карту ПриватБанка на банковский счет Level (реквизиты Вам отправят после подтверждения заказа).</li>
+                            <li>Оплата наложенным платежом (Новая Почта).</li>
+                            <li>Расчет наличными с курьером. Курьерская доставка осуществляется в городе Киев и только в будние дни.</li>
+                            <li>Оплата покупки в шоу-руме.</li>
+                            <li class="text-danger-custom">
+                                В случае наложенного платежа и расчета с курьером необходимо внести предоплату на карту ПриватБанка в размере 100 грн*, остальную сумму при получении. На осуществление предоплаты предоставляется 3 рабочих дня. Если оплата не была произведена
+                                в эти сроки, заказ будет аннулирован.
+                            </li>
+                        </ul>
+                        <p class="text-danger-custom">*в случае несвоевременного отказа от покупки, данная сумма не возвращается, так как она оплачивает услуги курьера и Новой Почты.</p>
+                        <ul>
+                            <li class="text-danger-custom">В дни скидок, если сумма заказа составляет менее 1000 грн или скидка превышает 10%, доставка за счет покупателя.</li>
+                        </ul>
                     </div>
                     <div class="col-sm-5">
-                        <p class="row shop-cart__promo--total">Итоговая сумма к оплате: <span>4 000 грн.</span></p>
+
+                        <div asp-validation-summary="All" class="text-danger"></div>
+
+                        <div class="form-group">
+                            <input type="phone" name="order.FirstName" value="@Model.Order.FirstName" />
+                            <label for="order.FirstName">Имя:</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="phone" name="order.LastName" value="@Model.Order.LastName" />
+                            <label for="order.LastName">Фамилия:</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="phone" name="order.Email" value="@Model.Order.Email" />
+                            <label for="order.Email">Email:</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="phone" name="order.Phone" value="@Model.Order.Phone" />
+                            <label for="order.Phone">Телефон :</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="phone" name="order.NovaPoshta" value="@Model.Order.NovaPoshta" />
+                            <label for="order.NovaPoshta">№ отделения "Новой Почты":</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="phone" name="order.City" value="@Model.Order.City" />
+                            <label for="order.City">Город:</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="phone" name="order.Address" value="@Model.Order.Address" />
+                            <label for="order.Address">Адрес:</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="phone" name="order.Comment" value="@Model.Order.Comment" />
+                            <label for="order.Comment">Ваш комментарий:</label>
+                        </div>
+                        <div class="text-center">
+                            <input class="btn btn-primary" type="submit" value="Оставить заявку" />
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-7 text-left shop-cart__information">
-                    <p class="shop-cart__subtitle">Важная информация:</p>
-                    <p>После осуществления заказа в интернет-магазине Level, наш менеджер обязательно свяжется с Вами по телефону для подтверждения заказа.</p>
-                    <p>
-                        Level предоставляет бесплатную доставку при покупке на сумму от 400 грн. Доставка осуществляется только по Украине. В случае наличия изделия на складе, в течении 2-3-х рабочих дней, в зависимости от времени совершения заказа и предоплаты,
-                        изделие уже будет у Вас.
-                    </p>
-                    <ul>
-                        СПОСОБЫ ОПЛАТЫ И ДОСТАВКИ:
-                        <li>Оплата на карту ПриватБанка на банковский счет Level (реквизиты Вам отправят после подтверждения заказа).</li>
-                        <li>Оплата наложенным платежом (Новая Почта).</li>
-                        <li>Расчет наличными с курьером. Курьерская доставка осуществляется в городе Киев и только в будние дни.</li>
-                        <li>Оплата покупки в шоу-руме.</li>
-                        <li class="text-danger-custom">
-                            В случае наложенного платежа и расчета с курьером необходимо внести предоплату на карту ПриватБанка в размере 100 грн*, остальную сумму при получении. На осуществление предоплаты предоставляется 3 рабочих дня. Если оплата не была произведена
-                            в эти сроки, заказ будет аннулирован.
-                        </li>
-                    </ul>
-                    <p class="text-danger-custom">*в случае несвоевременного отказа от покупки, данная сумма не возвращается, так как она оплачивает услуги курьера и Новой Почты.</p>
-                    <ul>
-                        <li class="text-danger-custom">В дни скидок, если сумма заказа составляет менее 1000 грн или скидка превышает 10%, доставка за счет покупателя.</li>
-                    </ul>
-                </div>
-                <div class="col-sm-5">
-                        
-                    <div asp-validation-summary="All" class="text-danger"></div>
-                
-                    <div class="form-group">
-                        <input type="phone" name="order.FirstName" value="@Model.Order.FirstName"/>
-                        <label for="order.FirstName">Имя:</label>
-                    </div>
-                    <div class="form-group">
-                        <input type="phone" name="order.LastName" value="@Model.Order.LastName" />
-                        <label for="order.LastName">Фамилия:</label>
-                    </div>
-                    <div class="form-group">
-                        <input type="phone" name="order.Email" value="@Model.Order.Email"/>
-                        <label for="order.Email">Email:</label>
-                    </div>
-                    <div class="form-group">
-                        <input type="phone" name="order.Phone" value="@Model.Order.Phone"/>
-                        <label for="order.Phone">Телефон :</label>
-                    </div>
-                    <div class="form-group">
-                        <input type="phone" name="order.NovaPoshta" value="@Model.Order.NovaPoshta"/>
-                        <label for="order.NovaPoshta">№ отделения "Новой Почты":</label>
-                    </div>
-                    <div class="form-group">
-                        <input type="phone" name="order.City" value="@Model.Order.City"/>
-                        <label for="order.City">Город:</label>
-                    </div>
-                    <div class="form-group">
-                        <input type="phone" name="order.Address" value="@Model.Order.Address"/>
-                        <label for="order.Address">Адрес:</label>
-                    </div>
-                    <div class="form-group">
-                        <input type="phone" name="order.Comment" value="@Model.Order.Comment"/>
-                        <label for="order.Comment">Ваш комментарий:</label>
-                    </div>
-                    <div class="text-center">
-                        <input class="btn btn-primary" type="submit" value="Оставить заявку" />
-                    </div>
-                </div>
-            </div>
-        </form>
-                
-            </div>
+            </form>
+
         </div>
     </div>
+</div>*@
 
