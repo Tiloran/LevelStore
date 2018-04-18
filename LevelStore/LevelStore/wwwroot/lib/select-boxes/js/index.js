@@ -39,10 +39,15 @@ $('.sel__box__options').click(function() {
   var index = $(this).index();
   
   $(this).siblings('.sel__box__options').removeClass('selected');
+  //$(".sel__box").next().$("option").eq(index).prop('selected', true);
   $(this).addClass('selected');
   
   var $currentSel = $(this).closest('.sel');
   $currentSel.children('.sel__placeholder').text(txt);
-  $currentSel.children('select').prop('selectedIndex', index + 1);
+    $currentSel.children('select').prop('selectedIndex', index + 1);
+    //var checkColor = $('select[name=selectedColor]');
+    //if (checkColor != null) {
+    //    HideAndShowImages();
+    //}
 });
 }

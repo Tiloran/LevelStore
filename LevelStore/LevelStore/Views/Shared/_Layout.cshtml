@@ -1,4 +1,59 @@
-﻿<!DOCTYPE html>
+﻿
+@{
+    var controller = ViewContext.RouteData.Values["Controller"];
+    var action = ViewContext.RouteData.Values["Action"];
+    string magazinePage = "";
+    string delivery = "";
+    string payment = "";
+    string guarantees = "";
+    string aboutTheBrand = "";
+    string ourShowRoom = "";
+    string deliveryDepartment = "";
+    string bayer = "";
+    string partnership = "";
+    string vacancy = "";
+    
+    switch (action)
+    {
+        case "Delivery":
+            delivery = "active";
+            break;
+        case "Payment":
+            payment = "active";
+            break;
+        case "Guarantees":
+            guarantees = "active";
+            break;
+        case "AboutTheBrand":
+            aboutTheBrand = "active";
+            break;
+        case "OurShowRoom":
+            ourShowRoom = "active";
+            break;
+        case "DeliveryDepartment":
+            deliveryDepartment = "active";
+            break;
+        case "Bayer":
+            bayer = "active";
+            break;
+        case "Partnership":
+            partnership = "active";
+            break;
+        case "Vacancy":
+            vacancy = "active";
+            break;
+            default:
+                switch (controller)
+                {
+                    case "Product":
+                        magazinePage = "active";
+                        break;
+                }
+                break;
+    }
+
+    }
+<!DOCTYPE html>
 
 <html>
 <head>
@@ -39,34 +94,34 @@
 
         <div class="row">
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="width: 100%;">
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTilo" aria-controls="navbarTilo" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+                <div class="collapse navbar-collapse" id="navbarTilo">
                     <a class="navbar-brand" href="#">Level store</a>
                     <ul class="navbar-nav mr-auto mt-2 mt-lg-0" style="margin: 0 auto;">
-                        <li class="nav-item active">
+                        <li class="nav-item @magazinePage">
                             <a class="nav-link" asp-controller="Product" asp-action="List">Магазин <span class="sr-only">(current)</span></a>
                         </li>
-                        <li class="nav-item dropdown">
+                        <li class="nav-item dropdown @delivery @payment @guarantees">
                             <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Доставка и оплата</a>
                             <ul class=" dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <li><a class="dropdown-item" asp-controller="DeliveryAndPayment" asp-action="Delivery">Доставка</a></li>
+                                <li><a class="dropdown-item " asp-controller="DeliveryAndPayment" asp-action="Delivery">Доставка</a></li>
                                 <li><a class="dropdown-item " asp-controller="DeliveryAndPayment" asp-action="Payment">Оплата</a></li>
                                 <li><a class="dropdown-item " asp-controller="DeliveryAndPayment" asp-action="Guarantees">Гарантии</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">О бренде</a>
+                        <li class="nav-item @aboutTheBrand">
+                            <a class="nav-link" asp-controller="Brand" asp-action="AboutTheBrand">О бренде</a>
                         </li>
-                        <li class="nav-item dropdown">
+                        <li class="nav-item dropdown @ourShowRoom @deliveryDepartment @bayer @partnership @vacancy">
                             <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Контакты
                             </a>
                             <ul class=" dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <li><a class="dropdown-item" asp-controller="Contact" asp-action="OurShowRoom">Наш Showroom</a></li>
+                                <li><a class="dropdown-item " asp-controller="Contact" asp-action="OurShowRoom">Наш Showroom</a></li>
                                 <li><a class="dropdown-item " asp-controller="Contact" asp-action="DeliveryDepartment">Отдел доставки</a></li>
-                                <li><a class="dropdown-item" asp-controller="Contact" asp-action="Bayer">Bayer</a></li>
+                                <li><a class="dropdown-item " asp-controller="Contact" asp-action="Bayer">Bayer</a></li>
                                 <li><a class="dropdown-item " asp-controller="Contact" asp-action="Partnership">Партнерство</a></li>
                                 <li><a class="dropdown-item " asp-controller="Contact" asp-action="Vacancy">Вакансии</a></li>
                             </ul>

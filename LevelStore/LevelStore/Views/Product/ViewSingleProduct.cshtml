@@ -76,7 +76,7 @@
                     {
                         int colorId = bindedColors.FirstOrDefault(cn => cn.TypeColorID == image.TypeColorID)?.TypeColorID ?? 0;
                         <div>
-                            <img class="MultiplePictureOfProduct" color="@colorId" src="/images/@image.Name" alt="@image.Alternative">
+                            <img color="@colorId" class="MultiplePictureOfProduct" src="/images/@image.Name" alt="@image.Alternative">
                         </div>
                     }
                 }
@@ -141,9 +141,9 @@
                                 <option value="0" selected="">Выберите цвет</option>
                                 <option value="-1">Выберите цвет</option>
                                 @foreach (var color in bindedColors)
-                    {
-                        <option value="@color.TypeColorID">@color.ColorType</option>
-        }
+                                {
+                                    <option value="@color.TypeColorID">@color.ColorType</option>
+                                }
                             </select>
                         </div>
                     </div>
@@ -168,7 +168,8 @@
 
 
                 <button class="AddToCartBytton btn" style="display: block; margin: auto; margin-top: 10px; width: 200px;" type="submit">Добавить в корзину</button>
-                <a href="javascript:history.go(-1)" style="display: block; margin: auto; margin-top: 10px; width: 200px;" class="btn btn-danger">Другие товары</a>
+                <a asp-controller="Product" asp-action="List" style="display: block; margin: auto; margin-top: 10px; width: 200px;" class="btn btn-danger">Другие товары</a>
+                @*href="javascript:history.go(-1)"*@
             </form>
         </div>
     </div>
