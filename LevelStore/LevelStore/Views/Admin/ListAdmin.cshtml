@@ -64,10 +64,10 @@
                 }
                 <td>
                     <input type="hidden" name="ProductID" value="@product.Product.ProductID"/>
-                    <a asp-controller="Admin" asp-action="Edit" asp-route-productid="@product.Product.ProductID">Изменить</a>
+                    <a class="btn btn-primary" asp-controller="Admin" asp-action="Edit" asp-route-productid="@product.Product.ProductID">Изменить</a>
                 </td>
                 <td>
-                    <a asp-controller="Admin" asp-action="Delete" asp-route-productId="@product.Product.ProductID">Удалить</a>
+                    <a class="btn btn-danger" asp-controller="Admin" asp-action="Delete" asp-route-productId="@product.Product.ProductID">Удалить</a>
                 </td>
             </tr>
         }

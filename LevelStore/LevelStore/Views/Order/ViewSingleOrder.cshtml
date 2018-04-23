@@ -18,7 +18,7 @@
         var MyVariable = convertHexToString('@myJson');
         MyVariable = MyVariable.replace(/&quot;/g, "\"");
         $(document).ready(function() {
-            $("#ChangeOrder").click(function (e) {
+            $("#ChangeOrder").click(function(e) {
                 var myOrder = CollectInfo(JSON.parse(MyVariable));
                 if (myOrder == null) {
                     return;
@@ -31,7 +31,13 @@
                     contentType: "application/json; charset=utf-8",
                     data: JSON.stringify(myOrder),
                     success: function(message) {
-                        alert(message);
+                        if (message == "Succes") {
+                            $("#Changes").css("color", "green");
+                            $("#Changes").text("Изменения успешно внесены!");
+                        } else {
+                            $("#Changes").css("color", "red");
+                            $("#Changes").text("Ошибка при внесении изменений!");
+                        }
                     }
                 });
             });
@@ -39,9 +45,14 @@
     </script>
 }
 
-<br><br><br><br><br><br><br>
+
+<div style="margin: auto; width: 300px; margin-top: 20px;">
+    <a class="btn btn-dark" asp-controller="Admin" asp-action="ListAdmin">К админ. списку</a>
+    <a class="btn btn-dark"  asp-action="ListOrder">К списку заявок</a>
+</div>
+<div id="Changes" style="margin: auto; width: 300px; margin-top: 20px; font-size: large;"></div>
 <!form>
-    <table>
+    <table style="text-align: center;">
         <tr>
             <th>ID заказа</th>
             <th>Дата создания</th>
@@ -192,6 +203,6 @@
         }
 
     </table>
-    <button id="ChangeOrder" type="button" class="btn btn-sm btn-danger">Изменить</button>
+    <button id="ChangeOrder" type="button" class="btn btn-danger" style="margin: auto; width: 100px; display: block;">Изменить</button>
 </!form>
 

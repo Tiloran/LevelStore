@@ -6,6 +6,8 @@
     List<TypeColor> bindedColors = TempData["BindedColors"] as List<TypeColor> ?? new List<TypeColor>();
 }
 
+<link rel="stylesheet" type="text/css" href="/lib/dataTable/datatables.min.css" />
+
 @section scripts{
     <script src="/js/GetIdForExcelDownload.js"></script>
 }
@@ -21,7 +23,7 @@
     }
     @if (Model.PageViewModel.PageNumber != 1)
     {
-        <a asp-action="ListOrder" asp-route-page="1">1</a>
+        <a class="myPageLink" asp-action="ListOrder" asp-route-page="1">1</a>
     }
 
     @for (int i = 1; i <= 3; i++)
@@ -29,24 +31,24 @@
         if (Model.PageViewModel.PageNumber - i > 1)
         {
             int temp = Model.PageViewModel.PageNumber - i;
-            <a asp-action="ListOrder" asp-route-page="@temp">@temp</a>
+            <a class="myPageLink" asp-action="ListOrder" asp-route-page="@temp">@temp</a>
         }
     }
-    
-    <a asp-action="ListOrder" asp-route-page="@Model.PageViewModel.PageNumber" style="color: red;">@Model.PageViewModel.PageNumber</a>
-    
+
+    <a class="activeMyPageLink" asp-action="ListOrder" asp-route-page="@Model.PageViewModel.PageNumber" style="color: red;">@Model.PageViewModel.PageNumber</a>
+
 
     @for (int i = 1; i <= 3; i++)
     {
         if (Model.PageViewModel.PageNumber + i < Model.PageViewModel.TotalPages)
         {
             int temp = Model.PageViewModel.PageNumber + i;
-            <a asp-action="ListOrder" asp-route-page="@temp">@temp</a>
+            <a class="myPageLink" asp-action="ListOrder" asp-route-page="@temp">@temp</a>
         }
     }
     @if (Model.PageViewModel.PageNumber != Model.PageViewModel.TotalPages)
     {
-        <a asp-action="ListOrder" asp-route-page="@Model.PageViewModel.TotalPages">@Model.PageViewModel.TotalPages</a>
+        <a class="myPageLink" asp-action="ListOrder" asp-route-page="@Model.PageViewModel.TotalPages">@Model.PageViewModel.TotalPages</a>
     }
 
     @if (Model.PageViewModel.HasNextPage)
@@ -60,7 +62,13 @@
 </div>
 @if (Model.Orders.Any())
 {
-    <table class="table table-bordered table-striped">
+    <form id="excelForm" asp-action="DownloadExcel" style="margin-top: 15px;">
+        <button class="btn btn-primary" style="" onclick="CollectId()">Скачать Excel</button>
+        <div style="display: none" id="excelIdContainer"></div>
+        <button id="ExcelSubmitButton" type="submit" style="display: none"></button>
+        <a class="btn btn-dark" asp-controller="Admin" asp-action="ListAdmin">К списку</a>
+    </form>
+    <table class="table table-bordered table-striped" style="text-align: center;">
         <tr>
             <th>Выбрать</th>
             <th>Дата создания</th>
@@ -100,28 +108,38 @@
                 }
                 <td>
                     <form asp-action="ChangeStatus" asp-route-orderId="@o.OrderID">
-                        <select name="status">
-                            <option disabled>Выберите статус</option>
-                            @if (o.Status == (int)OrderStatus.Waiting)
-                            {
-                                <option value="@Convert.ToInt32(OrderStatus.NotSended)">Не отправлено</option>
-                                <option selected value="@Convert.ToInt32(OrderStatus.Waiting)">Ожидание</option>
-                                <option value="@Convert.ToInt32(OrderStatus.Sended)">Отправлено</option>
-                            }
-                            else if (o.Status == (int)OrderStatus.NotSended)
-                            {
-                                <option selected value="@Convert.ToInt32(OrderStatus.NotSended)">Не отправлено</option>
-                                <option value="@Convert.ToInt32(OrderStatus.Waiting)">Ожидание</option>
-                                <option value="@Convert.ToInt32(OrderStatus.Sended)">Отправлено</option>
-                            }
-                            else
-                            {
-                                <option value="@Convert.ToInt32(OrderStatus.NotSended)">Не отправлено</option>
-                                <option value="@Convert.ToInt32(OrderStatus.Waiting)">Ожидание</option>
-                                <option selected value="@Convert.ToInt32(OrderStatus.Sended)">Отправлено</option>
-                            }
-                        </select>
-                        <button class="btn btn-sm btn-danger">Изменить</button>
+                        <table>
+                            <tr>
+                                <td>
+                                    <select name="status">
+                                        <option disabled>Выберите статус</option>
+                                        @if (o.Status == (int) OrderStatus.Waiting)
+                                        {
+                                            <option value="@Convert.ToInt32(OrderStatus.NotSended)">Не отправлено</option>
+                                            <option selected value="@Convert.ToInt32(OrderStatus.Waiting)">Ожидание</option>
+                                            <option value="@Convert.ToInt32(OrderStatus.Sended)">Отправлено</option>
+                                        }
+                                        else if (o.Status == (int) OrderStatus.NotSended)
+                                        {
+                                            <option selected value="@Convert.ToInt32(OrderStatus.NotSended)">Не отправлено</option>
+                                            <option value="@Convert.ToInt32(OrderStatus.Waiting)">Ожидание</option>
+                                            <option value="@Convert.ToInt32(OrderStatus.Sended)">Отправлено</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@Convert.ToInt32(OrderStatus.NotSended)">Не отправлено</option>
+                                            <option value="@Convert.ToInt32(OrderStatus.Waiting)">Ожидание</option>
+                                            <option selected value="@Convert.ToInt32(OrderStatus.Sended)">Отправлено</option>
+                                        }
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center;">
+                                    <button class="btn btn-sm btn-danger">Изменить</button>
+                                </td>
+                            </tr>
+                        </table>
                     </form>
 
                 </td>
@@ -129,47 +147,47 @@
             </tr>
             foreach (var line in o.Lines)
             {
-            <tr>
-                <td colspan="4"></td>
-                <td>@line.Product.Name</td>
-                <td>@line.Quantity</td>
-                @{
-                    decimal price = line.PriceAfterCheckout;
-                    if (line.KoefPriceAfterCheckout != null)
-                    {
-                        if (line.FakeShare == true)
+                <tr>
+                    <td colspan="4"></td>
+                    <td>@line.Product.Name</td>
+                    <td>@line.Quantity</td>
+                    @{
+                        decimal price = line.PriceAfterCheckout;
+                        if (line.KoefPriceAfterCheckout != null)
                         {
-                            price = price / 100 * (decimal) (line.KoefPriceAfterCheckout + 100);
+                            if (line.FakeShare == true)
+                            {
+                                price = price / 100 * (decimal)(line.KoefPriceAfterCheckout + 100);
+                            }
+                            else
+                            {
+                                price = price / 100 * (decimal)(100 - line.KoefPriceAfterCheckout);
+                            }
+                            if (line.PriceAfterCheckout > price)
+                            {
+                                <td class="text-right"><del>@line.PriceAfterCheckout.ToString(CultureInfo.InvariantCulture)</del>@price.ToString(CultureInfo.InvariantCulture) грн.</td>
+                            }
+                            else
+                            {
+                                <td class="text-right"><del>@price.ToString(CultureInfo.InvariantCulture)</del>@line.PriceAfterCheckout.ToString(CultureInfo.InvariantCulture) грн.</td>
+                            }
+
                         }
                         else
                         {
-                            price = price / 100 * (decimal) (100 - line.KoefPriceAfterCheckout);
+                            <td class="text-right">@price.ToString(CultureInfo.InvariantCulture) грн.</td>
+
                         }
                         if (line.PriceAfterCheckout > price)
                         {
-                            <td class="text-right"><del>@line.PriceAfterCheckout.ToString(CultureInfo.InvariantCulture)</del>@price.ToString(CultureInfo.InvariantCulture) грн.</td>
+                            totalPrice += line.Quantity * price;
                         }
                         else
                         {
-                            <td class="text-right"><del>@price.ToString(CultureInfo.InvariantCulture)</del>@line.PriceAfterCheckout.ToString(CultureInfo.InvariantCulture) грн.</td>
+                            totalPrice += line.Quantity * line.PriceAfterCheckout;
                         }
-
                     }
-                    else
-                    {
-                        <td class="text-right">@price.ToString(CultureInfo.InvariantCulture) грн.</td>
-
-                    }
-                    if (line.PriceAfterCheckout > price)
-                    {
-                        totalPrice += line.Quantity * price;
-                    }
-                    else
-                    {
-                        totalPrice += line.Quantity * line.PriceAfterCheckout;
-                    }
-                }
-            </tr>
+                </tr>
                 <tr>
                     <td colspan="4"></td>
                     <th>Фурнитура</th>
@@ -199,12 +217,6 @@
 
         }
     </table>
-    <form id="excelForm" asp-action="DownloadExcel">
-        <button onclick="CollectId()">Скачать Excel</button>
-        <div style="display: none" id="excelIdContainer"></div>
-        <button id="ExcelSubmitButton" type="submit" style="display: none"></button>
-    </form>
-
 }
 else
 {
