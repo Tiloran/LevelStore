@@ -5,34 +5,43 @@
     Layout = "_LayoutAdmin";
 }
 
-<h2>Delete</h2>
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Share</h4>
+
+<h3 style="margin: auto; width: 300px;">Вы точно хотите удалить акцию?</h3>
+<div style="margin: auto; width: 300px;">
+    <h4>Акция</h4>
     <hr />
     <div>Дата начала акции</div>
-    <div>@Model.DateOfStart</div>
+    <div style="font-weight: bold;">@Model.DateOfStart</div>
     <div>Дата конца акции</div>
-    <div>@Model.DateOfEnd</div>
+    <div style="font-weight: bold;">@Model.DateOfEnd</div>
     <div>Включена/Выключена</div>
     @if (@Model.Enabled)
     {
-        <div>Вкл</div>
+        <div style="font-weight: bold;">Вкл</div>
     }
     else
     {
-        <div>Выкл</div>
+        <div style="font-weight: bold;">Выкл</div>
+    }
+    <div>Фейк вкл/выкл</div>
+    @if (@Model.Fake)
+    {
+        <div style="font-weight: bold;">Вкл</div>
+    }
+    else
+    {
+        <div style="font-weight: bold;">Выкл</div>
     }
     <div>Коеф. снижения цены</div>
     @{
         string koefString = Model.KoefPrice + "%";
     }
-    <div>@koefString</div>
-    
+    <div style="font-weight: bold;">@koefString</div>
+
     <form asp-action="Delete">
         <input type="hidden" asp-for="ShareId" />
-        <input type="submit" value="Delete" class="btn btn-default" /> |
-        <a asp-action="Index">Back to List</a>
+        <button type="submit" value="Delete" class="btn btn-danger" >Удалить</button>
+        <a class="btn btn-primary" asp-action="Index">Назад к списку</a>
     </form>
 </div>

@@ -5,28 +5,29 @@
     Layout = "_LayoutAdmin";
 }
 
-<h2>View</h2>
+<h2 style="margin: auto; width: 300px;">Промо коды</h2>
 
-<p>
-    <a asp-action="EditPromo">Create New</a>
-</p>
-<p>
-    <a asp-action="ListAdmin">К админке</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.PromoCode)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Discount)
-                </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
+<div>
+    <a class="btn btn-primary" asp-action="EditPromo">Создать новый код</a>
+</div>
+<div style="margin-top: 10px;">
+    <a class="btn btn-dark" asp-action="ListAdmin">К админке</a>
+</div>
+<table class="table" style="margin: auto; width: 400px">
+        <thead>
+            <tr>
+                    <th>
+                        Название
+                    </th>
+                    <th>
+                        Скидка
+                    </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model)
+    {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.PromoCode)
@@ -35,10 +36,10 @@
                 @Html.DisplayFor(modelItem => item.Discount)
             </td>
             <td>
-                <a asp-action="EditPromo" asp-route-promoId="@item.PromoId">Edit</a>
-                <a asp-action="DeletePromo" asp-route-promoId="@item.PromoId">Delete</a>
+                <a class="btn btn-info" asp-action="EditPromo" asp-route-promoId="@item.PromoId">Изменить</a>
+                <a class="btn btn-danger" asp-action="DeletePromo" asp-route-promoId="@item.PromoId">Удалить</a>
             </td>
         </tr>
-}
-    </tbody>
+    }
+        </tbody>
 </table>

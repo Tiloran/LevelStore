@@ -23,6 +23,7 @@ namespace LevelStore.Models
         void AddViewCount(int productId);
         void AddBuyCount(int productId);
         int UpdatePromo(Promo promo);
-        void Delet3Promo(int promoId);
+        void DeletePromo(int promoId);
+        void DeletePhoto(int productId, int photoId);
     }
 }

@@ -5,15 +5,44 @@
     var colorList = TempData["ColorList"] as List<TypeColor> ?? new List<TypeColor>();
 }
 
+<div style="margin: 10px auto">
+    <div style="margin: auto; width: 500px">
+        <form asp-action="AddColors" method="post">
+            <input asp-for="ColorType" placeholder="Название цвета" />
+            <button class="btn btn-primary" type="submit">Добавить</button>
+            <a class="btn btn-info" asp-controller="Admin" asp-action="ListAdmin">К админ. списку</a>
+        </form>
+        
+    </div>
 
-@foreach (var type in colorList)
-{
-    <label>@type.ColorType</label>
-    <a asp-controller="Admin" asp-action="RemoveColor" asp-route-typeColorId="@type.TypeColorID">Удалить</a>
-}
+    @{
+        int rowLength = 3;
+        int outerCounter = colorList.Count / rowLength;
+        if (colorList.Count % rowLength != 0)
+        {
+            outerCounter++;
+        }
+    }
+    <table style="margin: 10px auto">
+        @for (int i = 0; i < outerCounter; i++)
+        {
+            <tr>
+                @for (int y = 0; y < rowLength; y++)
+                {
+                    if ((y + i * rowLength) > colorList.Count - 1)
+                    {
+                        break;
+                    }
+                    <td>
+                        <label>@colorList[y + i * rowLength].ColorType</label>
+                    </td>
+                    <td>
+                        <a class="btn btn-danger" asp-controller="Admin" asp-action="RemoveColor" asp-route-typeColorId="@colorList[y + i*rowLength].TypeColorID">Удалить</a>
+                    </td>
+                }
+            </tr>
+        }
+    </table>
+</div>
 
-<form asp-action="AddColors" method="post">
-    <input asp-for="ColorType"/>
-    <button type="submit">Добавить</button>
-</form>
-<a asp-controller="Admin" asp-action="ListAdmin">Назад</a>
+

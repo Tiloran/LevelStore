@@ -5,10 +5,15 @@
     List<Image> imageList = TempData["ImageList"] as List<Image> ?? new List<Image>();
     List<TypeColor> colorsList = TempData["Colors"] as List<TypeColor> ?? new List<TypeColor>();
     List<TypeColor> bindedColors = TempData["BindedColors"] as List<TypeColor> ?? new List<TypeColor>();
+    int productId = Convert.ToInt32(TempData["id"]);
+    TempData["id"] = productId;
+
 }
 
-
-<script src="/js/First_Second_ImageShow0.js"></script>
+@section scripts{
+    <script src="/js/First_Second_ImageShow0.js"></script>
+    <script src="/js/ShowFilesInCustomInputFile.js"></script>
+}
 
 @{
     int counterForIdFirst = 0;
@@ -18,120 +23,166 @@
     int counterForIdThird = 0;
     string stringfForIdThird = "Third" + counterForIdThird;
 }
-@if (imageList.Count > 0)
-{
-    <h2>Настройки фото</h2>
-    <form asp-action="BindPhotoAndColor" method="post">
-        @foreach (var image in imageList)
-        {
+<div style="margin: auto; width: 500px;">
 
-            <img src="/images/@image.Name" style="width: 100px; height: 100px;" alt="@image.Alternative">
-            <input type="hidden" name="imageID" value="@image.ImageID"/>
+    <form asp-action="UploadFiles" enctype="multipart/form-data" method="post">
+        <table>
+            <tr>
+                <td style="text-align:center;">
+                    <h2>Загрузка фото</h2>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align:center;">
+                    <h3>Выберите фото для загрузки</h3>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align:center;">
+                    <input type="file" id="file" name="files" class="inputfile inputfile-icon" data-multiple-caption="{count} files selected" multiple/>
+                    <label for="file"><figure><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"/></svg></figure> <span>Выберите файл&hellip;</span></label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input class="btn btn-primary" type="submit" value="Загрузка выбраных файлов"/>
+                </td>
+                <td>
+                    <a asp-controller="Admin" asp-action="ListAdmin" class="btn btn-dark">К списку</a>
+                </td>
+            </tr>
+        </table>
+    </form>
 
-
-
-            if (image.FirstOnScreen)
-            {
-                <div>
-                    <input type="checkbox" checked="checked" value="@image.ImageID" disabled="disabled" id="@stringfForIdFirst" name="@nameof(image.FirstOnScreen)" onchange="First_Second_ImageShow(this)">Первый показ
-                </div>
-            }
-            else
-            {
-                <div>
-                    <input type="checkbox" value="@image.ImageID" id="@stringfForIdFirst" name="@nameof(image.FirstOnScreen)" onchange="First_Second_ImageShow(this)">Первый показ
-                </div>
-            }
-
-            if (image.SecondOnScreen)
-            {
-                <div>
-                    <input type="checkbox" checked="checked" value="@image.ImageID" disabled="disabled" id="@stringfForIdSecond" name="@nameof(image.SecondOnScreen)" onchange="First_Second_ImageShow(this)">Второй показ
-                </div>
-            }
-            else
-            {
-                <div>
-                    <input type="checkbox" value="@image.ImageID" id="@stringfForIdSecond" name="@nameof(image.SecondOnScreen)" onchange="First_Second_ImageShow(this)">Второй показ
-                </div>
-            }
-
-            if (image.FirstOnScreen == false && image.SecondOnScreen == false)
-            {
-                <div>
-                    <input type="checkbox" checked="checked" value="@image.ImageID" disabled="disabled" id="@stringfForIdThird" name="NoneChecked" onchange="First_Second_ImageShow(this)">В общем списке
-                </div>
-            }
-            else
-            {
-                <div>
-                    <input type="checkbox" value="@image.ImageID" id="@stringfForIdThird" name="NoneChecked" onchange="First_Second_ImageShow(this)">В общем списке
-                </div>
-            }
-
-
-
-
-            counterForIdFirst++;
-            stringfForIdFirst = "First" + counterForIdFirst;
-            counterForIdSecond++;
-            stringfForIdSecond = "Second" + counterForIdSecond;
-            counterForIdThird++;
-            stringfForIdThird = "Third" + counterForIdThird;
-
-            <label>Alt:</label>
-            <input name="@nameof(image.Alternative)" value="@image.Alternative" />
     
-
-
-            <label>Цвет фотографии:</label>
-            <select name="ColorID">
-                <option disabled>Выберите цвет фотографии</option>
-                @foreach (var color in colorsList)
+    @if (imageList.Count > 0)
+    {
+        <h2 style="text-align: center;">Настройки фото</h2>
+        <form asp-action="BindPhotoAndColor" method="post">
+            <table>
+                @foreach (var image in imageList)
                 {
-                    if (bindedColors.Any(i => i.TypeColorID == image.TypeColorID && color.TypeColorID == image.TypeColorID))
+                    <tr>
+                        <td>
+                            <img src="/images/@image.Name" style="width: 100px; height: 100px;" alt="@image.Alternative">
+                            <input type="hidden" name="imageID" value="@image.ImageID"/>
+                        </td>
+
+                        <td>
+                            @if (image.FirstOnScreen)
+                            {
+                                <div style="margin-left: 5px;">
+                                    <input type="checkbox" checked="checked" value="@image.ImageID" disabled="disabled" id="@stringfForIdFirst" name="@nameof(image.FirstOnScreen)" onchange="First_Second_ImageShow(this)">Первый показ
+                                </div>
+                            }
+                            else
+                            {
+                                <div style="margin-left: 5px;">
+                                    <input type="checkbox" value="@image.ImageID" id="@stringfForIdFirst" name="@nameof(image.FirstOnScreen)" onchange="First_Second_ImageShow(this)">Первый показ
+                                </div>
+                            }
+
+                            @if (image.SecondOnScreen)
+                            {
+                                <div style="margin-left: 5px;">
+                                    <input type="checkbox" checked="checked" value="@image.ImageID" disabled="disabled" id="@stringfForIdSecond" name="@nameof(image.SecondOnScreen)" onchange="First_Second_ImageShow(this)">Второй показ
+                                </div>
+                            }
+                            else
+                            {
+                                <div style="margin-left: 5px;">
+                                    <input type="checkbox" value="@image.ImageID" id="@stringfForIdSecond" name="@nameof(image.SecondOnScreen)" onchange="First_Second_ImageShow(this)">Второй показ
+                                </div>
+                            }
+
+                            @if (image.FirstOnScreen == false && image.SecondOnScreen == false)
+                            {
+                                <div style="margin-left: 5px;">
+                                    <input type="checkbox" checked="checked" value="@image.ImageID" disabled="disabled" id="@stringfForIdThird" name="NoneChecked" onchange="First_Second_ImageShow(this)">В общем списке
+                                </div>
+                            }
+                            else
+                            {
+                                <div style="margin-left: 5px;">
+                                    <input type="checkbox" value="@image.ImageID" id="@stringfForIdThird" name="NoneChecked" onchange="First_Second_ImageShow(this)">В общем списке
+                                </div>
+                            }
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2" style="text-align: center;">
+                            <a class="btn btn-danger" asp-action="DeletePhoto" asp-route-photoId="@image.ImageID" asp-route-productId="@productId">Удалить</a>
+                        </td>
+                    </tr>
+
+
+                    counterForIdFirst++;
+                    stringfForIdFirst = "First" + counterForIdFirst;
+                    counterForIdSecond++;
+                    stringfForIdSecond = "Second" + counterForIdSecond;
+                    counterForIdThird++;
+                    stringfForIdThird = "Third" + counterForIdThird;
+
+                    <tr>
+                        <td>
+                            <label style="display: block; text-align: right;">Alt:</label>
+                        </td>
+                        <td>
+                            <input name="@nameof(image.Alternative)" style="margin-left: 5px; width: 180px;" value="@image.Alternative"/>
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+                        <td>
+                            <label style="display: block; text-align: right;">Цвет фотографии:</label>
+                        </td>
+                        <td>
+                            <select name="ColorID" style="margin-left: 5px; width: 180px;">
+                                <option disabled>Выберите цвет фотографии</option>
+                                @foreach (var color in colorsList)
+                                {
+                                    if (bindedColors.Any(i => i.TypeColorID == image.TypeColorID && color.TypeColorID == image.TypeColorID))
+                                    {
+                                        <option selected value="@color.TypeColorID">@color.ColorType</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@color.TypeColorID">@color.ColorType</option>
+                                    }
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                }
+
+                @{
+                    string first = "";
+                    string second = "";
+                    if (imageList.FirstOrDefault(i => i.FirstOnScreen) != null)
                     {
-                        <option selected value="@color.TypeColorID">@color.ColorType</option>
+                        first = imageList.First(i => i.FirstOnScreen).ImageID.ToString();
                     }
-                    else
+                    if (imageList.FirstOrDefault(i => i.SecondOnScreen) != null)
                     {
-                        <option value="@color.TypeColorID">@color.ColorType</option>
+                        second = imageList.First(i => i.SecondOnScreen).ImageID.ToString();
                     }
+
 
                 }
-            </select>
-            <br/>
-        }
-        
-        @{
-            string first = "";
-            string second = "";
-            if (imageList.FirstOrDefault(i => i.FirstOnScreen) != null)
-            {
-                first = imageList.First(i => i.FirstOnScreen).ImageID.ToString();
-            }
-            if (imageList.FirstOrDefault(i => i.SecondOnScreen) != null)
-            {
-                second = imageList.First(i => i.SecondOnScreen).ImageID.ToString();
-            }
-
-
-        }
-
-        <input type="hidden" value="@first" id="FirstOnScreen" name="ValFirstOnScreen">
-        <input type="hidden" value="@second" id="SecondOnScreen" name="ValSecondOnScreen">
-
-
-        <button type="submit" class="btn btn-sm btn-danger">Изменить</button>
-    </form>
-}
-
-<h2>Загрузка файлов</h2>
-
-<form asp-action="UploadFiles" enctype="multipart/form-data" method="post">
-    <h3>Выберите файл для загрузки</h3>
-    <input type="file" name="files" multiple/>
-    <input type="submit" value="Upload Selected Files"/>
-</form>
-
-<a asp-controller="Admin" asp-action="ListAdmin" class="btn btn-default">К списку</a>
+                <tr>
+                    <td style="text-align:center;">
+                        <input type="hidden" value="@first" id="FirstOnScreen" name="ValFirstOnScreen">
+                        <input type="hidden" value="@second" id="SecondOnScreen" name="ValSecondOnScreen">
+                        <button type="submit" class="btn btn-sm btn-danger" style="width: 100px;">Изменить</button>                        
+                    </td>
+                    <td style="text-align:center;">
+                        <a asp-controller="Admin" asp-action="ListAdmin" class="btn btn-dark">К списку</a>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    }
+</div>

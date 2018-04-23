@@ -7,86 +7,95 @@
     List<Category> categories = TempData["Categories"] as List<Category> ?? new List<Category>();
 }
 
-<h2>Edit</h2>
+<h2 style="margin: auto; width: 450px;">Добавить/Изменить товар</h2>
 
-<form asp-action="Edit" method="post">
-    <input type="hidden" asp-for="ProductID" />
-    <div class="form-group">
-        <label>Название:</label>
-        <div><span asp-validation-for="Name" class="text-danger"></span></div>
-        <input asp-for="Name" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label>Описание:</label>
-        <div><span asp-validation-for="Description" class="text-danger"></span></div>
-        <textarea asp-for="Description" class="form-control"></textarea>
-    </div>
-    <div class="form-group">
-        <label>Категория:</label>
-        <div><span asp-validation-for="SubCategoryID" class="text-danger"></span></div>
-
-        <select asp-for="SubCategoryID">
-            <option disabled>Выберите категорию</option>
-            @foreach (var category in categories)
-            {
-                foreach (var subCategory in category.SubCategories)
-                {
-                    if (subCategory.SubCategoryID == Model.SubCategoryID)
-                    {
-                        <option selected value="@subCategory.SubCategoryID">@category.CategoryName "@subCategory.SubCategoryName"</option>
-                    }
-                    else
-                    {
-                        <option value="@subCategory.SubCategoryID">@category.CategoryName "@subCategory.SubCategoryName"</option>
-                    }
-                }
-            }
-
-        </select>
-        <div>
-            <label>Цвет:</label>
-
-            @for (int i = 0; i < colorList.Count; i++)
-            {
-                <label>@colorList[i].ColorType:</label>
-                if (boundcolorList.Select(bcl => bcl.TypeColorID).Contains(colorList[i].TypeColorID))
-                {
-                    <input name="colors" checked="checked" type="checkbox" value="@colorList[i].TypeColorID" />
-                }
-                else
-                {
-                    <input name="colors" type="checkbox" value="@colorList[i].TypeColorID" />
-                }
-            }
+<div style="margin: auto; width: 400px;">
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="ProductID" />
+        <div class="form-group">
+            <label>Название:</label>
+            <div><span asp-validation-for="Name" class="text-danger"></span></div>
+            <input asp-for="Name" class="form-control" />
         </div>
+        <div class="form-group">
+            <label>Описание:</label>
+            <div><span asp-validation-for="Description" class="text-danger"></span></div>
+            <textarea asp-for="Description" class="form-control"></textarea>
+        </div>
+        <div class="form-group">
+            <label>Категория:</label>
+            <div><span asp-validation-for="SubCategoryID" class="text-danger"></span></div>
 
-    </div>
-    <div class="form-group">
-        <label>Цена:</label>
-        <div><span asp-validation-for="Price" class="text-danger"></span></div>
-        <input asp-for="Price" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label>Размер:</label>
-        <div><span asp-validation-for="Size" class="text-danger"></span></div>
-        <input asp-for="Size" class="form-control" />
-    </div>
-    <div>
-        <label>Новый товар:</label>
-        <div><span asp-validation-for="NewProduct" class="text-danger"></span></div>
-        <input asp-for="NewProduct" class="form-control" />
-    </div>
-    <div>
-        <label>Спрятать товар:</label>
-        <div><span asp-validation-for="HideFromUsers" class="text-danger"></span></div>
-        <input asp-for="HideFromUsers" class="form-control" />
-    </div>
-    <div class="text-center">
-        <button class="btn btn-primary" type="submit">Сохранить</button>
-        @if (Model.ProductID != 0)
-        {
-            <a asp-action="UploadFiles" asp-route-productId="@Model.ProductID">Картинки товара</a>
-        }
-        <a asp-controller="Admin" asp-action="ListAdmin" class="btn btn-default">К списку</a>
-    </div>
-</form>
+            <select asp-for="SubCategoryID">
+                <option disabled>Выберите категорию</option>
+                @foreach (var category in categories)
+                {
+                    foreach (var subCategory in category.SubCategories)
+                    {
+                        if (subCategory.SubCategoryID == Model.SubCategoryID)
+                        {
+                            <option selected value="@subCategory.SubCategoryID">@category.CategoryName "@subCategory.SubCategoryName"</option>
+                        }
+                        else
+                        {
+                            <option value="@subCategory.SubCategoryID">@category.CategoryName "@subCategory.SubCategoryName"</option>
+                        }
+                    }
+                }
+
+            </select>
+            <div>
+                <label>Цвет:</label>
+                <table>
+                    @for (int i = 0; i < colorList.Count; i++)
+                    {
+                        <tr>
+                        <td>@colorList[i].ColorType:</td>
+                        @if (boundcolorList.Select(bcl => bcl.TypeColorID).Contains(colorList[i].TypeColorID))
+                        {
+                            <td>
+                                <input name="colors" checked="checked" type="checkbox" value="@colorList[i].TypeColorID" />
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                <input name="colors" type="checkbox" value="@colorList[i].TypeColorID" />
+                            </td>
+                        }
+                        </tr>
+                    }
+                </table>
+            </div>
+
+        </div>
+        <div class="form-group">
+            <label>Цена:</label>
+            <div><span asp-validation-for="Price" class="text-danger"></span></div>
+            <input asp-for="Price" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Размер:</label>
+            <div><span asp-validation-for="Size" class="text-danger"></span></div>
+            <input asp-for="Size" class="form-control" />
+        </div>
+        <div>
+            <span asp-validation-for="NewProduct" class="text-danger"></span>
+            <input asp-for="NewProduct" />
+            <label>Новый товар</label>
+        </div>
+        <div>
+            <span asp-validation-for="HideFromUsers" class="text-danger"></span>
+            <input asp-for="HideFromUsers" />
+            <label>Спрятать товар</label>
+        </div>
+        <div class="text-center">
+            <button class="btn btn-primary" type="submit">Сохранить</button>
+            @if (Model.ProductID != 0)
+            {
+                <a asp-action="UploadFiles" asp-route-productId="@Model.ProductID" class="btn btn-info">Картинки товара</a>
+            }
+            <a asp-controller="Admin" asp-action="ListAdmin" class="btn btn-dark">К списку</a>
+        </div>
+    </form>
+</div>

@@ -23,6 +23,21 @@ namespace LevelStore.Models.EF
         public IEnumerable<Product> ProductsWithImages => context.Products.Include(i => i.Images);
         public IEnumerable<Promo> PromoCodes => context.PromoCodes;
 
+        public void DeletePhoto(int productId, int photoId)
+        {
+            Product product = ProductsWithImages.FirstOrDefault(i => i.ProductID == productId);
+            Image image = product?.Images.FirstOrDefault(i => i.ImageID == photoId);
+            if (image != null)
+            {
+                if (System.IO.File.Exists("/images/" + image.Name))
+                {
+                    System.IO.File.Delete("wwwroot/images/" + image.Name);
+                }
+                product.Images.Remove(image);
+                context.SaveChanges();
+            }
+        }
+
         public int UpdatePromo(Promo promo)
         {
             Promo updatePromo = context.PromoCodes.FirstOrDefault(i => i.PromoId == promo.PromoId);
@@ -40,7 +55,7 @@ namespace LevelStore.Models.EF
             return promo.PromoId;
         }
 
-        public void Delet3Promo(int promoId)
+        public void DeletePromo(int promoId)
         {
             Promo deletePromo = context.PromoCodes.FirstOrDefault(i => i.PromoId == promoId);
             if (deletePromo != null)

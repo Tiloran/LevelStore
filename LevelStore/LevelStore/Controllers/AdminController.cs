@@ -195,6 +195,10 @@ namespace LevelStore.Controllers
 
         public IActionResult UploadFiles(int productId)
         {
+            if (productId < 1)
+            {
+                return NotFound();
+            }
             int id = productId;
             TempData["id"] = id;
             List<Color> bindedColors = _repository.BoundColors.Where(i => i.ProductID == id).ToList();
@@ -232,6 +236,18 @@ namespace LevelStore.Controllers
             TempData["ImageList"] = imageList;
             TempData["BindedColors"] = boundedColors;
             return View();
+        }
+
+        public IActionResult DeletePhoto(int productId, int photoId)
+        {
+            Product product = _repository.Products.FirstOrDefault(i => i.ProductID == productId);
+            
+            if (product != null)
+            {
+                _repository.DeletePhoto(productId, photoId);
+                return RedirectToActionPermanent("UploadFiles", new { productid = productId });
+            }
+            return NotFound();
         }
 
         [HttpPost]
@@ -304,7 +320,7 @@ namespace LevelStore.Controllers
         {
             if (promoId >= 1)
             {
-                _repository.Delet3Promo((int) promoId);
+                _repository.DeletePromo((int) promoId);
             }
             else
             {

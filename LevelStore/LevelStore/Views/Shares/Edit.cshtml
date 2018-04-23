@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Edit";
     Layout = "_LayoutAdmin";
-    List<Category> catogieList = TempData["Categories"] as List<Category> ?? new List<Category>();
+    List<Category> categories = TempData["Categories"] as List<Category> ?? new List<Category>();
 }
 
 @section scripts{
@@ -11,78 +11,82 @@
     <script src="/js/GettignProductForShares.js"></script>
 }
 
-<h2>Edit</h2>
-
-<h4>Share</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ShareId" />
-            <div class="form-group">
-                <label class="control-label">Дата начала акции</label>
-                <input asp-for="DateOfStart" class="form-control" />
-                <span asp-validation-for="DateOfStart" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label">Дата конца акции</label>
-                <input asp-for="DateOfEnd" class="form-control" />
-                <span asp-validation-for="DateOfEnd" class="text-danger"></span>
-            </div>
-            <div class="form-group" style="height: 100px;">
-                <div class="checkbox">
-                    <label>
-                        <input asp-for="Enabled" /> Включить/Выключить
-                    </label>
-                </div>
-            </div>
-            <div class="form-group" style="height: 100px;">
-                <div class="checkbox">
-                    <label>
-                        <input asp-for="Fake" /> Фейк
-                    </label>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label">Коеф. снижения цены</label>
-                <input asp-for="KoefPrice" class="form-control" />
-                <span asp-validation-for="KoefPrice" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-            Список товаров для акции
-            <div id="SelectedProductBlock">
-                @for (int i = 0; i < Model.Products?.Count; i++)
-                {
-                    <div>
-                        <input checked="checked" type="checkbox" value="@Model.Products[i].ProductID" name="Products[@i]"/>
-                        @Model.Products[i].Name
-                        <button type="button" onclick="RecalcIndexOfProducts(this)">Удалить</button>
+    
+        <h4 style="margin: auto; width: 300px;">Создать/изменить</h4>
+        <hr />
+        <div class="row " style="margin: 10px auto; width: 400px;" >
+            <div class="col">
+                <form asp-action="Edit" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="ShareId" />
+                    <div class="form-group">
+                        <label class="control-label">Дата начала акции:</label>
+                        <input asp-for="DateOfStart" class="form-control" />
+                        <span asp-validation-for="DateOfStart" class="text-danger"></span>
                     </div>
-                }
+                    <div class="form-group">
+                        <label class="control-label">Дата конца акции:</label>
+                        <input asp-for="DateOfEnd" class="form-control" />
+                        <span asp-validation-for="DateOfEnd" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label>
+                                <input asp-for="Enabled" /> Включить/Выключить
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label>
+                                <input asp-for="Fake" /> Фейк (вкл/выкл)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Коеф. снижения цены:</label>
+                        <input asp-for="KoefPrice" class="form-control" />
+                        <span asp-validation-for="KoefPrice" class="text-danger"></span>
+                    </div>
+                    <div class="form-group text-center">
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                    </div>
+                    Список товаров для акции:
+                    <table id="SelectedProductBlock">
+                        @for (int i = 0; i < Model.Products?.Count; i++)
+                        {
+                            <tr>
+                            <td>
+                                <input checked="checked" type="checkbox" value="@Model.Products[i].ProductID" name="Products[@i]"/>
+                                @Model.Products[i].Name
+                            </td>
+                            <td>
+                            <button type="button" class="btn btn-danger" onclick="RecalcIndexOfProducts(this)">Удалить</button>
+                            </td>
+                            </tr>
+                        }
+                    </table>
+                </form>
+                <div>
+                    <button class="btn btn-info text-center" id="AjaxSearchProductForShares" onclick="search()">Поиск</button>
+                    <input id="search-input" onkeypress="RunAjaxSearch(event, false)" />
+                    <select id="category-input" style="margin-top: 10px;" onchange="RunAjaxSearch(event, true)">
+                        <option selected CategoryId="0" value="0">Любая категория</option>
+                        @foreach (var category in categories)
+                        {
+                            <option CategoryId="@category.CategoryID" value="0">@category.CategoryName</option>
+                            foreach (var subCategory in category.SubCategories)
+                            {
+                                <option CategoryId="@subCategory.CategoryID" value="@subCategory.SubCategoryID">@category.CategoryName "@subCategory.SubCategoryName"</option>
+                            }
+                        }
+                    </select>
+                </div>
             </div>
-        </form>
-        <div>
-            <button id="AjaxSearchProductForShares" onclick="search()">Поиск</button>
-            <input id="search-input" onkeypress="RunAjaxSearch(event, false)"/>
-            <select id="category-input" onchange="RunAjaxSearch(event, true)">
-                <option selected CategoryId="0" value="0">Любая категория</option>
-                @foreach (var category in catogieList)
-                {
-                    <option CategoryId="@category.CategoryID" value="0">@category.CategoryName</option>
-                    foreach (var subCategory in category.SubCategories)
-                    {
-                        <option CategoryId="@subCategory.CategoryID" value="@subCategory.SubCategoryID">@category.CategoryName "@subCategory.SubCategoryName"</option>
-                    }
-                }
-            </select>
         </div>
-    </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+        <div style="margin: 10px auto; width: 150px;">
+            <a class="btn btn-danger" asp-action="Index">Назад к списку</a>
+        </div>
+    
 

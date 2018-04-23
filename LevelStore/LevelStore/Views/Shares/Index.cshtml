@@ -5,10 +5,10 @@
     Layout = "_LayoutAdmin";
 }
 
-<h2>Index</h2>
+<h4 style="margin: auto; width: 300px;">Список акций</h4>
 
 <p>
-    <a asp-action="Edit">Create New</a>
+    <a class="btn btn-primary" asp-action="Edit">Создать новую акцию</a>
 </p>
 <table class="table">
     <thead>
@@ -52,8 +52,8 @@
                 @koefString
             </td>
             <td>
-                <a asp-action="Edit" asp-route-shareid="@item.ShareId">Edit</a> |
-                <a asp-action="Delete" asp-route-shareid="@item.ShareId">Delete</a>
+                <a  class="btn btn-info" asp-action="Edit" asp-route-shareid="@item.ShareId">Изменить</a>
+                <a  class="btn btn-danger" asp-action="Delete" asp-route-shareid="@item.ShareId">Удалить</a>
             </td>
         </tr>
 }

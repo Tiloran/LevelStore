@@ -34,11 +34,15 @@ function ShowProductList(products) {
     if (products.length > 0) {
         for (var i = 0; i < products.length; i++) {
             productBlock.append(
-                "<div>" +
+                "<tr>" +
+                "<td>" + 
                 "<input checked=\"checked\" productAttr=\"yes\" type=\"checkbox\" value=\"" + products[i].productID + "\" name=\"Products[" + i + "]\" /> " +
                 products[i].name +
-                " <button type=\"button\" onclick=\"RecalcIndexOfProducts(this)\">Удалить</button>" +
-                "</div>"
+                "</td>" + 
+                "<td>" +
+                " <button class=\"btn btn-danger\" type=\"button\" onclick=\"RecalcIndexOfProducts(this)\">Удалить</button>" +
+                "</td>" +
+                "</tr>"
             );
         }
     }
@@ -46,6 +50,8 @@ function ShowProductList(products) {
 
 
 function RecalcIndexOfProducts(element) {
+    var delItem = $(element).closest('td').prev('td');
+    DeleteElem(delItem);
     DeleteElem((element).parentElement);
     var products = $("[productAttr]");
     for (var i = 0; i < products.length; i++) {

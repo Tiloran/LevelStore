@@ -7,30 +7,29 @@
 
 
 
-<h4>Promo</h4>
+<h4 style="margin: auto; width: 300px;">Создать/Изменить промо код</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
+<div class="row" style="margin: auto; width: 300px;">
+    <div class="col">
         <form asp-action="EditPromo" asp-route-promoId="@Model.PromoId" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="PromoCode" class="control-label"></label>
+                <label asp-for="PromoCode" class="control-label">Название</label>
                 <input asp-for="PromoCode" value="@Model.PromoCode" class="form-control" />
                 <span asp-validation-for="PromoCode" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Discount" class="control-label"></label>
+                <label asp-for="Discount" class="control-label">Скидка %</label>
                 <input type="number" min="0" max="20" value="@Model.Discount" name="Discount" class="form-control" />
                 <span asp-validation-for="Discount" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+                <a class="btn btn-dark" asp-action="ListPromo">Назад к списку</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="ListPromo">Back to List</a>
-</div>
+
 

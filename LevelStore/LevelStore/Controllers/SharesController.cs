@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using LevelStore.Models;
@@ -29,7 +30,8 @@ namespace LevelStore.Controllers
         {
             if (shareid == null || shareid == 0)
             {
-                return View(new Share());
+                TempData["Categories"] = _productRepository.GetCategoriesWithSubCategories();
+                return View(new Share{DateOfStart = DateTime.Now, DateOfEnd = DateTime.Now.AddDays(7)});
             }
 
             var share = _repository.Shares.SingleOrDefault(m => m.ShareId == shareid);

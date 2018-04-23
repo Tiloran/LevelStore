@@ -9,14 +9,13 @@
 @section scripts{
     <script src="/js/GetIdForExcelDownload.js"></script>
 }
-<h2>ListOrder</h2>
+<h2>Таблица заявок</h2>
 <div>
     @if (Model.PageViewModel.HasPreviousPage)
     {
         <a asp-action="ListOrder"
            asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
-           class="btn btn-default btn">
-            <i class="glyphicon glyphicon-chevron-left"></i>
+           class="btn btn-dark">
             Назад
         </a>
     }
@@ -54,9 +53,8 @@
     {
         <a asp-action="ListOrder"
            asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
-           class="btn btn-default btn">
+           class="btn btn-dark btn">
             Вперед
-            <i class="glyphicon glyphicon-chevron-right"></i>
         </a>
     }
 </div>

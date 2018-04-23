@@ -1,24 +1,64 @@
 ﻿@model IEnumerable<Category>
 @{
-     if (Model.Any())
-     {
-         <ul class="menu">
-             <li><a asp-controller="Admin" asp-action="ListAdmin">Без фильтров</a></li>
-             @foreach (var category in Model)
-             {
-                 <li>
-                     <a asp-controller="Admin" asp-action="ListAdmin" asp-route-categoryId="@category.CategoryID">@category.CategoryName</a>
-                     @if (category.SubCategories.Any())
-                     {
-                         <ul class="submenu">
-                             @foreach (var subCategory in category.SubCategories)
-                             {
-                                 <li><a asp-controller="Admin" asp-action="ListAdmin" asp-route-subCategoryId="@subCategory.SubCategoryID" class="btn btn-default">@category.CategoryName "@subCategory.SubCategoryName"</a></li>
-                             }
-                         </ul>
-                     }
-                 </li>
-             }
-         </ul>
-     }
+
+    <div class="row">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="width: 100%;">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCategory" aria-controls="navbarCategory" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCategory">
+                <ul class="navbar-nav mr-auto mt-2 mt-lg-0" style="margin: 0 auto;">
+                    <li class="nav-item ">
+                        <a class="nav-link" asp-controller="Admin" asp-action="ListAdmin">Без фильтров <span class="sr-only">(current)</span></a>
+                    </li>
+                    @if (Model.Any())
+                    {
+                         foreach (var category in Model)
+                         {
+                             <li class="nav-item dropdown ">
+                                 <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">@category.CategoryName</a>
+                                 <ul class=" dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                     <li><a class="dropdown-item " asp-controller="Admin" asp-action="ListAdmin" asp-route-categoryId="@category.CategoryID">@category.CategoryName</a></li>
+                                     @if (category.SubCategories.Any() && category.SubCategories.Count > 1)
+                                     {
+                                          foreach (var subCategory in category.SubCategories)
+                                          {
+                                              <li><a class="dropdown-item " asp-controller="Admin" asp-action="ListAdmin" asp-route-subCategoryId="@subCategory.SubCategoryID" >@category.CategoryName "@subCategory.SubCategoryName"</a></li>
+                                          }
+                                     }
+                                 </ul>
+                             </li>
+                         }
+                    }
+               </ul>
+            </div>
+        </nav>
+    </div>
+
+
+
+
+
+
+    @*if (Model.Any())
+    {
+        <ul class="menu">
+            <li><a asp-controller="Admin" asp-action="ListAdmin">Без фильтров</a></li>
+            @foreach (var category in Model)
+            {
+                <li>
+                    <a asp-controller="Admin" asp-action="ListAdmin" asp-route-categoryId="@category.CategoryID">@category.CategoryName</a>
+                    @if (category.SubCategories.Any())
+                    {
+                        <ul class="submenu">
+                            @foreach (var subCategory in category.SubCategories)
+                            {
+                                <li><a asp-controller="Admin" asp-action="ListAdmin" asp-route-subCategoryId="@subCategory.SubCategoryID" class="btn btn-default">@category.CategoryName "@subCategory.SubCategoryName"</a></li>
+                            }
+                        </ul>
+                    }
+                </li>
+            }
+        </ul>
+    }*@
 }
