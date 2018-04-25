@@ -5,48 +5,6 @@
 }
 
 @section scripts{
-    <script>
-        function ololo() {
-            var myTemplate = $.templates("#personTmpl");
-
-            var ids = [
-                {
-                    id: 1
-                },
-                {
-                    id: 2
-                },
-                {
-                    id: 3
-                },
-                {
-                    id: 4
-                },
-                {
-                    id: 5
-                },
-                {
-                    id: 6
-                },
-                {
-                    id: 7
-                },
-                {
-                    id: 8
-                },
-                {
-                    id: 9
-                },
-                {
-                    id: 10
-                }
-            ];
-
-            var html = myTemplate.render(ids);
-
-            $("#peopleList").html(html);
-        }
-    </script>
     
 }
 
@@ -58,16 +16,9 @@
                 <div class="otdel-dostavki__content">
                     <p class="otdel-dostavki__text">
                         Каждый заказ в индивидуальном порядке отправляется по четко отработанной схеме шоу-рума. Девочки-консультанты связываются с клиентом для оформления заказа, далее передавая его на доставку.
-                        <div id="peopleList"></div>
-                        <script id="personTmpl" type="text/x-jsrender">                            
-                            <a class="btn btn-primary" href="/Product/ViewSingleProduct?productId={{:id}}">Выбрать</a>
-                            <br />
-                        </script>
-                        
                     </p>
                     <p class="otdel-dostavki__text">Если у Вас возникли вопросы по доставке, свяжитесь по номеру:  (063) 740 67 02 <br> Также возможно написать письмо на почту  Level.direct@gmail.com</p>
                 </div>
-                <a href="/dostavka.html" class="btn-link">Как получить свой заказ</a>
             </div>
         </div>
     </div>

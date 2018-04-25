@@ -10,8 +10,6 @@ namespace LevelStore.Controllers
 
         public ViewResult OurShowRoom() => View();
 
-        public ViewResult Partnership() => View();
-
         public ViewResult Vacancy() => View();
     }
 }
