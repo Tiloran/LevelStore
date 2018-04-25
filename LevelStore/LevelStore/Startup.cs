@@ -2,6 +2,7 @@
 using LevelStore.Infrastructure.Tasks;
 using LevelStore.Models;
 using LevelStore.Models.EF;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -29,7 +30,13 @@ namespace LevelStore
         {
             services.AddDbContext<ApplicationDbContext>(option =>
                 option.UseSqlServer(Configuration["Data:LevelStore:ConnectionString"]));
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = new PathString("/Account/Login");
+                });
             services.AddTransient<IProductRepository, EFProductRepository>();
+            services.AddTransient<IUserRepository, EFUserRepository>();
             services.AddTransient<IOrderRepository, EFOrderRepository>();
             services.AddTransient<IShareRepository, EFShareRepository>();
             services.AddScoped(SessionCart.GetCart);
@@ -43,9 +50,9 @@ namespace LevelStore
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseDeveloperExceptionPage();
             app.UseStatusCodePages();
             app.UseStaticFiles();
+            app.UseAuthentication();
             app.UseSession();
             app.StartTask<WorkWithShares>(TimeSpan.FromMinutes(1));
             app.UseMvc(routes =>

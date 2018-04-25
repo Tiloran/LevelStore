@@ -36,7 +36,7 @@ function ShowProductList(products) {
             productBlock.append(
                 "<tr>" +
                 "<td>" + 
-                "<input checked=\"checked\" productAttr=\"yes\" type=\"checkbox\" value=\"" + products[i].productID + "\" name=\"Products[" + i + "]\" /> " +
+                "<input checked=\"checked\" productAttr=\"yes\" type=\"checkbox\" value=\"" + products[i].productID + "\" name=\"Products[]\" /> " +
                 products[i].name +
                 "</td>" + 
                 "<td>" +

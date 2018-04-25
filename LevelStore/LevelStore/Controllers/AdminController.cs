@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using LevelStore.Models;
 using LevelStore.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ using Microsoft.Net.Http.Headers;
 
 namespace LevelStore.Controllers
 {
+    [Authorize]
     public class AdminController : Controller
     {
         private readonly IProductRepository _repository;
@@ -49,10 +51,16 @@ namespace LevelStore.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Edit(Product product, List<int> colors)
         {
             if (ModelState.IsValid)
             {
+                int? shareId = _repository.Products.FirstOrDefault(i => i.ProductID == product.ProductID)?.ShareID;
+                if (shareId != null)
+                {
+                    product.ShareID = shareId;
+                }
                 int? id = _repository.SaveProduct(product, colors);
                 if (id == null)
                 {
@@ -105,11 +113,8 @@ namespace LevelStore.Controllers
                         Images = images
                     });
             }
-            
-            
 
             List<Category> categories = _repository.GetCategoriesWithSubCategories();
-
             ProductsListViewModel productsListViewModel = new ProductsListViewModel { ProductAndImages = productAndImages.ToList(), Categories = categories };
             return View(productsListViewModel);
         }
@@ -121,6 +126,7 @@ namespace LevelStore.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult AddColors(TypeColor newTypeColor)
         {
             _repository.SaveTypeColor(newTypeColor);
@@ -251,6 +257,7 @@ namespace LevelStore.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult UploadFiles(IList<IFormFile> files)
         {
             List<string> imageNameList = new List<string>();
@@ -351,6 +358,7 @@ namespace LevelStore.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult EditPromo(Promo promo)
         {
             if (ModelState.IsValid)

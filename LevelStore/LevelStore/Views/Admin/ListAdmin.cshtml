@@ -21,6 +21,7 @@
             <td>Название</td>
             <td>Цена</td>
             <td>Новый</td>
+            <td>Спрятан</td>
             <td>Просмотров</td>
             <td>Добавлений в корзину</td>
             <td>Куплено</td>
@@ -38,6 +39,14 @@
                 <td>@product.Product.Name</td>
                 <td>@product.Product.Price</td>
                 @if (product.Product.NewProduct)
+                {
+                    <td>Да</td>
+                }
+                else
+                {
+                    <td>Нет</td>
+                }
+                @if (product.Product.HideFromUsers)
                 {
                     <td>Да</td>
                 }

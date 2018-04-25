@@ -35,6 +35,15 @@
                 <div class="collapse navbar-collapse" id="navbarTilo">
                     <a class="navbar-brand" href="#">Level store</a>
                     <ul class="navbar-nav mr-auto mt-2 mt-lg-0" style="margin: 0 auto;">
+                        <li class="nav-item dropdown ">
+                            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Аккаунты</a>
+                            <ul class=" dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <li><a class="dropdown-item " asp-controller="Account" asp-action="Register">Регистрация </a></li>
+                                <li><a class="dropdown-item " asp-controller="Account" asp-action="Logout">Logout </a></li>
+                                <li><a class="dropdown-item " asp-controller="Account" asp-action="Login">Login </a></li>
+                            </ul>
+                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Product" asp-action="List">К юзерскому списку </a>
                         </li>

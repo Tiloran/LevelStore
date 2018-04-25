@@ -159,7 +159,7 @@ namespace LevelStore.Models.EF
                     productToSave.AddToCartCounter = product.AddToCartCounter;
                     productToSave.BuyingCounter = product.BuyingCounter;
                     productToSave.ViewsCounter = product.ViewsCounter;
-                    productToSave.DateOfCreation = productToSave.DateOfCreation == null ? DateTime.Now : product.DateOfCreation;
+                    productToSave.DateOfCreation = productToSave.DateOfCreation ?? DateTime.Now;
                 }
             }
             context.SaveChanges();

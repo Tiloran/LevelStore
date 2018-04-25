@@ -82,9 +82,6 @@ function ShowNewData(data) {
         var newPrice = price;
 
         startString += "<a class=\"Product\" href=\"/Product/ViewSingleProduct?productId=" + product.product.productID + "\">";
-        if (product.product.newProduct === true) {
-            //startString += "<div style=\"background-color: red; width: 100px;\">NEW</div>";
-        }
         if (product.product.shareID != null) {
             
             var share = searchShare(data.shares, product.product.shareID);
@@ -93,23 +90,25 @@ function ShowNewData(data) {
             if (share >= 0) {
                 share = data.shares[share];
                 if (new Date(share.dateOfStart) <= $.now() && share.enabled) {
-                    //startString += "<div> Акция </div>";
-                    //var timeOfEnd = new Date(share.dateOfEnd);
-                    //var seconds = '' + timeOfEnd.getSeconds();
-                    //var minutes = '' + timeOfEnd.getMinutes();
-                    //var hours = '' + timeOfEnd.getHours();
-                    //var month = '' + (timeOfEnd.getMonth() + 1);
-                    //var day = '' + timeOfEnd.getDate();
-                    //var year = timeOfEnd.getFullYear();
+                    startString += "<div class=\"ShareDisplay\">";
+                    startString += "<div>Акция! До конца:</div>";
+                    var timeOfEnd = new Date(share.dateOfEnd);
+                    var seconds = '' + timeOfEnd.getSeconds();
+                    var minutes = '' + timeOfEnd.getMinutes();
+                    var hours = '' + timeOfEnd.getHours();
+                    var month = '' + (timeOfEnd.getMonth() + 1);
+                    var day = '' + timeOfEnd.getDate();
+                    var year = timeOfEnd.getFullYear();
 
-                    //if (seconds.length < 2) seconds = '0' + seconds;
-                    //if (minutes.length < 2) minutes = '0' + minutes;
-                    //if (hours.length < 2) hours = '0' + hours;
-                    //if (month.length < 2) month = '0' + month;
-                    //if (day.length < 2) day = '0' + day;
+                    if (seconds.length < 2) seconds = '0' + seconds;
+                    if (minutes.length < 2) minutes = '0' + minutes;
+                    if (hours.length < 2) hours = '0' + hours;
+                    if (month.length < 2) month = '0' + month;
+                    if (day.length < 2) day = '0' + day;
 
-                    //var timeOfEndString = year + "/" + month + "/" + day + " " + hours + ":" + minutes + ":" + seconds;
-                    //startString += "<div data-countdown=\"" + timeOfEndString + "\"></div>";
+                    var timeOfEndString = year + "/" + month + "/" + day + " " + hours + ":" + minutes + ":" + seconds;
+                    startString += "<div data-countdown=\"" + timeOfEndString + "\"></div>";
+                    startString += "</div>";
                     if (share.fake) {
                         price = price / 100 * (share.koefPrice + 100);
                     } else {
@@ -117,6 +116,10 @@ function ShowNewData(data) {
                     }
                 }
             }
+        }
+
+        if (product.product.newProduct === true) {
+            startString += "<img class=\"NewIcon\" src=\"/images/img/main-page/new.svg\" alt=\"NEW\">";
         }
         
 
@@ -135,23 +138,20 @@ function ShowNewData(data) {
         }
         else
         {
-            startString += "<img src=\"/images/None.jpg\" alt=\"\">";
+            startString += "<img src=\"/images/None.jpg\" alt=\"None\">";
         }
 
         startString += "<div>" + product.product.name + " " + "</div>";
-        //if (newPrice != price) {
-        //    startString += "<span><del>" + price.toFixed(2).replace(".", ",") + "</del> </span>";
-        //    startString += "<span>" + newPrice.toFixed(2).replace(".", ",") + " </span>";
-        //}
-        //else {
+        if (newPrice != price) {
+            startString += "<div style=\"display:inline-block; font-weight:bold; color: red;\"><del style=\"font-weight: normal; color: black;\">" + price.toFixed(2).replace(".", ",") + "</del>" + newPrice.toFixed(2).replace(".", ",") + "</div>";
+            startString += "<div style=\"display:inline-block;\">грн.</div>";
+            startString += "<br />";
+        }
+        else {
             startString += "<div>" + price.toFixed(2).replace(".", ",") + "грн. </div>";
-        //}
-
-        //startString += "<div>" + product.product.description + "</div>";
+        }
+        
         startString += "<div type=\"button\" class=\"btn btn-success\">Посмотреть</div>";
-        //startString += "<a href=\"/Product/ViewSingleProduct?productId=" +
-        //    product.product.productID +
-        //    "\" class=\"btn btn-primary\">Выбрать</a>";
         startString += "</li>";
         ololo = startString;
         $(holder).append(startString);

@@ -17,15 +17,13 @@ namespace LevelStore.Controllers
             _repository = repo;
             _productRepository = productRepo;
         }
-
-        // GET: Shares
+        
         public IActionResult Index()
         {
             return View(_repository.Shares.ToList());
         }
-
         
-        // GET: Shares/Edit/5
+        
         public IActionResult Edit(int? shareid)
         {
             if (shareid == null || shareid == 0)
@@ -42,11 +40,9 @@ namespace LevelStore.Controllers
             TempData["Categories"] = _productRepository.GetCategoriesWithSubCategories();
             return View(share);
         }
-
-        // POST: Shares/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Edit(int shareid, Share share, int[] products)
         {
             if (shareid != share.ShareId)
@@ -71,8 +67,7 @@ namespace LevelStore.Controllers
             }
             return View(share);
         }
-
-        // GET: Shares/Delete/5
+        
         public IActionResult Delete(int? shareid)
         {
             if (shareid == null)
@@ -89,9 +84,9 @@ namespace LevelStore.Controllers
 
             return View(share);
         }
-
-        // POST: Shares/Delete/5
+        
         [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int shareid)
         {
             _repository.Delete(shareid);

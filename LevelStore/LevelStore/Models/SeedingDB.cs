@@ -10,10 +10,14 @@ namespace LevelStore.Models
     {
         public static void EnsurePopulated(ApplicationDbContext context)
         {
-            //context.Database.EnsureCreated();
             if (context.TypeColors.Any())
             {
                 return;
+            }
+
+            if (!context.Users.Any())
+            {
+                context.Users.Add(new User {Email = "MyEmail@gmail.com", Password = "12345"});
             }
             if (!context.TypeColors.Any())
             {

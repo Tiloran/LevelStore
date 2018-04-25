@@ -30,7 +30,7 @@
             $('[data-countdown]').each(function () {
                 var $this = $(this), finalDate = $(this).data('countdown');
                 $this.countdown(finalDate, function (event) {
-                    $this.html(event.strftime('%D дней %H:%M:%S'));
+                    $this.html(event.strftime('%D дней и %H:%M:%S'));
                 });
             });
         }
@@ -97,18 +97,15 @@
                     decimal newPrice = price;
                     <li class="Product-wrapper">
                         <a asp-action="ViewSingleProduct" asp-route-productId="@product.Product.ProductID" class="Product">
-                            @*@if (product.Product.NewProduct)
-                                {
-                                    <div style="background-color: red; width: 100px;">NEW</div>
-                                }*@
-
                             @if (product.Product.ShareID != null)
                             {
                                 Share share = shares.First(id => id.ShareId == product.Product.ShareID);
                                 if (share.DateOfStart <= DateTime.Now && share.Enabled)
                                 {
-                                    @*<div>Акция</div>*@
-                                    @*<div data-countdown="@share.DateOfEnd.ToString("yyyy/MM/dd HH:mm:ss").Replace('.', '/')"></div>*@
+                                    <div class="ShareDisplay">
+                                        <div>Акция! До конца:</div>
+                                        <div data-countdown="@share.DateOfEnd.ToString("yyyy/MM/dd HH:mm:ss").Replace('.', '/')"></div>
+                                    </div>
                                     if (share.Fake)
                                     {
                                         price = price / 100 * (decimal)(share.KoefPrice + 100);
@@ -120,6 +117,11 @@
 
                                 }
                             }
+                            
+                            @if (product.Product.NewProduct)
+                            {
+                                <img class="NewIcon" src="/images/img/main-page/new.svg" alt="NEW">
+                            }
 
                             @if (product.Images.Count > 0 && product.Images.FirstOrDefault(f => f.FirstOnScreen)?.Name != null && product.Images.FirstOrDefault(f => f.SecondOnScreen)?.Name != null)
                             {
@@ -129,10 +131,20 @@
                             }
                             else
                             {
-                                <img src="/images/None.jpg" alt="">
+                                <img src="/images/None.jpg" alt="None">
                             }
                             <div>@product.Product.Name</div>
-                            <div>@newPrice грн.</div>
+                            @if (price != newPrice)
+                            {
+                                <div style="display: inline-block; font-weight: bold; color: red;"><del style=" font-weight: normal; color: black;">@price</del> @newPrice </div>
+                                <div style="display: inline-block;">грн.</div>
+                                <br/>
+                            }
+                            else
+                            {
+                                <div>@newPrice грн.</div>
+                            }
+                            
                             <div type="button" class="btn btn-success">Посмотреть</div>
                         </a>
                     </li>
@@ -141,117 +153,3 @@
         </div>
     </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-@*<div class="shop__wrap">
-    <div class="row">
-        <div class="col-md-12 main-navigation shop__navigation text-center">
-            <div style="display: none" id="CategoryId">@categoryId</div>
-            <div style="display: none" id="SubCategoryId">@subCategoryId</div>
-            <a asp-controller="Admin" asp-action="ListAdmin" class="btn btn-default">Админка</a>
-
-            @if (Model.Categories.Any())
-            {
-                <ul class="menu shop__menu">
-                    <li class="menu__item"><a asp-controller="Product" asp-action="List" asp-route-searchString="">Без фильтров</a></li>
-                    @foreach (var category in Model.Categories)
-                    {
-                        <li class="menu__item">
-                            <a class="menu__item-link" asp-controller="Product" asp-action="List" asp-route-categoryId="@category.CategoryID" asp-route-searchString="@oldSearchString">@category.CategoryName</a>
-                            @if (category.SubCategories.Any())
-                            {
-                                <ul class="submenu">
-                                    @foreach (var subCategory in category.SubCategories)
-                                    {
-                                        <li class="submenu__item">
-                                            <a asp-controller="Product" asp-action="List" asp-route-subCategoryId="@subCategory.SubCategoryID" asp-route-searchString="@oldSearchString">
-                                                @category.CategoryName "@subCategory.SubCategoryName"
-                                            </a>
-                                        </li>
-                                    }
-                                </ul>
-                            }
-                        </li>
-                    }
-                </ul>
-            }
-        </div>
-        </div>
-    <div class="container-fluid">
-        <div class="row shop__content">
-            <div id="itemHolder" class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-                <div id="LastItem" style="display: none">@(productList.Count)</div>
-                @foreach (var product in productList)
-                {
-                    <div>
-                        @{
-                            decimal price = product.Product.Price;
-                            decimal newPrice = price;
-
-
-                            if (product.Product.NewProduct)
-                            {
-                                <div style="background-color: red; width: 100px;">NEW</div>
-                            }
-                            if (product.Product.ShareID != null)
-                            {
-                                Share share = shares.First(id => id.ShareId == product.Product.ShareID);
-                                if (share.DateOfStart <= DateTime.Now && share.Enabled)
-                                {
-                                    <div>Акция</div>
-                                    <div data-countdown="@share.DateOfEnd.ToString("yyyy/MM/dd HH:mm:ss").Replace('.', '/')"></div>
-                                    if (share.Fake)
-                                    {
-                                        price = price / 100 * (decimal) (share.KoefPrice + 100);
-                                    }
-                                    else
-                                    {
-                                        newPrice = price / 100 * (decimal)(100 - share.KoefPrice);
-                                    }
-
-                                }
-                            }
-                        }
-                        <span>@product.Product.Name</span>
-                        @if (newPrice != price)
-                        {
-                            <span><del>@price</del></span>
-                            <span>@newPrice</span>
-                        }
-                        else
-                        {
-                            <span>@price</span>
-                        }
-                        <div>@product.Product.Description</div>
-
-
-                            @if (product.Images.Count > 0 && product.Images.FirstOrDefault(f => f.FirstOnScreen)?.Name != null && product.Images.FirstOrDefault(f => f.SecondOnScreen)?.Name != null)
-                            {
-                                <img src="/images/@product.Images.First(f => f.FirstOnScreen).Name" id="@product.Product.ProductID" name="FirstAndSecondImages" onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" style="width: 100px; height: 100px;" alt="@product.Images.First(f => f.FirstOnScreen).Alternative">
-                                <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.First(f => f.FirstOnScreen).Name" imageAlternative="@product.Images.First(f => f.FirstOnScreen).Alternative"/>
-                                <input type="hidden" name="FirstAndSecondImages" imageName="/images/@product.Images.First(f => f.SecondOnScreen).Name" imageAlternative="@product.Images.First(f => f.SecondOnScreen).Alternative"/>
-                            }
-                            else
-                            {
-                                <img src="/images/None.jpg" style="width: 100px; height: 100px;" alt="">
-                            }
-
-
-
-                        <a asp-action="ViewSingleProduct" asp-route-productId="@product.Product.ProductID" class="btn btn-primary">Выбрать</a>
-                    </div>
-                }
-            </div>
-            </div>
-        </div>
-    </div>*@
-

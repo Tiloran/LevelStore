@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using LevelStore.Models;
 using LevelStore.Models.Enums;
 using LevelStore.Models.ViewModels;
@@ -207,7 +209,21 @@ namespace LevelStore.Controllers
 
             var filePath = Path.Combine(_appEnvironment.ContentRootPath, $"wwwroot/excelReports/{sFileName}");
             const string fileType = "application/xlsx";
+            Task deleteTask = new Task(() =>
+            {
+                DeleteExcelReport(60000, filePath);
+            });
+            deleteTask.Start();
             return PhysicalFile(filePath, fileType, sFileName);
+        }
+
+        private void DeleteExcelReport(int milliSeconds, string path)
+        {
+            Thread.Sleep(milliSeconds);
+            if (System.IO.File.Exists(path))
+            {
+               System.IO.File.Delete(path);
+            }
         }
     }
 }

@@ -69,6 +69,7 @@ namespace LevelStore.Controllers
 
         
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [ExportModelState]
         public IActionResult Checkout(Order order)
         {
