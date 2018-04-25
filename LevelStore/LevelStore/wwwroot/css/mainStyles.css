@@ -210,9 +210,10 @@
     border-color: grey;
 }
 
-.RelatedProductWrapperOfHref{
+.RelatedProductWrapperOfHref {
     margin-left: 10px;
     margin-right: 10px;
+    text-decoration: none !important;
 }
 
 @media only screen and (max-width: 768px) {
@@ -579,6 +580,22 @@
      font-weight: bold;
      font-size: 12px;
      color: #e4e4e4;
+ }
+
+
+.adminButton {
+    position: fixed;
+    width: 120px;
+    z-index: 999;
+    margin-left: 50px;
+    margin-top: 50px;
+    color: white
+}
+
+ @media only screen and (max-width: 768px) {
+    .adminButton {
+        margin-left: 0px;
+    }
  }
 
 

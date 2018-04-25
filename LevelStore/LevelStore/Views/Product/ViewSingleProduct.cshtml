@@ -183,7 +183,7 @@
             @foreach (var rProduct in relatedProducts)
             {
                 <div class="RelatedProductWrapperOfHref">
-                    <a asp-controller="Product" asp-action="ViewSingleProduct" asp-route-productId="@rProduct.ProductID">
+                    <a asp-controller="Product" asp-action="ViewSingleProduct" asp-route-productId="@rProduct.ProductID" style="text-decoration: none !important;">
                         <div class="RelatedProductWrapper" style="">
                             @if (rProduct.Images.Count > 0)
                             {

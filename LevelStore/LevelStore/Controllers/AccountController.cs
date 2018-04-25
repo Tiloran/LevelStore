@@ -24,7 +24,7 @@ namespace LevelStore.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            return View(new LoginViewModel{Email = "Bulankino@gmail.com", Password = "", RememberMe = true});
+            return View(new LoginViewModel{RememberMe = true});
         }
 
         [HttpPost]

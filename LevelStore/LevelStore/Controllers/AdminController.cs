@@ -277,14 +277,12 @@ namespace LevelStore.Controllers
                 }
             }
             int? id = TempData["id"] as int?;
-            //ViewBag.Message = $"{files.Count} file(s) / {size} bytes uploaded successfully!";
+
             if (id != null)
             {
                 _repository.AddImages(imageNameList, id);
-                
             }
-
-            //return RedirectToAction(actionName: "ListAdmin", controllerName: "Product");
+            
             TempData["id"] = id;
             List<Image> imageList = _repository.Images.Where(i => i.ProductID == id).ToList();
             List<TypeColor> boundedColors = _repository.GetColorThatBindedWithImages(imageList);

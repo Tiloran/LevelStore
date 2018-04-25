@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+
+
+<!DOCTYPE html>
 
 <html>
 <head>
@@ -33,7 +36,7 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarTilo">
-                    <a class="navbar-brand" href="#">Level store</a>
+                    @await Component.InvokeAsync("UserInfo")
                     <ul class="navbar-nav mr-auto mt-2 mt-lg-0" style="margin: 0 auto;">
                         <li class="nav-item dropdown ">
                             <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Аккаунты</a>
